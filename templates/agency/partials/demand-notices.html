@@ -1,0 +1,64 @@
+{% load humanize %}
+<tr>
+    <td>
+        {% if dn.status in 'UNDISPUTED UNPAID' %}
+        <a href="{% url 'agency_waiver' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %}
+        {% if dn.status in 'UNDISPUTED PAID' %}
+        <a href="{% url 'agency_waiver' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %}
+        {% if dn.status in 'REVISED' %}
+        <a href="{% url 'agency_waiver' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %}
+        {% if dn.status in 'RESOLVED' %}
+        <a href="{% url 'agency_waiver' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %}
+
+        {% comment %}
+        {% if dn.status in 'UNDISPUTED UNPAID' %}
+        <a href="{% url 'agency_generate_ex_receipt' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %}
+        {% if dn.status in 'UNDISPUTED PAID' %}
+        <a href="{% url 'agency_generate_ex_receipt' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %}
+        {% endcomment %}
+
+        {% if dn.status == 'DEMAND NOTICE' %}
+        {% if dn.is_exisiting %}
+        <a href="{% url 'agency_generate_ex_receipt' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% else %}
+        <a href="{% url 'agency_generate_receipt' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %}
+        {% endif %}
+        <!-- {% if dn.status == 'DEMAND NOTICE' and dn.is_existing == false %}
+        <a href="{% url 'generate_receipt' dn.referenceid %}">{{ dn.referenceid }}</a>
+        {% endif %} -->
+    </td>
+    <td>&#8358;{{ dn.amount_due | floatformat:2 | intcomma }}</td>
+    <td>&#8358;{{ dn.annual_fee | floatformat:2 | intcomma }}</td>
+    <td>&#8358;{{ dn.remittance | floatformat:2 | intcomma }}</td>
+    <td>&#8358;{{ dn.amount_paid | floatformat:2 | intcomma }}</td>
+    <td>&#8358;{{ dn.penalty | floatformat:2 | intcomma }}</td>
+    <td>&#8358;{{ dn.waiver_applied | floatformat:2 | intcomma }}</td>
+    <td>&#8358;{{ dn.total_due | floatformat:2 | intcomma }}</td>
+    <td>{{ dn.created_at | date:"M, d Y" }} </td>
+    <td class="!text-center">
+        {% if dn.status == 'DEMAND NOTICE' %}
+        <span class="status-others">{{ dn.status }}</span>
+        {% endif %}
+        {% if dn.status == 'UNDISPUTED UNPAID' %}
+        <span class="status-disputed">{{ dn.status }}</span>
+        {% endif %}
+        {% if dn.status == 'UNDISPUTED PAID' %}
+        <span class="status-disputed">{{ dn.status }}</span>
+        {% endif %}
+        {% if dn.status == 'REVISED' %}
+        <span class="status-revised">{{ dn.status }}</span>
+        {% endif %}
+        {% if dn.status == 'RESOLVED' %}
+        <span class="status-paid">{{ dn.status }}</span>
+        {% endif %}
+        </a>
+    </td>
+    </a>
+</tr>

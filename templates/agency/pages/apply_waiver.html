@@ -1,0 +1,143 @@
+{% extends 'agency/base2.html' %} {% load static %}
+{% block title %}Apply waiver{% endblock %}
+{% load humanize %}
+{% block content %}
+    <!-- Top Bar with title page, buttons and notification tabs -->
+    <section class="w-full flex flex-col md:flex-row justify-between items-center gap-6">
+      <article class="flex flex-col flex-grow">
+        <h2 class="text-xl text-darkBlue">Apply waiver</h2>
+        <p class="text-sm text-gray400">
+          Apply relevant waivers
+        </p>
+      </article>
+      <article class="flex flex-row w-80 justify-end gap-4 items-center">
+        <!-- <button
+          class="border-2 border-gray-300 px-6 py-2 text-gray-900 rounded-md text-sm flex justify-center items-center gap-2">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+            </svg>
+          </span>
+          Bulk Upload
+        </button>
+        <a href="/assets/media/uploads/bulk_upload_sample.csv" class="text-sm text-gray-800 underline">Download
+          Format</a> -->
+      </article>
+
+      <article
+        class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3">
+        <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+          alt="appointment-reminders--v1" />
+        <p class="text-sm text-gray800">{{ request.user }}</p>
+        <div class="w-6 h-6 rounded-full">
+          <img src="/assets/media/{{ request.user.company_logo }}" alt="user" />
+        </div>
+      </article>
+      {% include 'tax-payers/partials/toasts.html' %}
+    </section>
+    <section class="w-full mt-20">
+      <div class="border-2 border-gray-50 rounded-md shadow-sm">
+        <table class="md:w-full" id="infra-table">
+          <thead class="bg-orange-50 border-b-2 border-gray-50">
+            <tr class="[&>th]:text-orange-600">
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">REF ID</th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Amount due</th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Annual fee</th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Remittance</th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Amount paid</th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Penalty</th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Waiver</th>
+              <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Total Due</th>
+              <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Created Date</th>
+              <th class="text-xs font-semibold"></th>
+            </tr>
+          </thead>
+          <tbody id="table">
+            <tr>
+              <td>{{ demand_notice.referenceid }}</td>
+              <td>&#8358;{{ amount_due | floatformat:2 | intcomma }}</td>
+              <td>&#8358;{{ annual_fee | floatformat:2 | intcomma }}</td>
+              <td>&#8358;{{ remittance | floatformat:2 | intcomma }}</td>
+              <td>&#8358;{{ amount_paid | floatformat:2 | intcomma }}</td>
+              {% if remittance == 0 %}
+              <td>&#8358;{{ penalty | floatformat:2 | intcomma }}</td>
+              {% else %}
+              <td><s>&#8358;{{ penalty | floatformat:2 | intcomma }}</s></td>
+              {% endif %}
+              <td>&#8358;{{ waiver_applied | floatformat:2 | intcomma }}</td>
+              <td>&#8358;{{ total_liability | floatformat:2 | intcomma }}</td>
+              <td>{{ demand_notice.created_at | date:"M, d Y" }}</td>
+              <td>
+                <a href="/assets/media/{{ receipt.receipt }}" target="_blank">
+                  <svg version="1.0" encoding="utf-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                </a>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flex mt-10 mx-auto justify-center">
+        <!-- Modal toggle -->
+        <button data-modal-target="static-modal" data-modal-toggle="static-modal"
+          style="border: 2px solid rgb(255 90 31/var(--tw-bg-opacity))"
+          class="border-2 border-orange-500 bg-border-gray-500 px-10 py-3 mr-2 text-orange-500 rounded-md"
+          type="button">
+          Apply Waiver
+        </button>
+        <!-- <a href="{% url 'undispute_ex_demand_notice_receipt' ref_id %}" id="submit-all-permit" type="submit"
+          class="bg-orange-500 border-2 border-orange-500 px-20 py-3 text-white rounded-md hover:bg-transparent hover:border-orange-500 hover:text-orange-500">
+          Update
+        </a> -->
+      </div>
+    </section>
+  </main>
+</section>
+<!-- Main modal -->
+<div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-90 md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Apply waiver
+        </h3>
+        <button type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="static-modal">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <form  method="post" action="{% url 'agency_waiver' ref_id %}">
+        {% csrf_token %}
+        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+          <div class="w-full text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            Enter amount <span style="color:red">*</span>
+            <input type="hidden" name="referenceid" value="{{ ref_id }}" />
+            <input type="hidden" name="company" value="{{ company }}" />
+            <input text="number" name="waiver_applied" value="{{ waiver_applied }}" class="w-full form-control" />
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+          <button type="submit" class="btn w-full">
+            Apply waiver now
+          </button>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

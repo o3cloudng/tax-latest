@@ -1,0 +1,893 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+    <section class="w-full flex flex-row items-start justify-start h-screen">
+      {% include 'tax-payers/aside.html' %}
+      <main class="main_side">
+
+        <!-- Top Bar with title page, buttons and notification tabs -->
+        <section class="w-full flex flex-row justify-between items-center">
+          <article class="flex flex-col">
+            <h2 class="text-xl text-darkBlue">Settings</h2>
+            <p class="text-sm text-lightBlue">
+              Overview of what's happening
+            </p>
+          </article>
+          
+          <article
+            class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3"
+          >
+          <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png" alt="appointment-reminders--v1"/>
+            <p class="text-sm text-gray800">{{ request.user }}</p>
+            <div class="w-6 h-6 rounded-full">
+              <img  src="/assets/media/{{ request.user.company_logo }}" alt="user--v1"/>
+            </div>
+            
+          </article>
+        </section>
+        <!-- Form Tab -->
+
+        <section class="flex flex-col mt-10">
+          <div role="tablist" class="tabs tabs-bordered">
+            <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Sectors" checked />
+            <div role="tabpanel" class="tab-content pt-10 p-0">
+              <section class="flex flex-col items-start justify-start">
+                
+                <button class="btn bg-darkBlue text-white border-collapse border-darkBlue ">+ Add New Sector</button>
+                <!-- Table -->
+
+                <div class="overflow-x-auto mt-10">
+                  <table class="table table-md rounded-lg">
+                    <thead>
+                      <tr class="table-title">
+                        <th>S/N</th> 
+                        <th>Title</th> 
+                        <th>Description</th> 
+                        <th>Created By</th> 
+                        <th>Created On</th> 
+                        <th>Action</th> 
+                        
+                      </tr>
+                    </thead> 
+                    <tbody>
+                      <tr>
+                        <th>1</th> 
+                        <td>Cy Ganderton</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Littel, Schaden and Vandervort</td> 
+                        <td>Canada</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>2</th> 
+                        <td>Hart Hagerty</td> 
+                        <td>Desktop Support Technician</td> 
+                        <td>Zemlak, Daniel and Leannon</td> 
+                        <td>United States</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>3</th> 
+                        <td>Brice Swyre</td> 
+                        <td>Tax Accountant</td> 
+                        <td>Carroll Group</td> 
+                        <td>China</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>4</th> 
+                        <td>Marjy Ferencz</td> 
+                        <td>Office Assistant I</td> 
+                        <td>Rowe-Schoen</td> 
+                        <td>Russia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>5</th> 
+                        <td>Yancy Tear</td> 
+                        <td>Community Outreach Specialist</td> 
+                        <td>Wyman-Ledner</td> 
+                        <td>Brazil</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>6</th> 
+                        <td>Irma Vasilik</td> 
+                        <td>Editor</td> 
+                        <td>Wiza, Bins and Emard</td> 
+                        <td>Venezuela</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>7</th> 
+                        <td>Meghann Durtnal</td> 
+                        <td>Staff Accountant IV</td> 
+                        <td>Schuster-Schimmel</td> 
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>8</th> 
+                        <td>Sammy Seston</td> 
+                        <td>Accountant I</td> 
+                        <td>O'Hara, Welch and Keebler</td> 
+                        <td>Indonesia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>9</th> 
+                        <td>Lesya Tinham</td> 
+                        <td>Safety Technician IV</td> 
+                        <td>Turner-Kuhlman</td> 
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>10</th> 
+                        <td>Zaneta Tewkesbury</td> 
+                        <td>VP Marketing</td> 
+                        <td>Sauer LLC</td> 
+                        <td>Chad</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>11</th> 
+                        <td>Andy Tipple</td> 
+                        <td>Librarian</td> 
+                        <td>Hilpert Group</td> 
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>12</th> 
+                        <td>Sophi Biles</td> 
+                        <td>Recruiting Manager</td> 
+                        <td>Gutmann Inc</td> 
+                        <td>Indonesia</td>
+                        <td></td>  
+                        
+                      </tr>
+                      <tr>
+                        <th>13</th> 
+                        <td>Florida Garces</td> 
+                        <td>Web Developer IV</td> 
+                        <td>Gaylord, Pacocha and Baumbach</td> 
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>14</th> 
+                        <td>Maribeth Popping</td> 
+                        <td>Analyst Programmer</td> 
+                        <td>Deckow-Pouros</td> 
+                        <td>Portugal</td> 
+                        <td></td> 
+                      </tr>
+                      <tr>
+                        <th>15</th> 
+                        <td>Moritz Dryburgh</td> 
+                        <td>Dental Hygienist</td> 
+                        <td>Schiller, Cole and Hackett</td> 
+                        <td>Sri Lanka</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>16</th> 
+                        <td>Reid Semiras</td> 
+                        <td>Teacher</td> 
+                        <td>Sporer, Sipes and Rogahn</td> 
+                        <td>Poland</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>17</th> 
+                        <td>Alec Lethby</td> 
+                        <td>Teacher</td> 
+                        <td>Reichel, Glover and Hamill</td> 
+                        <td>China</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>18</th> 
+                        <td>Aland Wilber</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Kshlerin, Rogahn and Swaniawski</td> 
+                        <td>Czech Republic</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>19</th> 
+                        <td>Teddie Duerden</td> 
+                        <td>Staff Accountant III</td> 
+                        <td>Pouros, Ullrich and Windler</td> 
+                        <td>France</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>20</th> 
+                        <td>Lorelei Blackstone</td> 
+                        <td>Data Coordiator</td> 
+                        <td>Witting, Kutch and Greenfelder</td> 
+                        <td>Kazakhstan</td> 
+                       
+                      </tr>
+                    </tbody> 
+                    <tfoot>
+                      <tr class="table-title">
+                        <th>Rows per page: 10</th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        
+                      </tr>
+                    </tfoot>
+                  </table>
+
+       
+              </section>
+
+            </div>
+
+            <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Infrastructure Items"/>
+            <div role="tabpanel" class="tab-content pt-10 p-0">
+              <section class="flex flex-col items-start justify-start">
+                
+                <button class="btn bg-darkBlue text-white border-collapse border-darkBlue ">+ Add New Infrastructure</button>
+
+                <div class="overflow-x-auto mt-10">
+                  <table class="table table-md">
+                    <thead>
+                      <tr class="table-title">
+                        <th>S/N</th> 
+                        <th>Type</th> 
+                        <th>Description</th> 
+                        <th>Created By</th> 
+                        <th>Created On</th> 
+                        <th>Options</th> 
+                        
+                      </tr>
+                    </thead> 
+                    <tbody>
+                      <tr>
+                        <th>1</th> 
+                        <td>Cy Ganderton</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Littel, Schaden and Vandervort</td> 
+                        <td>Canada</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>2</th> 
+                        <td>Hart Hagerty</td> 
+                        <td>Desktop Support Technician</td> 
+                        <td>Zemlak, Daniel and Leannon</td> 
+                        <td>United States</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>3</th> 
+                        <td>Brice Swyre</td> 
+                        <td>Tax Accountant</td> 
+                        <td>Carroll Group</td> 
+                        <td>China</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>4</th> 
+                        <td>Marjy Ferencz</td> 
+                        <td>Office Assistant I</td> 
+                        <td>Rowe-Schoen</td> 
+                        <td>Russia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>5</th> 
+                        <td>Yancy Tear</td> 
+                        <td>Community Outreach Specialist</td> 
+                        <td>Wyman-Ledner</td> 
+                        <td>Brazil</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>6</th> 
+                        <td>Irma Vasilik</td> 
+                        <td>Editor</td> 
+                        <td>Wiza, Bins and Emard</td> 
+                        <td>Venezuela</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>7</th> 
+                        <td>Meghann Durtnal</td> 
+                        <td>Staff Accountant IV</td> 
+                        <td>Schuster-Schimmel</td> 
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>8</th> 
+                        <td>Sammy Seston</td> 
+                        <td>Accountant I</td> 
+                        <td>O'Hara, Welch and Keebler</td> 
+                        <td>Indonesia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>9</th> 
+                        <td>Lesya Tinham</td> 
+                        <td>Safety Technician IV</td> 
+                        <td>Turner-Kuhlman</td> 
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>10</th> 
+                        <td>Zaneta Tewkesbury</td> 
+                        <td>VP Marketing</td> 
+                        <td>Sauer LLC</td> 
+                        <td>Chad</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>11</th> 
+                        <td>Andy Tipple</td> 
+                        <td>Librarian</td> 
+                        <td>Hilpert Group</td> 
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>12</th> 
+                        <td>Sophi Biles</td> 
+                        <td>Recruiting Manager</td> 
+                        <td>Gutmann Inc</td> 
+                        <td>Indonesia</td>
+                        <td></td>  
+                        
+                      </tr>
+                      <tr>
+                        <th>13</th> 
+                        <td>Florida Garces</td> 
+                        <td>Web Developer IV</td> 
+                        <td>Gaylord, Pacocha and Baumbach</td> 
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>14</th> 
+                        <td>Maribeth Popping</td> 
+                        <td>Analyst Programmer</td> 
+                        <td>Deckow-Pouros</td> 
+                        <td>Portugal</td> 
+                        <td></td> 
+                      </tr>
+                      <tr>
+                        <th>15</th> 
+                        <td>Moritz Dryburgh</td> 
+                        <td>Dental Hygienist</td> 
+                        <td>Schiller, Cole and Hackett</td> 
+                        <td>Sri Lanka</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>16</th> 
+                        <td>Reid Semiras</td> 
+                        <td>Teacher</td> 
+                        <td>Sporer, Sipes and Rogahn</td> 
+                        <td>Poland</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>17</th> 
+                        <td>Alec Lethby</td> 
+                        <td>Teacher</td> 
+                        <td>Reichel, Glover and Hamill</td> 
+                        <td>China</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>18</th> 
+                        <td>Aland Wilber</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Kshlerin, Rogahn and Swaniawski</td> 
+                        <td>Czech Republic</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>19</th> 
+                        <td>Teddie Duerden</td> 
+                        <td>Staff Accountant III</td> 
+                        <td>Pouros, Ullrich and Windler</td> 
+                        <td>France</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>20</th> 
+                        <td>Lorelei Blackstone</td> 
+                        <td>Data Coordiator</td> 
+                        <td>Witting, Kutch and Greenfelder</td> 
+                        <td>Kazakhstan</td> 
+                       
+                      </tr>
+                    </tbody> 
+                    <tfoot>
+                      <tr class="table-title">
+                        <th>Rows per page: 10</th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        
+                      </tr>
+                    </tfoot>
+                  </table>
+
+              </section>
+
+            </div>
+
+            <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Collection Items" />
+            <div role="tabpanel" class="tab-content pt-10 p-0">
+              <section class="flex flex-col items-start justify-start">
+                
+                <button class="btn bg-darkBlue text-white border-collapse border-darkBlue ">+ Add New Collection Items</button>
+
+                <div class="overflow-x-auto mt-10">
+                  <table class="table table-md">
+                    <thead>
+                      <tr class="table-title">
+                        <th>S/N</th> 
+                        <th>Type</th> 
+                        <th>Item</th> 
+                        <th>Amount</th> 
+                        <!-- <th>Description</th>  -->
+                        <th>Created By</th> 
+                        <!-- <th>Created On</th>  -->
+                        <th>Action</th> 
+                        
+                      </tr>
+                    </thead> 
+                    <tbody>
+                      <tr>
+                        <th>1</th> 
+                        <td>Cy Ganderton</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Littel, Schaden and Vandervort</td> 
+                        
+                        <td>Canada</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>2</th> 
+                        <td>Hart Hagerty</td> 
+                        <td>Desktop Support Technician</td> 
+                        <td>Zemlak, Daniel and Leannon</td> 
+                        
+                        <td>United States</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>3</th> 
+                        <td>Brice Swyre</td> 
+                        <td>Tax Accountant</td> 
+                        <td>Carroll Group</td> 
+                        
+                        <td>China</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>4</th> 
+                        <td>Marjy Ferencz</td> 
+                        <td>Office Assistant I</td> 
+                        <td>Rowe-Schoen</td> 
+                        
+                        <td>Russia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>5</th> 
+                        <td>Yancy Tear</td> 
+                        <td>Community Outreach Specialist</td> 
+                        <td>Wyman-Ledner</td> 
+                        
+                        <td>Brazil</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>6</th> 
+                        <td>Irma Vasilik</td> 
+                        <td>Editor</td> 
+                        <td>Wiza, Bins and Emard</td> 
+                         
+                        <td>Venezuela</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>7</th> 
+                        <td>Meghann Durtnal</td> 
+                        <td>Staff Accountant IV</td> 
+                        <td>Schuster-Schimmel</td> 
+                        
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>8</th> 
+                        <td>Sammy Seston</td> 
+                        <td>Accountant I</td> 
+                        <td>O'Hara, Welch and Keebler</td> 
+                        
+                        <td>Indonesia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>9</th> 
+                        <td>Lesya Tinham</td> 
+                        <td>Safety Technician IV</td> 
+                        <td>Turner-Kuhlman</td> 
+                         
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>10</th> 
+                        <td>Zaneta Tewkesbury</td> 
+                        <td>VP Marketing</td> 
+                        <td>Sauer LLC</td> 
+                         
+                        <td>Chad</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>11</th> 
+                        <td>Andy Tipple</td> 
+                        <td>Librarian</td> 
+                        <td>Hilpert Group</td> 
+                         
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>12</th> 
+                        <td>Sophi Biles</td> 
+                        <td>Recruiting Manager</td> 
+                        <td>Gutmann Inc</td> 
+                         
+                        <td>Indonesia</td>
+                        <td></td>  
+                        
+                      </tr>
+                      <tr>
+                        <th>13</th> 
+                        <td>Florida Garces</td> 
+                        <td>Web Developer IV</td> 
+                        <td>Gaylord, Pacocha and Baumbach</td> 
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>14</th> 
+                        <td>Maribeth Popping</td> 
+                        <td>Analyst Programmer</td> 
+                        <td>Deckow-Pouros</td> 
+                        <td>Portugal</td> 
+                        <td></td> 
+                      </tr>
+                      <tr>
+                        <th>15</th> 
+                        <td>Moritz Dryburgh</td> 
+                        <td>Dental Hygienist</td> 
+                        <td>Schiller, Cole and Hackett</td> 
+                        <td>Sri Lanka</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>16</th> 
+                        <td>Reid Semiras</td> 
+                        <td>Teacher</td> 
+                        <td>Sporer, Sipes and Rogahn</td> 
+                        <td>Poland</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>17</th> 
+                        <td>Alec Lethby</td> 
+                        <td>Teacher</td> 
+                        <td>Reichel, Glover and Hamill</td> 
+                        <td>China</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>18</th> 
+                        <td>Aland Wilber</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Kshlerin, Rogahn and Swaniawski</td> 
+                        <td>Czech Republic</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>19</th> 
+                        <td>Teddie Duerden</td> 
+                        <td>Staff Accountant III</td> 
+                        <td>Pouros, Ullrich and Windler</td> 
+                        <td>France</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>20</th> 
+                        <td>Lorelei Blackstone</td> 
+                        <td>Data Coordiator</td> 
+                        <td>Witting, Kutch and Greenfelder</td> 
+                        <td>Kazakhstan</td> 
+                       
+                      </tr>
+                    </tbody> 
+                    <tfoot>
+                      <tr class="table-title">
+                        <th>Rows per page: 10</th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        
+                      </tr>
+                    </tfoot>
+                  </table>
+</div>
+              </section>
+
+            </div>
+
+            <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Path Type" />
+           <div role="tabpanel" class="tab-content pt-10 p-0">
+              <section class="flex flex-col items-start justify-start">
+                
+                <button class="btn bg-darkBlue text-white border-collapse border-darkBlue ">+ Add New Path Type</button>
+
+                <div class="overflow-x-auto mt-10">
+                  <table class="table table-md">
+                    <thead>
+                      <tr class="table-title">
+                        <th>S/N</th> 
+                        <th>Path</th> 
+                        <th>Amount per meter</th> 
+                        <th>Created By</th> 
+                        <th>Created On</th> 
+                        <th>Action</th> 
+                        
+                      </tr>
+                    </thead> 
+                    <tbody>
+                      <tr>
+                        <th>1</th> 
+                        <td>Cy Ganderton</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Littel, Schaden and Vandervort</td> 
+                        <td>Canada</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>2</th> 
+                        <td>Hart Hagerty</td> 
+                        <td>Desktop Support Technician</td> 
+                        <td>Zemlak, Daniel and Leannon</td> 
+                        <td>United States</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>3</th> 
+                        <td>Brice Swyre</td> 
+                        <td>Tax Accountant</td> 
+                        <td>Carroll Group</td> 
+                        <td>China</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>4</th> 
+                        <td>Marjy Ferencz</td> 
+                        <td>Office Assistant I</td> 
+                        <td>Rowe-Schoen</td> 
+                        <td>Russia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>5</th> 
+                        <td>Yancy Tear</td> 
+                        <td>Community Outreach Specialist</td> 
+                        <td>Wyman-Ledner</td> 
+                        <td>Brazil</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>6</th> 
+                        <td>Irma Vasilik</td> 
+                        <td>Editor</td> 
+                        <td>Wiza, Bins and Emard</td> 
+                        <td>Venezuela</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>7</th> 
+                        <td>Meghann Durtnal</td> 
+                        <td>Staff Accountant IV</td> 
+                        <td>Schuster-Schimmel</td> 
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>8</th> 
+                        <td>Sammy Seston</td> 
+                        <td>Accountant I</td> 
+                        <td>O'Hara, Welch and Keebler</td> 
+                        <td>Indonesia</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>9</th> 
+                        <td>Lesya Tinham</td> 
+                        <td>Safety Technician IV</td> 
+                        <td>Turner-Kuhlman</td> 
+                        <td>Philippines</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>10</th> 
+                        <td>Zaneta Tewkesbury</td> 
+                        <td>VP Marketing</td> 
+                        <td>Sauer LLC</td> 
+                        <td>Chad</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>11</th> 
+                        <td>Andy Tipple</td> 
+                        <td>Librarian</td> 
+                        <td>Hilpert Group</td> 
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>12</th> 
+                        <td>Sophi Biles</td> 
+                        <td>Recruiting Manager</td> 
+                        <td>Gutmann Inc</td> 
+                        <td>Indonesia</td>
+                        <td></td>  
+                        
+                      </tr>
+                      <tr>
+                        <th>13</th> 
+                        <td>Florida Garces</td> 
+                        <td>Web Developer IV</td> 
+                        <td>Gaylord, Pacocha and Baumbach</td> 
+                        <td>Poland</td> 
+                        <td></td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>14</th> 
+                        <td>Maribeth Popping</td> 
+                        <td>Analyst Programmer</td> 
+                        <td>Deckow-Pouros</td> 
+                        <td>Portugal</td> 
+                        <td></td> 
+                      </tr>
+                      <tr>
+                        <th>15</th> 
+                        <td>Moritz Dryburgh</td> 
+                        <td>Dental Hygienist</td> 
+                        <td>Schiller, Cole and Hackett</td> 
+                        <td>Sri Lanka</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>16</th> 
+                        <td>Reid Semiras</td> 
+                        <td>Teacher</td> 
+                        <td>Sporer, Sipes and Rogahn</td> 
+                        <td>Poland</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>17</th> 
+                        <td>Alec Lethby</td> 
+                        <td>Teacher</td> 
+                        <td>Reichel, Glover and Hamill</td> 
+                        <td>China</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>18</th> 
+                        <td>Aland Wilber</td> 
+                        <td>Quality Control Specialist</td> 
+                        <td>Kshlerin, Rogahn and Swaniawski</td> 
+                        <td>Czech Republic</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>19</th> 
+                        <td>Teddie Duerden</td> 
+                        <td>Staff Accountant III</td> 
+                        <td>Pouros, Ullrich and Windler</td> 
+                        <td>France</td> 
+                        
+                      </tr>
+                      <tr>
+                        <th>20</th> 
+                        <td>Lorelei Blackstone</td> 
+                        <td>Data Coordiator</td> 
+                        <td>Witting, Kutch and Greenfelder</td> 
+                        <td>Kazakhstan</td> 
+                       
+                      </tr>
+                    </tbody> 
+                    <tfoot>
+                      <tr class="table-title">
+                        <th>Rows per page: 10</th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        
+                      </tr>
+                    </tfoot>
+                  </table>
+</div>
+              </section>
+
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+    </section>
+  </body>
+</html>
+{% endblock %}

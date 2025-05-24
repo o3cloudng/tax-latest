@@ -1,0 +1,102 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.10.1/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- <script src="https://cdn.tailwindcss.com?plugins=typography"></script> -->
+    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>LASIMRA:: Tax Payers</title>
+  </head>
+  <body> {% endcomment %}
+
+    <section class="relative w-full flex flex-row items-start justify-start h-screen z-10">
+      
+      {% include 'tax-payers/aside.html' %}
+      <main class="w-full md:w-4/5 md:ml-[20%] ml-20 bg-gray-50 min-h-screen transition-all p-10">
+    {% comment %} <section class="w-full flex flex-row items-start justify-start h-screen">
+      <aside
+        class="min-w-60 max-w-60 flex flex-col h-screen items-start justify-start space-y-10 bg-lightGrayBg"
+      >
+        <div class="w-full">
+          <img
+            class="w-20 mx-auto mt-10"
+            src="{% static 'img/lasimra_logo.png' %}"
+            alt=""
+          />
+        </div>
+        <div>
+          <ul class="sidebar-menu">
+            <li>
+              <a href="">
+                <span>Setup Profile</span>
+              </a>
+            </li>
+
+            <li class="mt-10">
+              <a href="{% url 'logout_user' %}">
+                <img
+                  src="https://img.icons8.com/ios/100/logout-rounded--v1.png"
+                  alt="logout-rounded--v1"
+                />
+                <span>Logout</span></a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside> {% endcomment %}
+      {% comment %} <main class="flex flex-col p-9 w-screen h-screen overflow-y-auto"> {% endcomment %}
+        <!-- Top Bar with title page, buttons and notification tabs -->
+        <section class="w-full flex flex-row justify-between items-center">
+          <article class="flex flex-col">
+            <h2 class="text-xl text-darkBlue">Profile</h2>
+            <p class="text-sm text-gray600">
+              Please, complete your company profile
+            </p>
+          </article>
+          <article
+            class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3"
+          >
+            <img
+              width="20"
+              height="20"
+              src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+              alt="appointment-reminders--v1"
+            />
+            <p class="text-sm text-gray800">{{ user.email }}</p>
+            <div class="w-6 h-6 rounded-full">
+              <img
+                src="https://img.icons8.com/ios-glyphs/90/user--v1.png"
+                alt="user--v1"
+              />
+            </div>
+          </article>
+        </section>
+        <!-- Form Tab -->
+        <!-- sm:mx-auto sm:w-full sm:max-w-sm -->
+        <div class="w-[712px] p-8 mt-10 bg-white rounded-md">
+          <form class="space-y-2 form-control" action="" method="POST">
+            {% csrf_token %} {{ form.as_p }}
+
+            <div>
+              <button
+                type="submit"
+                class="flex justify-center btn btn-neutral btn-block border-0 mt-4 bg-darkBlue text-white hover:bg-lightBlue"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </section>
+  {% endblock %}

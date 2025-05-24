@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Django::Streaming</title>
+</head>
+
+<script>
+    var eventSource = new EventSource("{% url 'DemandNoticeStream' %}")
+
+    eventSource.onopen = function(e) {
+        console.log("Connected to django streaming");
+    }
+
+    eventSource.onmessage = function(e) {
+        console.log(e.data);
+    }
+
+    eventSource.onerror = function(e) {
+        console.log(e);
+    }
+</script>
+
+<body>
+    <h1>Streaming</h1>
+    <p>We are going to be pulling data from {% url "test_stream" %} until finished</p>
+    <p>You can look for 'start new chunk:' so you can see that data comes in several chunks</p>
+    <div id="progress"></div>
+    <div id="data"></div>
+    <p>Please, check browser console info for more info</p>
+</body>
+
+</html>

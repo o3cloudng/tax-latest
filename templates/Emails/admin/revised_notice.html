@@ -1,0 +1,24 @@
+{% load humanize %}
+Dear {{company.company_name}},<br><br>
+<p>Your demand notice has been reviewed by our admin team, and a revised sum has been determined. Below are the updated
+    details of your demand notice:</p>
+<p>
+<ul>
+    <li>Reference Number: {{referenceid}}</li>
+    <li>Date: {{ company.created_at }}</li>
+    <li>Revised Amount Due: &#8358;{{ total_due | floatformat:2 | intcomma }}</li>
+</ul>
+</p>
+
+<p>To view the revised demand notice, please log in to your account using the link below:</p>
+<p><a href="{{ login }}"><strong>Login to Lasimra e-Collection System</strong></a></p>
+
+<p>Please ensure that the revised amount due is paid by the specified date to avoid any penalties or additional charges.
+    If
+    you have any questions regarding the revision or need further assistance, please contact our support team at
+    [{{agency_email}}] or
+    [{{agency_phone}}].</p>
+Thank you for your cooperation and for using Lasimra e-Collection System.
+
+Best regards,<br>
+<strong><i>Lasimra e-Collection System Team</i></strong>

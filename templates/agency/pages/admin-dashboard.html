@@ -1,0 +1,374 @@
+{% extends 'agency/base2.html' %} {% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Top Bar with title page, buttons and notification tabs -->
+<section class="w-full flex flex-row justify-between items-center mb-10">
+  <article class="flex flex-col">
+    <h2 class="text-xl text-darkBlue">Dashboard</h2>
+    <p class="text-sm text-gray600">Overview of what's happening</p>
+  </article>
+
+  <article
+    class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3">
+    <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+      alt="appointment-reminders--v1" />
+    <p class="text-sm text-gray800">{{ request.user }}</p>
+    <div class="w-6 h-6 rounded-full">
+      <img src="/assets/media/{{ request.user.company_logo }}" alt="user--v1" />
+    </div>
+  </article>
+  {% include 'tax-payers/partials/toasts.html' %}
+</section>
+
+<section class="mt-10 w-full">
+  <!-- New Tab Design -->
+  <div x-data="{tab:'companies'}" class="flex flex-col">
+    <!-- Tab Navigation -->
+    <div class="w-full grid grid-rows md:grid-cols-3 gap-10 justify-between items-center my-5">
+      <div class="db_card" @click="tab = 'companies'" :class="{'!bg-orange-400 !text-white': tab==='companies'}">
+        <p>Registered Companies</p>
+        <h4 class="">{{ tax_payers.count }}</h4>
+        <p class="text-xs font-thin">
+          <span class="font-normal">+ {{ tax_payers_month | floatformat:1 }}% </span>from last 30 days
+        </p>
+      </div>
+      <div class="db_card" @click="tab = 'infrastructures'"
+        :class="{'!bg-orange-400 !text-white': tab==='infrastructures'}">
+        <p>Total Infrastructures</p>
+        <h4 class="">{{ total_infrastructures }}</h4>
+        <p class="text-xs font-thin">
+          <span class="font-normal">+{{ infrastructures_month | floatformat:1 }}% </span>from last 30 days
+        </p>
+      </div>
+
+      <div class="db_card" @click="tab = 'notices'" :class="{'!bg-orange-400 !text-white': tab==='notices'}">
+        <p>Total Demand Notices</p>
+        <h4 class="">{{ demand_notice }}</h4>
+        <p class="text-xs font-thin">
+          <span class="font-normal">+{{ demand_notices_month | floatformat:1 }}% </span>from last 30 days
+        </p>
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div>
+      <div x-show="tab === 'companies'" x-transition:enter.duration.500ms>
+        <!-- All Tabs -->
+        <section class="w-full">
+          <article class="w-full md:mt-10">
+            <!-- Companies Data Chart Tab -->
+
+            <div class="flex flex-col md:flex-row justify-between gap-10">
+              <article class="border-2 border-gray-100 rounded-md shadow-xs p-4 w-full md:w-1/2">
+                <p class="text-sm text-gray-600 mb-2">
+                  Distribution of sectors
+                </p>
+                <div>
+                  {% include 'agency/charts/bar_chart.html' %}
+                </div>
+              </article>
+              <article class="border-2 border-gray-100 rounded-md shadow-xs p-4 w-full md:w-1/2">
+                <p class="text-sm text-gray-600 mb-2">
+                  Revenue per sectors
+                </p>
+                <div>
+                  {% include 'agency/charts/revenue_sector.html' %}
+                </div>
+              </article>
+            </div>
+          </article>
+          <article class="flex flex-col md:flex-row md:justify-between md:items-center md:mt-10 gap-5 mt-5 h-[content]">
+            <div class="md:w-1/3 border-2 border-gray-100 rounded-lg p-4 py-2">
+              <p class="py-3">Users Login</p>
+              <div class="flex flex-col justify-start items-start gap-2">
+                {% for x in log_events %}
+                <div class="flex flex-row justify-between items-center gap-2 w-full">
+                  <p class="text-gray-400 text-md font-thin">
+                    {{ x.user.company_name }}
+                  </p>
+                  <p class="text-orange-400 italic font-thin text-sm">
+                    {% if not x.login_type %}
+                      Logged in
+                    {% else %}
+                      Logged out
+                    {% endif %}
+                  </p>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="md:w-2/3 border-2 border-gray-100 rounded-lg p-4 py-2">
+              <p class="py-5">Audit Log</p>
+
+              <table class="w-full overflow-auto">
+                <thead class="bg-gray-50 border-y-2 border-gray-200">
+                  <tr>
+                    <th>SN</th>
+                    <th class="w-96">Activity</th>
+                    <th class="w-96">User</th>
+                    <th class="w-40">Time</th>
+                    <!-- <th class="w-40">Role</th> -->
+                  </tr>
+                </thead>
+                <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                <tbody class="divide-y divide-gray-100 bg-white">
+                  {% for x in audit_trail %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>Changed {{ x.method }} {{ x.content_type }}</td>
+                    <td>{{ x.user.company_name }}</td>
+                    <td>{{ x.datetime|timesince }}</td>
+                    <!-- <td>{{ x.user.role.text }}</td> -->
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'infrastructures'" x-transition:enter.duration.500ms>
+        <section class="flex flex-col w-full">
+          <article class="overflow-auto md:mt-10">
+            <!-- Infrastructures Data Table -->
+
+            <section class="w-full">
+              <article class="w-full">
+                <!-- Companies Data Chart Tab -->
+
+                <div class="flex flex-col md:flex-row justify-between gap-10">
+                  <article class="border-2 border-gray-100 rounded-md shadow-xs p-4 w-full md:w-1/2">
+                    <p class="text-sm text-gray-600 mb-2">
+                      Distribution of Infrastructures
+                    </p>
+                    <div>
+                      {% include 'agency/charts/infrastructure_chart.html' %}
+                    </div>
+                  </article>
+                  <article class="border-2 border-gray-100 rounded-md shadow-xs p-4 w-full md:w-1/2">
+                    <p class="text-sm text-gray-600 mb-2">
+                      Revenue per Infrastructure
+                    </p>
+                    <div>
+                      {% include 'agency/charts/infrarevenue_chart.html' %}
+                      
+                    </div>
+                  </article>
+                </div>
+              </article>
+              <article
+                class="flex flex-col md:flex-row md:justify-between md:items-center md:mt-10 gap-5 mt-5 h-[content]">
+                <div class="md:w-1/3 border-2 border-gray-100 rounded-lg p-4 py-2">
+                  <p class="py-3">Users Login</p>
+                  <div class="flex flex-col justify-start items-start gap-2">
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Adewale Uche
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Freeman Oloruntoba
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Adika Amaka
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Adika Sunday
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Olumide Oderinde
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Olumide Oderinde
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="md:w-2/3 border-2 border-gray-100 rounded-lg p-4 py-2">
+                  <p class="py-5">Audit Log</p>
+
+                  <table class="w-full overflow-auto">
+                    <thead class="bg-gray-50 border-y-2 border-gray-200">
+                      <tr>
+                        <th>SN</th>
+                        <th class="w-40">Time</th>
+                        <th class="w-96">User</th>
+                        <th class="w-40">Role</th>
+                        <th class="w-96">Activity</th>
+                      </tr>
+                    </thead>
+                    <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                      <tr>
+                        <td>1</td>
+                        <td>1hr ago</td>
+                        <td>Adewale Uche</td>
+                        <td>Admin 1</td>
+                        <td>Revised Demand Notice</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            </section>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'notices'" x-transition:enter.duration.500ms>
+        <section class="flex flex-col w-full">
+          <article class="overflow-auto md:mt-10">
+            <!-- Demand Notices Data Table -->
+
+            <section class="w-full">
+              <article class="w-full">
+                <!-- Companies Data Chart Tab -->
+
+                <div class="flex flex-col md:flex-row justify-between gap-10">
+                  <article class="border-2 border-gray-100 rounded-md shadow-xs p-4 w-full md:w-1/2">
+                    <p class="text-sm text-gray-600 mb-2">
+                      Disputed Demand Notices
+                    </p>
+                    <div>
+                      {% include 'agency/charts/resolved_chart.html' %}
+                    </div>
+                  </article>
+                  <article class="border-2 border-gray-100 rounded-md shadow-xs p-4 w-full md:w-1/2">
+                    <p class="text-sm text-gray-600 mb-2">
+                      Paid Demand Notices
+                    </p>
+                    <div>
+                      {% include 'agency/charts/paid_demand_notice_chart.html' %}
+                    </div>
+                  </article>
+                </div>
+              </article>
+              <article
+                class="flex flex-col md:flex-row md:justify-between md:items-center md:mt-10 gap-5 mt-5 h-[content]">
+                <div class="md:w-1/3 border-2 border-gray-100 rounded-lg p-4 py-2">
+                  <p class="py-3">Users Login</p>
+                  <div class="flex flex-col justify-start items-start gap-2">
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Adewale Uche
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Freeman Oloruntoba
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Adika Amaka
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Adika Sunday
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Olumide Oderinde
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                    <div class="flex flex-row justify-between items-center gap-2 w-full">
+                      <p class="text-gray-400 text-md font-thin">
+                        Olumide Oderinde
+                      </p>
+                      <p class="text-orange-400 italic font-thin text-sm">
+                        online
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="md:w-2/3 border-2 border-gray-100 rounded-lg p-4 py-2">
+                  <p class="py-5">Audit Log</p>
+
+                  <table class="w-full overflow-auto">
+                    <thead class="bg-gray-50 border-y-2 border-gray-200">
+                      <tr>
+                        <th>SN</th>
+                        <th class="w-40">Time</th>
+                        <th class="w-96">User</th>
+                        <th class="w-40">Role</th>
+                        <th class="w-96">Activity</th>
+                      </tr>
+                    </thead>
+                    <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                      {% for x in audit_trail %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>1hr ago</td>
+                        <td>{{ x.user }}</td>
+                        <td>Admin 1</td>
+                        <td>Changed {{ x.content_type }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            </section>
+          </article>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block charts %}
+
+
+<!-- <script type="text/javascript" src="{% static 'charts/dist_sectors_pie_charts.js' %}"></script> -->
+<!-- <script type="text/javascript" src="{% static 'charts/sectors_bar_chart.js' %}"></script> -->
+<!-- <script type="text/javascript" src="{% static 'charts/inf_sectors_pie_chart.js' %}"></script> -->
+<!-- <script type="text/javascript" src="{% static 'charts/infrarevenue_bar_chart.js' %}"></script> -->
+<!-- <script type="text/javascript" src="{% static 'charts/disputed_dn_pie.chart.js' %}"></script> -->
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% for agent in agents %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td class="flex flex-row"><img width="20px" src="/assets/media/{{agent.company_logo}}" /> &nbsp;
+        {{ agent.first_name }}
+    </td>
+    <td>{{ agent.email }}</td>
+    <td>{{ agent.phone_number }}</td>
+    <td>
+        <button>Edit</button>
+        <button>Delete</button>
+    </td>
+</tr>
+{% endfor %}

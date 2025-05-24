@@ -1,0 +1,81 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<section class="relative w-full flex flex-row items-start justify-start h-screen z-10">
+      
+      {% include 'tax-payers/aside.html' %}
+      <main class="w-full md:w-4/5 md:ml-[20%] ml-20 bg-gray-50 min-h-screen transition-all p-10">
+
+        <!-- Top Bar with title page, buttons and notification tabs -->
+        <section class="w-full flex flex-col md:flex-row justify-between items-center gap-6 ">
+          <article class="flex flex-col flex-grow">
+            <h2 class="text-xl text-gray-800">Application for Permit to Build Facilities</h2>
+            <p class="text-sm text-gray400">
+              Request access to install your new infrastructure
+            </p>
+          </article>
+          <article class="flex flex-row w-80 justify-end gap-4 items-center">
+            <button class="border-2 border-gray-300 px-6 py-2 text-gray-900 rounded-md text-sm flex justify-center items-center gap-2">
+              <span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+              </svg>
+
+              </span>
+              Bulk Upload
+            </button>
+            <a href="#" class="text-sm text-gray-800 underline">Download Format</a>
+          </article>
+          
+          <article
+            class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3"
+          >
+          <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png" alt="appointment-reminders--v1"/>
+            <p class="text-sm text-gray800">{{ request.user }}</p>
+            <div class="w-6 h-6 rounded-full">
+              <img  src="https://img.icons8.com/ios-glyphs/90/user--v1.png" alt="user--v1"/>
+            </div>
+            
+          </article>
+        </section>
+        <!-- Form Tab -->
+        <section class="w-full mt-20">
+          <div class="border-2 border-gray-50 rounded-md shadow-sm">
+            
+              <table class="md:w-full" id="infra-table">
+                  <thead class="bg-orange-50 border-b-2 border-gray-50">
+                    
+                    <tr class="[&>th]:text-orange-600">
+                      <!-- <th class="w-20 p-3 text-sm font-semibold tracking-wide text-left">No.</th> -->
+                      <th class="p-3 text-xs font-semibold tracking-wide text-left">Infrastructure</th>
+                      <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Quantity <span class="block text-[8px]">(no of sites)</span></th>
+                      <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Length <span class="block text-[8px]">(Meters)</span></th>
+                      <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Address <span class="block text-[8px]">(From)</span></th>
+                      <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Address To</th>
+                      <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Installation Date</th>
+                      <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Attach File<span class="block text-[8px]">(application letter)</span></th>
+                      <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Attach File<span class="block text-[8px]">(design drawing)</span></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                      <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                    
+                      
+                      <tbody class="divide-y divide-gray-100 bg-white "></tbody>
+                      
+                      {% include 'tax-payers/partials/apply_permit_form.html' %}
+          <!-- <button type="submit" class="btn btn-warning" id="submit-all-permit">Next</button> -->
+                    </tbody>
+                    
+                      
+                  </table>     
+            </div>
+            <div class="mt-10 mx-auto w-80">
+              <button id="submit-all-permit" 
+              class="bg-orange-500 border-2 border-orange-500 px-20 py-3 text-white rounded-md hover:bg-transparent hover:border-orange-500 hover:text-orange-500">
+              Next</button>
+            </div>
+        </section>
+
+
+      </main>
+  </section>
+{% endblock %}

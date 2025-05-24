@@ -1,0 +1,160 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+    <section class="w-full flex flex-row items-start justify-start h-screen">
+      {% include 'tax-payers/aside.html' %}
+      <main
+        class="main_side"
+      >
+        <!-- Top Bar with title page, buttons and notification tabs -->
+        <section
+          class="w-full flex flex-col md:flex-row justify-between items-center gap-6"
+        >
+          <article class="flex flex-col flex-grow">
+            <h2 class="text-xl text-gray-800">Settings</h2>
+            <p class="text-sm text-gray400">
+              Manage your corporate settings here
+            </p>
+          </article>
+
+          <article
+            class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3"
+          >
+            <img
+              width="20"
+              height="20"
+              src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+              alt="appointment-reminders--v1"
+            />
+            <p class="text-sm text-gray800"> {{ request.user }}</p>
+            <div class="w-6 h-6 rounded-full">
+              <img
+                src="/assets/media/{{ request.user.company_logo }}"
+                alt="profile-pics"
+              />
+            </div>
+          </article>
+          {% include 'tax-payers/partials/toasts.html' %}
+        </section>
+        <section class="md:w-5/6 w-content border-1 h-screen mt-20">
+          <article
+            class="w-full flex flex-row justify-between items-center mb-10"
+          >
+            <div class="flex flex-row justify-start items-center gap-4">
+              <img
+                src="{% static 'img/mtn-logo.png' %}"
+                alt=""
+                class="w-20 h-20 rounded-full"
+              />
+              <div>
+                <h2 class="text-black text-xl">RF Communications</h2>
+                <p class="text-sm">Telecommunications</p>
+              </div>
+            </div>
+            <a href="#" class="btn flex flex-row !px-8">
+              <span>Edit Profile</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                />
+              </svg>
+            </a>
+          </article>
+          <hr />
+          <article class="w-full flex flex-col gap-4 mb-10">
+            <h2 class="mt-3">Corporate Bio Data</h2>
+            <p class="text-md text-gray-800">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia
+              sunt nulla dolorem harum vero accusamus possimus veritatis
+              consectetur officiis ipsam aliquid deleniti consequatur ut ipsum
+              illum molestias, illo a obcaecati itaque iure eveniet. Vel
+              voluptatibus, aperiam iste earum officiis nam!
+            </p>
+          </article>
+          <hr />
+          <article class="w-5/6">
+            <h3>Corporate Data</h3>
+            
+              <form action="" >
+                <div class="flex flex-row justify-between gap-10 mr-10">
+                <div class="w-full">
+                  
+                    <label
+                      for="rcnumber"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      RC Number
+                      <input type="text" name="rcnumber" id="" class="!w-full" />
+                    </label>
+                    <label
+                      for="dateEnrolled"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      Date Enrolled
+                      <input type="date" name="dateEnrolled" id="" />
+                    </label>
+                    <label
+                      for="Country"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      Country
+                      <input type="text" name="Country" id="" />
+                    </label>
+                    <label
+                      for="PostalCode"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      Postal Code
+                      <input type="text" name="PostalCode" id="" />
+                    </label>
+                  
+                </div>
+                <div class="w-full">
+                  
+                    <label
+                      for="ContactEmail"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      Contact Email
+                      <input type="email" name="ContactEmail" id="" />
+                    </label>
+                    <label
+                      for="phone"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      Telephone
+                      <input type="text" name="phone" id="" />
+                    </label>
+                    <label
+                      for="State"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      State
+                      <input type="text" name="State" id="" />
+                    </label>
+                    <label
+                      for="StreetAddress"
+                      class="text-sm text-orange-400 block w-full my-3"
+                    >
+                      Street Address
+                      <input type="text" name="StreetAddress" id="" />
+                    </label>
+                  
+                </div>
+              </div>
+              </form>
+            
+          </article>
+        </section>
+      </main>
+       </section>
+  </body>
+</html>
+{% endblock %}

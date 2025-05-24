@@ -1,0 +1,55 @@
+<tbody>
+  <tr>
+    <form hx-post="{% url 'add_ex_undispute_edit' %}" 
+        hx-swap="beforeend"
+        hx-target="#infra-table"
+        method="POST" 
+        hx-encoding='multipart/form-data'>
+      {% csrf_token %}
+      <td>{{ form.infra_type }}</td>
+      <input type="hidden" name="referenceid" value="{{ referenceid}}" />
+    <td>
+      {{ form.amount }}
+    </td>
+    <td>{{ form.length }}
+    </td>
+    <td>{{ form.add_from }}
+    </td>
+    <td>
+      <select name="year" class="form-control">
+        <option>2024</option>
+        <option>2023</option>
+        <option>2022</option>
+        <option>2021</option>
+        <option>2020</option>
+        <option>2019</option>
+        <option>2018</option>
+        <option>2017</option>
+        <option>2016</option>
+        <option>2015</option>
+        <option>2014</option>
+        <option>2013</option>
+        <option>2012</option>
+        <option>2011</option>
+        <option>2010</option>
+        <option>2009</option>
+        <option>2008</option>
+        <option>2007</option>
+        <option>2006</option>
+        <option>2005</option>
+        <option>2004</option>
+        <option>2003</option>
+        <option>2002</option>
+        <option>2001</option>
+        <option>2000</option>
+      </select>
+    </td>
+    <td>{{ form.upload_application_letter }}</td>
+    <td>{{ form.upload_asBuilt_drawing }}</td>
+    <td>
+      <button class="border-2 border-orage-600 rounded-md px-2 py-2 hover:border-orange-500 bg-orange-500 hover:bg-orange-300 hover:text-white text-white cursor-pointer" title="Edit infrstructure">Save</button>
+      <button hx-on="click: this.closest('tbody').remove()" 
+      class="border-2 bg-orange-600 text-orange-600 border-orange-500 rounded-md px-2 py-1 hover:border-grey-500 hover:bg-grey-500 hover:text-grey-500 cursor-pointer" type="button" title="Close">&#x2715;</button>
+    </td>
+</tr>
+</tbody>

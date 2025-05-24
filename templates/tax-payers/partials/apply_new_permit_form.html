@@ -1,0 +1,28 @@
+<tbody>
+  <tr>
+    <form hx-post="{% url 'add_undispute_edit' %}" 
+        hx-swap="beforeend"
+        hx-target="#infra-table"
+        method="POST" 
+        hx-encoding='multipart/form-data'>
+      {% csrf_token %}
+      <td>{{ form.infra_type }}</td>
+      <input type="hidden" name="referenceid" value="{{ referenceid}}" />
+    <td>
+      {{ form.amount }}
+    </td>
+    <td>{{ form.length }}
+    </td>
+    <td>{{ form.add_from }}
+    </td>
+    <td>{{ form.year_installed }}
+    </td>
+    <td>{{ form.upload_application_letter }}</td>
+    <td>{{ form.upload_asBuilt_drawing }}</td>
+    <td>
+      <button class="border-2 border-orage-600 rounded-md px-2 py-2 hover:border-orange-500 bg-orange-500 hover:bg-orange-300 hover:text-white text-white cursor-pointer" title="Edit infrstructure">Save</button>
+      <button hx-on="click: this.closest('tbody').remove()" 
+      class="border-2 bg-orange-600 text-orange-600 border-orange-500 rounded-md px-2 py-1 hover:border-grey-500 hover:bg-grey-500 hover:text-grey-500 cursor-pointer" type="button" title="Close">&#x2715;</button>
+    </td>
+</tr>
+</tbody>

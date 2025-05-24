@@ -1,0 +1,29 @@
+<form method="dialog" hx-post="{% url 'edit_company' company.id %}">
+    <article class="w-full my-5 text-md text-gray-500 flex flex-col justify-between items-start gap-2">
+        <div class="w-full justify-start items-center">
+            <!-- <label for="users" class="w-2/5">User Type</label> -->
+            {{ company_form.is_tax_admin }}
+        </div>
+
+        <div class="w-full justify-start items-center">
+            <!-- <label for="email" class="w-2/5">Email</label> -->
+            {{ company_form.email }}
+        </div>
+        <div class="w-full justify-start items-center">
+            <!-- <label for="cname" class="w-2/5">Company Name:</label> -->
+            {{ company_form.company_name }}
+        </div>
+
+        <div class="w-full justify-start items-center">
+            <!-- <label for="password" class="w-2/5">Password</label> -->
+            {{ company_form.password1 }}
+        </div>
+        <div class="w-full justify-start items-center">
+            <!-- <label for="password2" class="w-2/5">Confirm Password</label> -->
+            {{ company_form.password2 }}
+        </div>
+        <div style="margin-top: -30px !important;" class="w-full justify-between items-center">
+            <button class="self-start btn" style="width: 100%;">Update</button>
+        </div>
+    </article>
+</form>

@@ -1,0 +1,130 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="container mt-5 mb-5 rounded my-3 bg-light text-dark">
+  <div class="row mt-5">
+    <div class="col-4">
+      LOGO HERE
+      </div>
+    <div class="col-4">
+      &nbsp;
+      </div>
+    <div class="col-4">
+        <h3 class="">Demand Notice</h3>
+        <p>Address</p>
+      </div>
+    </div>
+      <hr/>
+    <div class="row mt-5">
+    <div class="col-4">
+      Bill to:
+      {{ user.company_name }} <br/>
+      Phone: {{ user.phone_number }} <br/>
+      Email: {{ user.email }}
+      </div>
+    <div class="col-4">
+      &nbsp;
+      </div>
+    <div class="col-4">
+        <strong class="text-warning">Bill from:</strong> <br/>
+
+        <strong>Lagos State Infrastructure Maintenance And Regulatory Agency (LASIMRA)
+
+        2, Yusuf Close, Off Hakeem Balogun St. Agidingbi, Ikeja</strong> <br/>
+
+        <strong class="text-warning">Date:</strong> 27th April, 2024<br/>
+        <strong class="text-warning">Terms:</strong> Due on Receipt<br/><br/>
+
+        <strong class="text-warning">Amount Due:</strong><br/>
+        <h2 class="text-warning">N735,840,275.00</h2>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Infrastructure Type</th>
+            <th>Quantity</th>
+            <th>Cum_Age(Years)</th>
+            <th>Rate</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Mast (1-50)</td>
+            <td>2</td>
+            <td>10</td>
+            <td>1,500,000</td>
+            <td>3,000,000</td>
+          </tr>
+        </tbody>
+        <thead style="border-top:1px solid #333; border-bottom:1px solid #333;">
+          <th colspan="5">Sub-Total (Permit fees)</th>
+          <th colspan="1">3,000,000</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2">Application Fee</td>
+            <td>8</td>
+            <td></td>
+            <td></td>
+            <td>400,000</td>
+          </tr>
+          <tr>
+            <td colspan="2">15% Administrative & Project Management Fees</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>3,000,000</td>
+          </tr>
+          <tr>
+            <td colspan="2">Site Assessment Report (SAR)</td>
+            <td></td>
+            <td></td>
+            <td>10</td>
+            <td>3,000,000</td>
+          </tr>
+          <tr>
+            <td colspan="2">Annual Fee</td>
+            <td></td>
+            <td>2</td>
+            <td>10</td>
+            <td>3,000,000</td>
+          </tr>
+          <tr>
+            <td colspan="2">Penalty</td>
+            <td></td>
+            <td>2</td>
+            <td>10</td>
+            <td>3,000,000</td>
+          </tr>
+          <tr>
+            <thead style="border-top:1px solid #333; border-bottom:1px solid #333;">
+            <th colspan="5">Total Due</th>
+            <th colspan="1">23,000,000</th>
+          </thead>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+    
+      <div class="d-flex justify-content-center mt-5">
+        <p>
+          {%  if request.user.is_authenticated %}
+            <p>You are logged in as {{ request.user }}. Click here to <a href="{% url 'logout_user' %}">log out</a></p>
+            <p>
+              <a href="{% url 'setup_profile' %}">Setup Profile</a>
+            </p>
+        {% endif %}
+        </p>
+        <!-- <p><a href="" class="text-decoration-none">Reset password</a></p> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,541 @@
+{% extends 'base.html' %}{% load humanize %} {% load static %} {% block content %}
+<section class="relative w-full flex flex-row items-start justify-start h-screen z-10">
+      {% include 'tax-payers/aside.html' %}
+      <main class="main_side">
+
+        <!-- Top Bar with title page, buttons and notification tabs -->
+        <section class="w-full flex flex-row justify-between items-center mb-10">
+          <article class="flex flex-col">
+            <h2 class="text-xl text-darkBlue">Dispute Notices</h2>
+            <p class="text-sm text-gray600">
+              Overview of your Dispute notices
+            </p>
+          </article>
+          
+          <article
+            class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3"
+          >
+          <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png" alt="appointment-reminders--v1"/>
+            <p class="text-sm text-gray800">{{ request.user }}</p>
+            <div class="w-6 h-6 rounded-full">
+              <img  src="/assets/media/{{ request.user.company_logo }}" alt="user--v1"/>
+            </div>
+            
+          </article>
+        </section>
+        <!-- Form Tab -->
+        <section class="w-full grid grid-rows  md:grid-cols-4 gap-4 justify-between items-center mt-10">
+          <div class="card">
+          
+            <p>Total Dispute Notices</p>
+            <h4> {{ dispute_notices.count }}</h4>
+          
+          </div>
+          <div class="card">
+          
+            <p>Paid Dispute Notices</p>
+            <h4>{{ dispute_notices_paid.count }}</h4>
+          
+          </div>
+          <div class="card">
+          
+            <p>Unpaid Dispute Notices</p>
+            <h4>{{ dispute_notices_unpaid.count }}</h4>
+          </div>
+          <div class="card">
+          
+            <p>Disputed Dispute Notices</p>
+            <h4>{{ dispute_notices_disputed.count }}</h4>
+          
+          </div>
+        </div>
+        </section>
+
+        <section class="mt-10 w-full">
+          <!--Tabs navigation-->
+          <div x-data="{currentTab: 'All'}">
+        
+            <ul class="mb-5 flex list-none flex-row flex-wrap md:gap-4 border-b-0 ps-0" role="tablist" data-twe-nav-ref>
+              <li role="presentation">
+                <a href="#tabs-all"
+                  class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-sm font-medium titlecase text-gray-600 leading-tight"
+                  id="tabs-all-tab" data-bs-toggle="pill" data-bs-target="#tabs-all" role="tab" aria-controls="tabs-all"
+                  aria-selected="true" @click.prevent="currentTab=$el.innerHTML"
+                  :class="currentTab == $el.innerHTML ? 'active' : '' ">All</a>
+              </li>
+              <li role="presentation">
+                <a href="#tabs-paid"
+                  class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-sm font-medium titlecase text-gray-600 leading-tight"
+                  id="tabs-paid-tab" data-bs-toggle="pill" data-bs-target="#tabs-paid" role="tab" aria-controls="tabs-paid"
+                  aria-selected="false" @click.prevent="currentTab=$el.innerHTML"
+                  :class="currentTab == $el.innerHTML ? 'active' : '' ">Paid</a>
+              </li>
+              <li role="presentation">
+                <a href="#tabs-disputed"
+                  class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-sm font-medium titlecase text-gray-600 leading-tight"
+                  id="tabs-disputed-tab" data-bs-toggle="pill" data-bs-target="#tabs-disputed" role="tab"
+                  aria-controls="tabs-disputed" aria-selected="false" @click.prevent="currentTab=$el.innerHTML"
+                  :class="currentTab == $el.innerHTML ? 'active' : '' ">Disputed</a>
+              </li>
+              <li role="presentation">
+                <a href="#tabs-revised"
+                  class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-sm font-medium titlecase text-gray-600 leading-tight"
+                  id="tabs-revised-tab" data-bs-toggle="pill" data-bs-target="#tabs-revised" role="tab"
+                  aria-controls="tabs-revised" aria-selected="false" @click.prevent="currentTab=$el.innerHTML"
+                  :class="currentTab == $el.innerHTML ? 'active' : '' ">Revised</a>
+              </li>
+              <li role="presentation">
+                <a href="#tabs-revised"
+                  class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-sm font-medium titlecase text-gray-600 leading-tight"
+                  id="tabs-revised-tab" data-bs-toggle="pill" data-bs-target="#tabs-revised" role="tab"
+                  aria-controls="tabs-revised" aria-selected="false" @click.prevent="currentTab=$el.innerHTML"
+                  :class="currentTab == $el.innerHTML ? 'active' : '' ">Unpaid</a>
+              </li>
+        
+            </ul>
+        
+            <!--Tabs content-->
+            <div class="mb-6">
+              <div x-show="currentTab == 'All'" class=" opacity-100 transition-opacity duration-150 ease-linear" id="tabs-all"
+                role="tabpanel" aria-labelledby="tabs-all-tab">
+                <!-- All Tabs -->
+                <section class="flex flex-col w-full">
+        
+                  <article class="flex md:self-end md:-mt-[80px] spacing-x-2 gap-4">
+                    <!-- Search and Sort Table -->
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                      </svg>
+                      <form>
+                        <input type="text" placeholder="Search"
+                          class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+                      </form>
+                    </div>
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-orange-600">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                      </svg>
+                      <p class=" font-normal text-gray-800 text-sm">Sort</p>
+        
+                    </div>
+                  </article>
+                  <article class="overflow-auto rounded-lg shadow md:mt-10">
+                    <!-- Data Table -->
+        
+                    <table class="w-full overflow-auto">
+                      <thead class="bg-gray-50 border-b-2 border-gray-200">
+                        <tr>
+                          <th>SN</th>
+                          <th>ID</th>
+                          <th>Penalty</th>
+                          <th>Remittance</th>
+                          <th>Waiver</th>
+                          <th>Amount</th>
+                          <th>Date Created</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                      <tbody class="divide-y divide-gray-100 bg-white ">
+                        {% if dispute_notices.exists %}
+                        {% for dn in dispute_notices %}
+                        <tr>
+                          <td>{{ forloop.counter }} </td>
+                          <td>
+                            {% if dn.is_exisiting %}
+                            <a href="{% url 'generate_ex_receipt' dn.referenceid %}">{{ dn.referenceid }}</a>
+                            {% else %}
+                            <a href="{% url 'generate_receipt' dn.referenceid %}">{{ dn.referenceid }}</a>
+                            {% endif %}
+                          </td>
+                          <td>&#8358;{{ dn.penalty | floatformat:2 | intcomma }}</td>
+                          <td>&#8358;{{ dn.remittance | floatformat:2 | intcomma }}</td>
+                          <td>&#8358;{{ dn.waiver | floatformat:2 | intcomma }}</td>
+                          <td>&#8358;{{ dn.total_due | floatformat:2 | intcomma }}</td>
+                          <td>{{ dn.created_at | date:"M, d Y" }} </td>
+                          <td class="!text-center">
+                            {% if dn.status == 'DISPUTED' %}
+                            <span class="status-disputed">{{ dn.status }}</span>
+                            {% else %}
+                            <span class="status-others">{{ dn.status }}</span>
+                            {% endif %}
+                            </a>
+                          </td>
+                          </a>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td colspan="6"> No demand notice
+                          </td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td>Rows per page</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </article>
+                </section>
+              </div>
+              <div x-show="currentTab == 'Paid'" class="transition-opacity duration-150 ease-linear" id="tabs-paid"
+                role="tabpanel" aria-labelledby="tabs-paid-tab">
+                <!-- Paid Tabs -->
+                <section class="flex flex-col w-full">
+        
+                  <article class="flex md:self-end md:-mt-[80px] spacing-x-2 gap-4">
+                    <!-- Search and Sort Table -->
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                      </svg>
+                      <form>
+                        <input type="text" placeholder="Search"
+                          class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+                      </form>
+                    </div>
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-orange-600">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                      </svg>
+                      <p class=" font-normal text-gray-800 text-sm">Sort</p>
+        
+                    </div>
+                  </article>
+                  <article class="overflow-auto rounded-lg shadow md:mt-10">
+                    <!-- Data Table -->
+        
+                    <table class="w-full overflow-auto">
+                      <thead class="bg-gray-50 border-b-2 border-gray-200">
+                        <tr>
+                          <th>SN</th>
+                          <th>ID</th>
+                          <!-- <th>Amount</th> -->
+                          <th>Date Created</th>
+                          <th>Status</th>
+                          <!-- <th class="!text-right">Actions</th> -->
+                        </tr>
+                      </thead>
+                      <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                      <tbody class="divide-y divide-gray-100 bg-white ">
+                        {% if dispute_notices_paid.exists %}
+                        {% for dn in dispute_notices_paid %}
+                        <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>
+                            <a href="#">
+                              {{ dn.referenceid }}
+                            </a>
+                          </td>
+                          <!-- <td> {{ dn.total }} </td> -->
+                          <td> {{ dn.created_at | date:"M, d Y" }}</a>
+                          </td>
+                          <td>
+                            <span class="status-paid">
+                              PAID
+                            </span>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td colspan="6"> No paid demand notice
+                          </td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td>Rows per page</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </article>
+                </section>
+              </div>
+              <div x-show="currentTab == 'Disputed'" class="transition-opacity duration-150 ease-linear" id="tabs-disputed"
+                role="tabpanel" aria-labelledby="tabs-disputed-tab">
+                <!-- Disputed Tabs -->
+                <section class="flex flex-col w-full">
+        
+                  <article class="flex md:self-end md:-mt-[80px] spacing-x-2 gap-4">
+                    <!-- Search and Sort Table -->
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                      </svg>
+                      <form>
+                        <input type="text" placeholder="Search"
+                          class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+                      </form>
+                    </div>
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-orange-600">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                      </svg>
+                      <p class=" font-normal text-gray-800 text-sm">Sort</p>
+        
+                    </div>
+                  </article>
+                  <article class="overflow-auto rounded-lg shadow md:mt-10">
+                    <!-- Data Table -->
+        
+                    <table class="w-full overflow-auto">
+                      <thead class="bg-gray-50 border-b-2 border-gray-200">
+                        <tr>
+                          <th>SN</th>
+                          <th>ID</th>
+                          <!-- <th>Amount</th> -->
+                          <th>Date Created</th>
+                          <th>Status</th>
+                          <!-- <th class="!text-right">Actions</th> -->
+                        </tr>
+                      </thead>
+                      <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                      <tbody class="divide-y divide-gray-100 bg-white ">
+                        {% if dispute_notices_disputed.exists %}
+                        {% for dn in dispute_notices_disputed %}
+                        <tr>
+                          <td>{{ forloop.counter }}</td>
+                          <td>
+                            {% if demand_notice_disputed.is_existing == true %}
+                            <a href="{% url 'undispute_ex_demand_notice_receipt' dn.referenceid %}">
+                              {% else %}
+                              <a href="{% url 'undispute_demand_notice_receipt' dn.referenceid %}">
+                                {% endif %}
+                                {{ dn.referenceid }}
+                              </a>
+                          </td>
+                          <!-- <td>{{ dn.total }}</td> -->
+                          <td>{{ dn.created_at | date:"M, d Y" }}</a>
+                          </td>
+                          <td>
+                            <span class="status-disputed">
+                              DISPUTED
+                            </span>
+                          </td>
+                          </a>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td colspan="6"> No disputed demand notice
+                          </td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td>Rows per page</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </article>
+                </section>
+              </div>
+              <div x-show="currentTab == 'Revised'" class="transition-opacity duration-150 ease-linear" id="tabs-revised"
+                role="tabpanel" aria-labelledby="tabs-revised-tab">
+                <!-- Revised Tabs -->
+                <section class="flex flex-col w-full">
+        
+                  <article class="flex md:self-end md:-mt-[80px] spacing-x-2 gap-4">
+                    <!-- Search and Sort Table -->
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                      </svg>
+                      <form>
+                        <input type="text" placeholder="Search"
+                          class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+                      </form>
+                    </div>
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-orange-600">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                      </svg>
+                      <p class=" font-normal text-gray-800 text-sm">Sort</p>
+        
+                    </div>
+                  </article>
+                  <article class="overflow-auto rounded-lg shadow md:mt-10">
+                    <!-- Data Table -->
+        
+                    <table class="w-full overflow-auto">
+                      <thead class="bg-gray-50 border-b-2 border-gray-200">
+                        <tr>
+                          <th>SN</th>
+                          <th>ID</th>
+                          <!-- <th>Amount</th> -->
+                          <th>Date Created</th>
+                          <th>Status</th>
+                          <!-- <th class="!text-right">Actions</th> -->
+                        </tr>
+                      </thead>
+                      <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                      <tbody class="divide-y divide-gray-100 bg-white ">
+                        {% if dispute_notices_resolved.exists %}
+                        {% for dn in dispute_notices_resolved %}
+                        <tr>
+                          <td> {{ forloop.counter }} </td>
+                          <td>
+                            <a href="{% url 'revised_demand_notice_receipt' dn.referenceid %}">
+                              {{ dn.referenceid }}
+                            </a>
+                          </td>
+                          <!-- <td> {{ dn.total }} </td> -->
+                          <td>{{ dn.created_at | date:"M, d Y" }}</td>
+                          <td>
+                            <span class="status-revised">
+                              REVISED
+                            </span>
+                            </a>
+                          </td>
+                          </a>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td colspan="6"> No revised demand notice
+                          </td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td>Rows per page</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </article>
+                </section>
+              </div>
+              <div x-show="currentTab == 'Unpaid'" class="transition-opacity duration-150 ease-linear" id="tabs-revised"
+                role="tabpanel" aria-labelledby="tabs-revised-tab">
+                <!-- Revised Tabs -->
+                <section class="flex flex-col w-full">
+        
+                  <article class="flex md:self-end md:-mt-[80px] spacing-x-2 gap-4">
+                    <!-- Search and Sort Table -->
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                      </svg>
+                      <form>
+                        <input type="text" placeholder="Search"
+                          class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+                      </form>
+                    </div>
+                    <div
+                      class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-orange-600">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                      </svg>
+                      <p class=" font-normal text-gray-800 text-sm">Sort</p>
+        
+                    </div>
+                  </article>
+                  <article class="overflow-auto rounded-lg shadow md:mt-10">
+                    <!-- Data Table -->
+        
+                    <table class="w-full overflow-auto">
+                      <thead class="bg-gray-50 border-b-2 border-gray-200">
+                        <tr>
+                          <th>SN</th>
+                          <th>ID</th>
+                          <!-- <th>Amount</th> -->
+                          <th>Date Created</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+                      <tbody class="divide-y divide-gray-100 bg-white ">
+                        {% if dispute_notices_unpaid.exists %}
+                        {% for dn in dispute_notices_unpaid %}
+                        <tr>
+                          <td>
+                            {{ forloop.counter }}
+                          </td>
+                          <td>
+                            {% if dn.is_existing %}
+                            <a href="{% url 'undispute_ex_demand_notice_receipt' dn.referenceid %}">
+                              {{ dn.referenceid }}
+                            </a>
+                            {% else %}
+                            <a href="{% url 'demand-notice-receipt' dn.referenceid %}">
+                              {{ dn.referenceid }}
+                            </a>
+                            {% endif %}
+                          </td>
+                          <!-- <td> {{ dn.total }} </td> -->
+                          <td>{{ dn.created_at | date:"M, d Y" }}
+                          </td>
+                          <td>
+                            <span class="status-others">
+                              UNPAID
+                            </span>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                          <td colspan="6"> No unpaid demand notice
+                          </td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td>Rows per page</td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </article>
+                </section>
+              </div>
+        
+            </div>
+        
+          </div>
+        </section>
+
+        
+
+<footer class="bottom-10 w-full md:w-4/5 md:ml-[20%] ml-20 text-right mt-20 text-xs text-blue-800">
+  <p>Powered by Maximum Collections</p>
+
+</footer>
+      </main>
+    </section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% if companies.exists %}
+{% for m in companies %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>
+        <a class="flex flex-row" href="{% url 'agency_companies_details' m.id %}">
+            <img width="20px" src="/assets/media/{{m.company_logo}}" />&nbsp;
+            {{ m.company_name }}
+        </a>
+    </td>
+    <td>{{ m.sector }}</td>
+    <td>{{ m.phone_number }}</td>
+    <td>{{ m.created_at | date:"d M, Y" }}</td>
+    <td>Status</td>
+    <td>
+        <span class="flex justify-end items-center text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+            </svg>
+
+        </span>
+    </td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+    <td colspan="7">No record found</td>
+</tr>
+{% endif %}

@@ -1,0 +1,246 @@
+{% extends 'base.html' %} {% load static %}
+{% load humanize %}
+{% block content %}
+<section class="w-full flex flex-row items-start justify-start h-screen">
+  {% include 'tax-payers/aside.html' %}
+  <main class="main_side">
+    <!-- Top Bar with title page, buttons and notification tabs -->
+    <section class="w-full flex flex-row justify-between items-center">
+      <article class="flex flex-col">
+        <h2 class="text-xl text-darkBlue">Demand Notice </h2>
+        <p class="text-sm text-gray600">View your receipt</p>
+      </article>
+
+      <article
+        class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3">
+        <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+          alt="appointment-reminders--v1" />
+        <p class="text-sm text-gray800">{{ request.user }}</p>
+        <div class="w-6 h-6 rounded-full">
+          <img src="https://img.icons8.com/ios-glyphs/90/user--v1.png" alt="user--v1" />
+        </div>
+      </article>
+      {% include 'tax-payers/partials/toasts.html' %}
+    </section>
+
+    <!-- Form Tab -->
+    <!-- bg-[image-url] bg-cover bg-center bg-no-repeat -->
+    <section class="border-2 border-gray-100 rounded-md w-[900px] shadow-sm md:mt-20 flex flex-column gap-4 p-6 px-10">
+      <article class="w-full">
+        <div class="flex flex-row justify-between items-center">
+          <img src="/assets/media/{{ agency.agency_logo }}" alt="" class="w-20 h-20" />
+          <div class="w-80 text-left">
+            <h1 class="text-orange-400 font-semibold text-4xl my-2">
+              Demand Notice
+            </h1>
+            <p class="text-xs text-gray-800 font-semibold">
+              Reference ID: {{ ref.referenceid }}
+            </p>
+          </div>
+        </div>
+
+        <hr class="my-4" />
+        <div class="flex flex-row justify-between items-start my-1 gap-8">
+          <div>
+            <h3 class="font-normal text-orange-400">Bill to:</h3>
+            <div class="flex flex-row justify-start gap-3 mt-1">
+              <img src='/assets/media/{{ request.user.company_logo }}' alt="" class="w-10 h-10 rounded-full" />
+              <div>
+                <p class="text-l text-gray-800">
+                  {{ request.user.company_name }}
+                </p>
+                <p class="text-sm text-gray-600">{{ request.user.sector}}</p>
+                <p class="text-sm text-gray-600 mt-2 font-bold">
+                  {{ request.user.address}}
+                </p>
+                <p class="text-sm text-gray-600">
+                  {{ request.user.phone_number }}
+                </p>
+                <p class="text-sm text-gray-600">{{ request.user.email }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="w-80">
+            <h3 class="font-normal text-orange-400">Bill from:</h3>
+
+            <div>
+              <p class="text-md font-bold text-gray-800">
+                {{ agency.agency_name }}
+              </p>
+
+              <p class="text-md text-gray-600 mt-2 font-semibold">
+                {{ agency.address }}
+              </p>
+              <p class="text-sm text-gray-600 font-semibold mt-2">{{ agency.phone_number }}</p>
+              <p class="text-sm text-gray-600 font-semibold">{{ agency.agency_email }}</p>
+              <div class="text-orange-400 text-sm mt-2">
+                <p class="font-semibold">Date: <span class="text-gray-600">{% now "d/m/Y" %}</span></p>
+                <p class="font-semibold">Terms: <span class="text-gray-600">Due on Receipt</span></p>
+              </div>
+              <div
+                class="text-orange-400 font-semibold mt-2 bg-gray-100 rounded-md shadow-sm p-2 hover:bg-orange-400 hover:text-white">
+                Amount Due:</h2>
+                <h2 class="text-lg">&#8358;{{ total_liability | floatformat:2 | intcomma }}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="my-4" />
+
+        <div
+          class="border-2 border-gray-50 rounded-md shadow-sm bg-contain bg-center bg-transparent bg-opacity-20 bg-no-repeat bg-white bg-opacity-40 w-full"
+          style="background-image: url('{% static " img/paid_receipt.pn" %}')">
+          <table class="md:w-full">
+            <thead class="bg-orange-50 border-b-2 border-gray-50">
+              <tr class="[&>th]:text-orange-800">
+                <th>#</th>
+                <th>Infrastructure</th>
+                <th>No of Sites</th>
+                <th>Length(Meters)</th>
+                <th>Rate((&#8358;))</th>
+                <th class="!text-right">Amount((&#8358;))</th>
+              </tr>
+            </thead>
+            <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+            <tbody class="divide-y divide-gray-100 bg-white bg-opacity-5">
+              {% for permit in permits %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ permit.infra_type}}</td>
+                <td>{{ permit.amount}}</td>
+                <td>{{ permit.length }}</td>
+                <td>{{ permit.infra_type.rate | floatformat:2 | intcomma }}</td>
+                <td class="!text-right">{{ permit.infra_cost | floatformat:2 | intcomma }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <div
+            class="flex flex-row justify-between items-center w-full border-y-2 border-gray-600 text-gray-800 p-3 bg-white">
+            <h3>Sub-Total(Permit Fees)</h3>
+            <h3>&#8358;{{ tot_sum_infra.no_sum | floatformat:2 | intcomma }}</h3>
+          </div>
+          <table class="md:w-full">
+            <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+            <tbody class="divide-y divide-gray-100 bg-white">
+              <tr>
+                <td>{{ app_fee.description }}</td>
+                <td class="text-left">{{ app_count }}</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="!text-right">{{ app_fee.rate | floatformat:2 | intcomma }}</td>
+                <td class="!text-right">{{ total_app_fee | floatformat:2 | intcomma }}</td>
+              </tr>
+              <tr>
+                <td class="!w-40">
+                  {{ admin_pm_fees.description }}
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="!text-right">&#8358;{{admin_pm_fees.rate }}%</td>
+                <td class="!text-right">{{ admin_pm_fees_sum | floatformat:2 | intcomma }}</td>
+              </tr>
+              <tr>
+                <td>Site Assessment Report (SAR)</td>
+                <td>{{ site_assess_count }}</td>
+                <td></td>
+                <td></td>
+                <td class="!text-right">{{ site_assessment.rate | floatformat:2 | intcomma }}</td>
+                <td class="!text-right">&#8358;{{ sar_rate | floatformat:2 | intcomma }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="font-normal w-full text-sm text-orange-800 flex flex-row justify-between items-center p-3">
+            <p>Total Due</p>
+            <h4>&#8358;{{ total_due | floatformat:2 | intcomma }}</h4>
+          </div>
+          <!-- <div
+            class="font-normal text-sm w-full text-green-800 flex flex-row justify-between items-center p-3"
+          >
+            <p>Waiver Applied</p>
+            <h4 class="">&#8358;{{ waver | floatformat:2 | intcomma }}</h4>
+          </div> -->
+          <div class="bg-gray-100 font-bold w-full text-orange-400 flex flex-row justify-between items-center p-3">
+            <h3>Total</h3>
+            <h3>&#8358;{{ total_liability | floatformat:2 | intcomma }}</h3>
+          </div>
+        </div>
+        <div class="flex flex-col p-3 gap-4 w-full">
+          <h3 class="text-sm font-semibold text-gray-800">
+            Attached Documents
+          </h3>
+          <div class="flex flex-row gap-5">
+            {% if permits.exists %}
+            {% for permit in permits %}
+            {% if permit.upload_application_letter %}
+
+            <p class="flex flex-row text-sm text-orange-400">
+              <svg version="1.0" encoding="utf-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>&nbsp;
+              <a href="/assets/media/{{ permit.upload_application_letter }}" target="_blank">Application:
+                ({{permit.infra_type}})</a>
+            </p>
+            {% endif %}
+            {% if permit.upload_asBuilt_drawing %}
+            <p class="flex flex-row text-sm text-orange-400">
+              <svg version="1.0" encoding="utf-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>&nbsp;
+              <object id="svg1" width="20px" data="{% static 'img/download.svg' %}" type="image/svg+xml"></object>
+              <a href="/assets/media/{{ permit.upload_asBuilt_drawing }}" target="_blank">Design Drawing:
+                ({{permit.infra_type}})</a>
+            </p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+          </div>
+          <div class="w-80 flex flex-row mx-auto gap-4 my-4">
+            {% if ref.is_existing %}
+            <a href="{% url 'dispute-demand-notice' ref_id %}" class="btn-outline">Dispute/Object</a>
+            {% endif %}
+            <form action="{% url 'initiate_payment' %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="email" value="{{ request.user }}" />
+              <input type="hidden" name="amount" value="{{ total_liability }}" />
+              <input type="hidden" name="referenceid" value="{{ ref_id }}" />
+
+              <button type="submit" class="btn">Make Payment</button>
+            </form>
+
+          </div>
+          <div class="flex flex-row justify-center items-center gap-10 px-auto my-4">
+            <div
+              class="text-darkBlue font-normal text-sm flex flex-row justify-start items-center gap-1 hover:text-black">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
+                </svg>
+              </div>
+              <a href="#" class="hover:underline">Print Demand Notice</a>
+            </div>
+            <div
+              class="text-darkBlue font-normal text-sm flex flex-row justify-start items-center gap-1 hover:text-black">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+              </div>
+              <a href="#" class="hover:underline">Download Demand Notice</a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    {% endblock %}
+  </main>
+</section>

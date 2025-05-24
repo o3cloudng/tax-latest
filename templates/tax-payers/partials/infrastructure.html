@@ -1,0 +1,10 @@
+{% for pm in infrastructures %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ pm.infra_type }}</td>
+    <td>{{ pm.year_installed }}</td>
+    <td>{{ pm.address }}</td>
+    <td>{{ pm.length }}</td>
+    <td>{{ pm.created_by }}</td>
+</tr>
+{% endfor %}

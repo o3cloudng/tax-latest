@@ -1,0 +1,58 @@
+<tr>
+  <td>{{ pm.infra_type }}</td>
+  <td>{{ pm.amount }}</td>
+  <td>{{ pm.length }}</td>
+  <td>{{ pm.add_from }}</td>
+  <td>{{ pm.year_installed }}</td>
+  <td>
+    {% if pm.upload_asBuilt_drawing %}
+    <a target="_blank" href="/assets/media/{{ pm.upload_application_letter }}"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="4-6 h-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+        />
+      </svg> </a
+    >{% else %} No file {% endif %}
+  </td>
+  <td>
+    {% if pm.upload_asBuilt_drawing %}
+    <a target="_blank" href="/assets/media/{{ pm.upload_asBuilt_drawing }}">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="4-6 h-4"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
+        />
+      </svg>
+    </a>
+    {% else %} No file {% endif %}
+  </td>
+  <td>
+    <button
+      hx-post="{% url 'del_ex_undisputed_edit' pm.id %}"
+      hx-swap="beforebegin"
+      hx-target="#addtable"
+      class="border-2 text-xm bg-orange-600 text-orange-600 border-orange-500 rounded-md px-2 py-1 hover:border-grey-500 hover:bg-grey-500 hover:text-grey-500 cursor-pointer"
+      type="button"
+      title="Edit"
+    >
+      X
+    </button>
+  </td>
+</tr>

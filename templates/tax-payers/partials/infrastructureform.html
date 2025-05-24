@@ -1,0 +1,39 @@
+<form hx-post="{% url 'add_infrastructure' %}" hx-target="#infra-table" hx-swap="innerHTML"
+    hx-encoding='multipart/form-data'>
+    {% csrf_token %}
+
+    <h2>{{ infrastructure }}</h2>
+    <div class="grid grid-cols-4 gap-4 mt-5">
+        <div class="col-span-3">
+            <input name="infra_type" type="hidden" value="{{ infrastructure.pk }}" />
+            <label class="text-gray-500" style="margin-bottom:10px;">Full address <small>(1, Alakija
+                    street)</small></label><br />
+            <input class="border-2 border-rose-600" style="border:2px solid #999" name="address" required type="text" />
+        </div>
+        <div class="col-span-1">
+            <label class="text-gray-500" style="margin-bottom:10px !important;">Year <small>(Installation)</small></label>
+            <input class="border-2 border-gray-500" style="border:2px solid #999" value="{{ current_year }}"
+                type="number" disabled />
+            <input type="hidden" name="year_installed" value="{{ current_year }}" />
+        </div>
+        <div class="col-span-2">
+            <label class="text-gray-500" style="margin-bottom:20px !important;">
+                As Built Drawing </label>
+            <input
+                class="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-500 dark:border-gray-500 dark:placeholder-gray-400"
+                aria-describedby="file_input_help" id="file_input" type="file" accept=".pdf,.jpg" name="upload_asBuilt_drawing">
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PDF, PNG, JPG or GIF .</p>
+
+        </div>
+        <div class="col-span-2">
+            <label class="text-gray-500" style="margin-bottom:20px;">
+                Application Letter
+            </label>
+            <input
+                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                aria-describedby="file_input_help" id="file_input" type="file" accept=".pdf,.jpg" name="upload_application_letter">
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PDF, PNG, JPG or GIF</p>
+        </div>
+    </div>
+    <button type="submit" class="w-full mt-10 self-end btn">Create infrastructure</button>
+</form>

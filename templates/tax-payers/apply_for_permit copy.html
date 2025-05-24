@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+
+
+<hr/>
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center mt-5">
+    <div class="col-12">
+      <div class="text-center">
+        <h3 class="text-center">Apply For Permit</h3>
+      </div>
+      <div class="py-4 px-3 rounded my-3 text-dark">
+        
+      <div class="d-flex justify-content-justify mt-5">
+        
+        <table class="border border-collapse border-stripped" id="infra-table">
+          <thead class="bg-light">
+            <th>S/N</th>
+            <th>Infrastructure Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Total Length</th>
+            <th>Year installed</th>
+            <th>Upload application letter</th>
+            <th>Upload As-Built Drawing</th>
+            <th>Upload Payment Receipt</th>
+            <th><button class="btn btn-success" title="Add new infrstructure"
+              hx-post="{% url 'add_permit_form' %}"
+              hx-swap="beforeend"
+              hx-target="#infra-table">+</button></th>
+          </thead>
+          {% include 'tax-payers/partials/apply_permit_form.html' %}
+        </table>
+        
+
+      </div>
+     
+      
+    </div>
+  </div>
+  <button type="submit" class="btn btn-warning" id="submit-all-permit">Next</button>
+</form>
+
+ 
+  </div>
+  <div>
+    <table class="table table-stripped table-condensed table-bordered">
+      {% for permit in permits %}
+      <tr>
+        <td>{{permit.infra_type}}</td>
+        <td>{{permit.add_from}}</td>
+        <td>{{permit.add_to}}</td>
+        <td>{{permit.infra_type}}</td>
+        <td>{{permit.infra_type}}</td>
+        <td></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div>
+        <p>
+          {%  if request.user.is_authenticated %}
+            <p>You are logged in as {{ request.user }}. Click here to <a href="{% url 'logout_user' %}">log out</a></p>
+            <p>
+              <a href="{% url 'setup_profile' %}">Setup Profile</a>
+            </p>
+        {% endif %}
+        </p>
+        <!-- <p><a href="" class="text-decoration-none">Reset password</a></p> -->
+      </div>
+</div>
+
+{% endblock content %}

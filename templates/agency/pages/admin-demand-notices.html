@@ -1,0 +1,402 @@
+{% extends 'agency/base2.html' %} {% load static %}
+{% load humanize %} 
+{% block title %}Demand Notices{% endblock %}
+{% block content %}
+<!-- Top Bar with title page, buttons and notification tabs -->
+<section class="w-full flex flex-row justify-between items-center mb-10">
+  <article class="flex flex-col">
+    <h2 class="text-xl text-darkBlue">Demand Notices</h2>
+    <p class="text-sm text-gray600">
+      Overview of all demand notices
+    </p>
+  </article>
+
+  <article
+    class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3">
+    <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+      alt="appointment-reminders--v1" />
+    <p class="text-sm text-gray800">{{ request.user.company_name }}</p>
+    <div class="w-6 h-6 rounded-full">
+      <img src="/assets/media/{{ request.user.company_logo }}" />
+    </div>
+
+  </article>
+</section>
+<!-- Form Tab -->
+<section class="w-full grid grid-rows  md:grid-cols-4 gap-4 justify-between items-center mt-10">
+  <div class="card">
+
+    <p>Total Demand Notices</p>
+    <h4>&#8358;{{ total_demand_notices | floatformat:2 | intcomma }}</h4>
+
+  </div>
+  <div class="card">
+
+    <p>Total Undisputed (Paid)</p>
+    <h4>&#8358;{{ total_undisputed_paid | floatformat:2 | intcomma }}</h4>
+  </div>
+  <div class="card">
+
+    <p>Total Undisputed (Unpaid)</p>
+    <h4>&#8358;{{ total_undisputed_unpaid | floatformat:2 | intcomma }}</h4>
+  </div>
+  <div class="card">
+
+    <p>Total Resolved</p>
+    <h4>&#8358;{{ total_resolved | floatformat:2 | intcomma }}</h4>
+
+  </div>
+  </div>
+</section>
+<!-- Create Button Added -->
+<!-- <a href="#" type="button" class="btn">
+  Create Demand Notice
+</a> -->
+<section class="mt-10 w-full flex flex-row">
+
+  <!-- New Tab Design -->
+  <div x-data="{tab:'all'}" class="mt-5 w-full py-2 text-black pt-10">
+    <div class="w-2/5 flex flex-row justify-around items-center text-sm mb-4">
+      <a href="#" @click.prevent="tab = 'all'" class="w-full text-center pb-2"
+        :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='all'}">All</a>
+      <a href="#" class="w-full text-center pb-2" @click.prevent="tab = 'paid'"
+        :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='paid'}">Resolved</a>
+      <a href="#" class="w-full text-center pb-2" @click.prevent="tab = 'unpaid'"
+        :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='unpaid'}">Disputed</a>
+      <a href="#" class="w-full text-center pb-2" @click.prevent="tab = 'disputed'"
+        :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='disputed'}">Revised</a>
+      <a href="#" style="width:500px;" class="w-full text-center pb-2" @click.prevent="tab = 'revised'"
+        :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='revised'}">Demand notice</a>
+    </div>
+
+    <div>
+      <div x-show="tab === 'all'">
+        <!-- All Tabs -->
+        <section class="flex flex-col w-full">
+
+          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
+            <!-- Search and Sort Table -->
+            {% include 'agency/partials/search-dn.html' %}
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-orange-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+              </svg>
+              <p class=" font-normal text-gray-800 text-sm">Sort</p>
+
+            </div>
+          </article>
+          <article class="overflow-auto rounded-lg shadow md:mt-10">
+            <!-- Data Table -->
+
+            <table class="w-full overflow-auto">
+              <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th>ID</th>
+                  <th>Amount due</th>
+                  <th>Annual fee</th>
+                  <th>Remittance</th>
+                  <th>Amount Paid</th>
+                  <th>Penalty</th>
+                  <th>Waiver</th>
+                  <th>Total due</th>
+                  <th>Date Created</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+              <tbody class="divide-y divide-gray-100 bg-white" id="search-result">
+                  {% if demand_notices.exists %}
+                  {% for dn in demand_notices %}
+                  {% include 'agency/partials/demand-notices.html' %}
+                  {% endfor %}
+                  {% else %}
+                  <tr>
+                    <td colspan="10"> No demand notice
+                    </td>
+                  </tr>
+                  {% endif %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="10">Rows per page</td>
+                </tr>
+              </tfoot>
+            </table>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'paid'">
+        <section class="flex flex-col w-full">
+
+          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
+            <!-- Search and Sort Table -->
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+              <form>
+                <input type="text" placeholder="Search"
+                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+              </form>
+            </div>
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-orange-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+              </svg>
+              <p class=" font-normal text-gray-800 text-sm">Sort</p>
+
+            </div>
+          </article>
+          <article class="overflow-auto rounded-lg shadow md:mt-10">
+            <!-- Data Table -->
+
+            <table class="w-full overflow-auto">
+              <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th>ID</th>
+                  <th>Amount due</th>
+                  <th>Annual fee</th>
+                  <th>Remittance</th>
+                  <th>Amount Paid</th>
+                  <th>Penalty</th>
+                  <th>Waiver</th>
+                  <th>Total due</th>
+                  <th>Date Created</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+              <tbody class="divide-y divide-gray-100 bg-white ">
+                {% if resolved.exists %}
+                {% for dn in resolved %}
+                {% include 'agency/partials/demand-notices.html' %}
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="10">No resolved demand notice found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="10">Rows per page</td>
+                </tr>
+              </tfoot>
+            </table>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'unpaid'">
+        <section class="flex flex-col w-full">
+
+          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
+            <!-- Search and Sort Table -->
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+              <form>
+                <input type="text" placeholder="Search"
+                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+              </form>
+            </div>
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-orange-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+              </svg>
+              <p class=" font-normal text-gray-800 text-sm">Sort</p>
+
+            </div>
+          </article>
+          <article class="overflow-auto rounded-lg shadow md:mt-10">
+            <!-- Data Table -->
+
+            <table class="w-full overflow-auto">
+              <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th>ID</th>
+                  <th>Amount due</th>
+                  <th>Annual fee</th>
+                  <th>Remittance</th>
+                  <th>Amount Paid</th>
+                  <th>Penalty</th>
+                  <th>Waiver</th>
+                  <th>Total due</th>
+                  <th>Date Created</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+              <tbody class="divide-y divide-gray-100 bg-white ">
+                {% if disputed.exists %}
+                {% for dn in disputed %}
+                {% include 'agency/partials/demand-notices.html' %}
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="10">No disputed demand notice found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="10">Rows per page</td>
+                </tr>
+              </tfoot>
+            </table>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'disputed'">
+        <section class="flex flex-col w-full">
+
+          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
+            <!-- Search and Sort Table -->
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+              <form>
+                <input type="text" placeholder="Search"
+                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+              </form>
+            </div>
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-orange-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+              </svg>
+              <p class=" font-normal text-gray-800 text-sm">Sort</p>
+
+            </div>
+          </article>
+          <article class="overflow-auto rounded-lg shadow md:mt-10">
+            <!-- Data Table -->
+
+            <table class="w-full overflow-auto">
+              <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th>ID</th>
+                  <th>Amount due</th>
+                  <th>Annual fee</th>
+                  <th>Remittance</th>
+                  <th>Amount Paid</th>
+                  <th>Penalty</th>
+                  <th>Waiver</th>
+                  <th>Total due</th>
+                  <th>Date Created</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+              <tbody class="divide-y divide-gray-100 bg-white ">
+                {% if revised.exists %}
+                {% for dn in revised %}
+                {% include 'agency/partials/demand-notices.html' %}
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="10">No revised demand notice found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="10">Rows per page</td>
+                </tr>
+              </tfoot>
+            </table>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'revised'">
+        <section class="flex flex-col w-full">
+
+          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
+            <!-- Search and Sort Table -->
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-5 h-5 text-darkBlue">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+              </svg>
+              <form>
+                <input type="text" placeholder="Search"
+                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
+              </form>
+            </div>
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-orange-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+              </svg>
+              <p class=" font-normal text-gray-800 text-sm">Sort</p>
+
+            </div>
+          </article>
+          <article class="overflow-auto rounded-lg shadow md:mt-10">
+            <!-- Data Table -->
+
+            <table class="w-full overflow-auto">
+              <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th>ID</th>
+                  <th>Amount due</th>
+                  <th>Annual fee</th>
+                  <th>Remittance</th>
+                  <th>Amount Paid</th>
+                  <th>Penalty</th>
+                  <th>Waiver</th>
+                  <th>Total due</th>
+                  <th>Date Created</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+              <tbody class="divide-y divide-gray-100 bg-white ">
+                {% if demand_notice.exists %}
+                {% for dn in demand_notice %}
+                {% include 'agency/partials/demand-notices.html' %}
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="10">No demand notice found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="10">Rows per page</td>
+                </tr>
+              </tfoot>
+            </table>
+          </article>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

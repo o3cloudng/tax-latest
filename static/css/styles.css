@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  [type="text"],
+  [type="email"],
+  [type="url"],
+  [type="password"],
+  [type="number"],
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="search"],
+  [type="tel"],
+  [type="time"],
+  [type="week"],
+  [multiple],
+  textarea,
+  select {
+    @apply w-full m-0 border-gray-200 rounded-md focus:border-orange-300 focus:ring-0;
+  }
+  [type="checkbox"],
+  [type="radio"] {
+    @apply border-gray-200 rounded-md focus:border-orange-300 focus:ring-0;
+  }
+  [type="file"] {
+    @apply bg-white rounded w-20;
+  }
+}
+
+body {
+  background-color: #fafaff;
+}
+
+.sidebar-menu {
+  @apply flex  flex-col items-start justify-start text-gray900 [&>li:hover]:text-darkBlue space-y-4 [&>li:hover]:border-l-2 [&>li:hover]:border-l-darkBlue [&>li:hover]:block [&>li]:px-8; /* Apply the custom style to all child elements */
+}
+
+.sidebar-menu-active {
+  @apply flex  flex-col items-start justify-start text-darkBlue space-y-4 border-l-2 border-l-darkBlue block [&>li]:px-8; /* Apply the custom style to all child elements */
+}
+
+.sidebar-menu > li > a {
+  @apply flex flex-row items-center justify-start space-x-2;
+}
+.sidebar-menu > li > a > img {
+  @apply h-5 w-5 hover:fill-darkBlue;
+}
+
+.table-title {
+  @apply bg-gray-200 rounded-md text-gray-500 text-xs font-light text-[12px];
+}
+
+tbody > tr > td {
+  @apply p-3 text-xs text-gray-700 whitespace-nowrap;
+}
+
+thead > tr > th {
+  @apply w-20 p-3 text-sm font-semibold tracking-wide text-left text-gray800;
+}
+
+tfoot > tr > td {
+  @apply w-20 p-3 text-sm font-semibold tracking-wide text-left text-gray800;
+}
+
+.status-disputed {
+  @apply w-24 p-1 px-5 bg-red-200 rounded-full text-red-800;
+}
+
+.status-revised {
+  @apply w-24 p-1 px-5 bg-orange-200 rounded-full text-darkBlue;
+}
+.status-paid {
+  @apply w-24 p-1 px-5 bg-green-200 rounded-full text-green-800;
+}

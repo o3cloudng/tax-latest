@@ -1,0 +1,75 @@
+{% if all.exists %}
+
+{% for x in all %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>
+        <!--Link to Existing Disputed DN-->
+        {% if x.is_existing %} <!-- Paid, Revised, Disputed, Unpaid -->
+        {% if x.is_paid %}
+        <!--Link to Payment DN-->
+        <a href="#">
+            <!--Link to Revised DN (Existing / New)-->
+            {% elif x.is_revised %}
+            <a href="{% url 'company_revised_receipt' x.referenceid %}">
+
+                {% elif x.is_disputed %}
+                <a href="{% url 'company_dispute_receipt' x.referenceid %}">
+                    {% else %}
+                    <a href="{% url 'dn_receipt' x.referenceid %}">
+                        {% endif %}
+                        {% else %}
+            {% if x.is_paid %}
+            <!--Link to Payment DN-->
+            <a href="#">
+                <!--Link to Revised DN (Existing / New)-->
+                {% elif x.is_revised %}
+                <a href="{% url 'company_revised_receipt' x.referenceid %}">
+
+                    {% elif x.is_disputed %}
+                    <a href="{% url 'company_dispute_receipt' x.referenceid %}">
+                        {% else %}
+                        <a href="{% url 'dn_receipt' x.referenceid %}">
+                            {% endif %}
+                            {% endif %}
+                            {{ x.referenceid }}
+                        </a>
+    </td>
+    <td>{{ x.infra_type }} (
+        {% if x.amount %}
+        {{x.amount}} Sites
+        {% else %}
+        {{x.length}} meters
+        {% endif %}
+        )</td>
+    <!-- <td>
+        {% if x.is_existing %}
+        Existing
+        {% else %}
+        New
+        {% endif %}
+    </td> -->
+    <td>{{ x.created_at | date:"d M, Y" }}</td>
+    <td>
+        <span class="status-disputed">
+            Disputed
+        </span>
+
+    </td>
+    <td>
+        <span class="flex justify-end items-center text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+            </svg>
+
+        </span>
+    </td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+    <td colspan="8">No infrastruture found.</td>
+</tr>
+{% endif %}

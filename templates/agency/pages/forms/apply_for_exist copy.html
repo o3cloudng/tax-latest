@@ -1,0 +1,147 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<section class="relative w-full flex flex-row items-start justify-start h-screen z-10">
+  {% include 'tax-payers/aside.html' %}
+  <main class="main_side">
+    <!-- Top Bar with title page, buttons and notification tabs -->
+    <section class="w-full flex flex-col md:flex-row justify-between items-center gap-6">
+      <article class="flex flex-col flex-grow">
+        <h2 class="text-xl text-gray-800">Upload Existing Facilities!</h2>
+        <p class="text-sm text-gray400">
+          Upload existing facilities for regulatory compliance
+        </p>
+      </article>
+      <article class="flex flex-row w-80 justify-end gap-4 items-center">
+        <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
+          class="border-2 border-gray-300 px-6 py-2 text-gray-900 rounded-md text-sm flex justify-center items-center gap-2">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+            </svg>
+          </span>
+          Bulk Upload
+        </button>
+        <a href="/assets/media/uploads/bulk_upload_sample.csv" class="text-sm text-gray-800 underline">Download
+          Format</a>
+      </article>
+
+      <article
+        class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3">
+        <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+          alt="appointment-reminders--v1" />
+        <p class="text-sm text-gray800">{{ request.user }}</p>
+        <div class="w-6 h-6 rounded-full">
+          <img src="/assets/media/{{ request.user.company_logo}}" alt="user--v1" />
+        </div>
+      </article>
+      {% include 'tax-payers/partials/toasts.html' %}
+    </section>
+    
+    <section class="w-full mt-20 grid grid-cols-6 gap-4">
+      {% comment %}
+      {% include 'tax-payers/partials/ex/infrastructure-form.html' %}
+      {% endcomment %}
+      <div class="col-span-1 text-surface text-orange-500 float-right mt-2">
+        Infrastructure Type
+      </div>
+      <div class="col-span-1 text-surface dark:text-white">
+        <select name="infrastructure" class="border-2 border-orange-200" hx-get="{% url 'add_ex_infrastructure_form' %}"
+          hx-target="#infra-form" hx-trigger="change">
+          {% for infra in infra_types %}
+          <option value="{{ infra.pk }}">{{ infra.infra_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-span-3 mx-3 border-2 border-orange-200 p-5 rounded shadow-lg" id="infra-form">
+        {% include 'tax-payers/partials/ex/infrastructureform.html' %}
+    
+      </div>
+    
+    </section>
+    
+    <section class="w-full mt-20">
+      <div class="border-2 border-gray-50 rounded-md shadow-sm">
+        <!-- <h2>Undisputed Notice</h2> -->
+        <p>&nbsp;</p>
+        <table class="md:w-full shadow" id="addtable">
+          <thead class="bg-orange-50 border-b-2 border-gray-50">
+            <tr class="[&>th]:text-orange-600">
+              <!-- <th class="w-20 p-3 text-sm font-semibold tracking-wide text-left">No.</th> -->
+              <th class="p-3 text-xs font-semibold tracking-wide text-left">
+                SN
+              </th>
+              <th class="p-3 text-xs font-semibold tracking-wide text-left">
+                Infrastructure Type
+              </th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">
+                Year
+              </th>
+              <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">
+                Address
+              </th>
+              <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">
+                Length (m)
+              </th>
+              <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">
+                Created by
+              </th>
+            </tr>
+          </thead>
+          <tbody id="infra-table">
+            {% include 'tax-payers/partials/ex/infrastructure.html' %}
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-10 mx-auto w-80">
+        <a href="{% url 'generate_ex_demand_notice' referenceid %}" id="submit-all-permit" type="submit" class="btn">
+          Create Demand Notice
+        </a>
+      </div>
+    </section>
+  </main>
+</section>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function uploadFile() {
+    // e.preventDefault()
+    var data = new FormData();
+    alert("{{ csrf_token }}");
+    data.append("file", $("input[id='dropzone']")[0].files[0]);
+    data.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+    data.append("referenceid", "input[id='referenceid']");
+
+    $.ajax({
+      method: "POST",
+      url: '{% url "upload_new" %}',
+      processData: false,
+      contentType: false,
+      MimeType: "multipart/form-data",
+      data: data,
+      success: function (res) {
+        console.log(res);
+      },
+    });
+  }
+</script>
+<!-- <script>
+  document.getElementById("upload-button").addEventListener("click", function(event){
+    event.preventDefault()
+  });
+async function uploadFile() {
+    let formData = new FormData();  
+    var referenceid = document.getElementById("referenceid");
+    formData.set("referenceid", referenceid.value)         
+    formData.append("file", dropzone.files[0]);
+    await fetch(`{% url 'upload_new' %}`, {
+      method: "POST", 
+      body: formData
+    });    
+    alert('The file has been uploaded successfully.');
+}
+</script> -->
+
+{% endblock %}
