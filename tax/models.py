@@ -93,17 +93,16 @@ class DemandNotice(models.Model):
 
     # history = HistoricalRecords()
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            self.updated_at = datetime.now()
-            original = DemandNotice.objects.get(pk=self.pk)
-            self.amount_due = self.total_due
-            if original.remittance != self.remittance or original.waiver_applied != self.waiver_applied:
-                self.total_due = self.calculated_total_due()
-        else:
-            self.updated_at = datetime.now()
+def save(self, *args, **kwargs):
+    self.updated_at = datetime.now()
+    if self.pk:
+        original = DemandNotice.objects.get(pk=self.pk)
+        if original.remittance != self.remittance or original.waiver_applied != self.waiver_applied:
             self.total_due = self.calculated_total_due()
-        super(DemandNotice, self).save(*args, **kwargs)
+    else:
+        self.total_due = self.calculated_total_due()
+    self.amount_due = self.total_due
+    super(DemandNotice, self).save(*args, **kwargs)
 
     def calculated_total_due(self):
         self.total_due = self.subtotal + self.penalty + self.application_fee + self.admin_fee + \
@@ -147,4 +146,3 @@ class Remittance(models.Model):
 
     def __str__(self):
         return f"{self.referenceid} - {self.remitted_amount}"
- 

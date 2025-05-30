@@ -1,0 +1,35 @@
+{
+	"folders": [
+		{
+			"path": "../node-express-api"
+		},
+		{
+			"path": "../node-tutorial"
+		},
+		{
+			"path": "../vite-react-project/frontend-react"
+		},
+		{
+			"path": "../infrastructureTax"
+		},
+		{
+			"path": "../FrontEnd Projects/Portfolio-React"
+		},
+		{
+			"path": "../Server Setup Docker"
+		},
+		{
+			"path": "../AkoweProject/akowe"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../django-tax"
+		}
+	],
+	"settings": {
+		"postman.settings.dotenv-detection-notification-visibility": false,
+		"liveServer.settings.multiRootWorkspaceName": "studio14"
+	}
+}

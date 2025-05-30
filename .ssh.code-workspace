@@ -1,0 +1,8 @@
+{
+	"folders": [
+		{
+			"uri": "vscode-remote://wsl+ubuntu/home/olumide/.ssh"
+		}
+	],
+	"remoteAuthority": "wsl+Ubuntu"
+}

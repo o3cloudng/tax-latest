@@ -27,6 +27,10 @@ class Notification(models.Model):
             self.slug = slugify(self.notification)
         super(Notification, self).save(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.notification)
+        super(Notification, self).save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.notification}"
-
