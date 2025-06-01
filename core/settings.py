@@ -169,11 +169,11 @@ ANYMAIL = {
 }
 
 # Paystack
-PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
-PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
+PAYSTACK_PUBLIC_KEY = os.environ.get('PAYSTACK_PUBLIC_KEY')
 
 # Celery
-CELERY_BROKER_URL = config('CELERY_BROKER_REDIS_URL', default='redis://redis:6379')
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://redis:6379')
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 CELERY_TIMEZONE = "Africa/Lagos"
@@ -182,13 +182,13 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 os.environ["CELERY_STORE_ERRORS_EVEN_IF_IGNORED"] = "True"
 
 # CORS (if needed)
-CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 
 # Cache (Redis)
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': config('REDIS_CACHE_URL', default='redis://localhost:6379/0'),
+        'LOCATION': os.environ.get('REDIS_CACHE_URL', default='redis://localhost:6379/0'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
@@ -211,7 +211,7 @@ LOGGING = {
 # Sentry (optional)
 # import sentry_sdk
 # sentry_sdk.init(
-#     dsn=config("SENTRY_KEY"),
+#     dsn=os.environ.get("SENTRY_KEY"),
 #     send_default_pii=True,
 # )
 
@@ -220,6 +220,6 @@ FIXTURE_DIRS = ['account/features', 'tax/features', 'agency/features', 'features
 
 # Misc
 IMPORT_EXPORT_USE_TRANSACTIONS = True
-TAX_AUTHOURITY_EMAIL = config("TAX_AUTHOURITY_EMAIL")
+TAX_AUTHOURITY_EMAIL = os.environ.get("TAX_AUTHOURITY_EMAIL")
 # Django Commands
 DJANGO_SETTINGS_MODULE='core.settings'
