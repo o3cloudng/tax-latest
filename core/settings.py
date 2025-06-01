@@ -4,16 +4,17 @@ from urllib.parse import urlparse
 from datetime import timedelta
 
 from django.core.management.utils import get_random_secret_key
-from decouple import config, Csv
+from decouple import config, Csv, AutoConfig
 import dj_database_url
 
+DEBUG=True
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG=True
+config = AutoConfig(search_path='/home/tax-latest/.env')
 
 SECRET_KEY = config('SECRET_KEY', default=get_random_secret_key())
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "lasimra.maxvaafrica.com", "flower.maxvaafrica.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com", "flower.maxvaafrica.com"]
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
 
 # Application definition
@@ -86,7 +87,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-PRODUCTION=0 #config("PRODUCTION")
+PRODUCTION=config("PRODUCTION")
 # Database
 if (PRODUCTION==1):
     try: 
