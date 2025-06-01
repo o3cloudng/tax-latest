@@ -129,13 +129,13 @@ TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = '/opt/tax-latest/static/'
+STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-MEDIA_URL = "/assets/media/"
-MEDIA_ROOT = BASE_DIR / "assets/media"
+MEDIA_URL = "/opt/tax-latest/assets/media/"
+MEDIA_ROOT = BASE_DIR / "opt/tax-latest/assets/media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "account.User"
