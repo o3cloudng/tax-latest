@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("DB_ENGINE"),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # django.db.backends.postgresql
         'NAME': os.environ.get("DB_NAME"),
         'USER': os.environ.get("DB_USER"),
         'PASSWORD': os.environ.get("DB_PASS"),
@@ -131,7 +131,7 @@ USE_TZ = True
 
 STATIC_URL = '/opt/tax-latest/static/'
 STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "tax-latest/static"]
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/opt/tax-latest/assets/media/"
