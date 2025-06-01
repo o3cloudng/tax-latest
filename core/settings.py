@@ -131,7 +131,7 @@ USE_TZ = True
 
 STATIC_URL = '/opt/tax-latest/static/'
 STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "opt/tax-latest/static"]
+STATICFILES_DIRS = [BASE_DIR / "tax-latest/static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/opt/tax-latest/assets/media/"
