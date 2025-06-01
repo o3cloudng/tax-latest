@@ -87,6 +87,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+print(f"-------- \n BREVO KEY: {config('BREVO_API_KEY')} \n -----------")
 PRODUCTION=config("PRODUCTION")
 # Database
 if (PRODUCTION==1):
