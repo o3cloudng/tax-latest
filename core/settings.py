@@ -163,7 +163,8 @@ DEFAULT_FROM_EMAIL = "LASIMRA <no-reply@maximumcollections.com>"
 EMAIL_HOST_USER = "LASIMRA <no-reply@maximumcollections.com>"
 
 ANYMAIL = {
-    "BREVO_API_KEY": config('BREVO_API_KEY'),
+    "BREVO_API_KEY": os.environ.get('BREVO_API_KEY'),
+    # "BREVO_API_KEY": config('BREVO_API_KEY'),
     "BREVO_API_URL": "https://api.brevo.com/v3/",
 }
 
