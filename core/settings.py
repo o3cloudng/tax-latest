@@ -4,19 +4,17 @@ from urllib.parse import urlparse
 from datetime import timedelta
 
 from django.core.management.utils import get_random_secret_key
-from decouple import config, Csv, AutoConfig
+# from decouple import config, Csv, AutoConfig
 import dj_database_url
 
 DEBUG=False
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-config = AutoConfig(search_path='/home/tax-latest/.env')
+# config = AutoConfig(search_path='/home/tax-latest/.env')
 
-SECRET_KEY = config('SECRET_KEY', default=get_random_secret_key())
+SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com", "flower.maxvaafrica.com"]
-# ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,38 +85,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# print(f"-------- \n BREVO KEY: {config('BREVO_API_KEY')} \n -----------")
-# PRODUCTION=config("PRODUCTION")
-# Database
-if not DEBUG:
-    try: 
-        DATABASES = {
-            'default': {
-                'ENGINE': config("DB_ENGINE"),
-                'NAME': config("DB_NAME"),
-                'USER': config("DB_USER"),
-                'PASSWORD': config("DB_PASS"),
-                'HOST': config("DB_HOST"),
-                'PORT': config("DB_PORT"),
-            }
-        }
-        # print("Database connected successfully")
-        # HTTPS / Security
-        # SESSION_COOKIE_SECURE = True
-        # CSRF_COOKIE_SECURE = True
-        # SECURE_SSL_REDIRECT = True
-        # SECURE_HSTS_SECONDS = 31536000
-        # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-        # SECURE_HSTS_PRELOAD = True
-    except:
-        print("Database not connected successfully")
-else:
+try: 
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': os.environ.get("DB_ENGINE"),
+            'NAME': os.environ.get("DB_NAME"),
+            'USER': os.environ.get("DB_USER"),
+            'PASSWORD': os.environ.get("DB_PASS"),
+            'HOST': os.environ.get("DB_HOST"),
+            'PORT': os.environ.get("DB_PORT"),
         }
     }
+    # print("Database connected successfully")
+    # HTTPS / Security
+    # SESSION_COOKIE_SECURE = True
+    # CSRF_COOKIE_SECURE = True
+    # SECURE_SSL_REDIRECT = True
+    # SECURE_HSTS_SECONDS = 31536000
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SECURE_HSTS_PRELOAD = True
+except:
+    print("Database not connected successfully")
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
 
     
     
