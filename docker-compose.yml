@@ -1,31 +1,31 @@
 services:
 
-  nginx:
-    restart: always
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - app_network
-    volumes:
-      - static_volume:/home/app/static
-      - media_volume:/home/app/media
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-    depends_on:
-      - app
+  # nginx:
+  #   restart: always
+  #   image: nginx:latest
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   networks:
+  #     - app_network
+  #   volumes:
+  #     - static_volume:/home/app/static
+  #     - media_volume:/home/app/media
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  #     - certbot-etc:/etc/letsencrypt
+  #     - certbot-var:/var/lib/letsencrypt
+  #   depends_on:
+  #     - app
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    command: certonly --webroot --webroot-path=/var/lib/letsencrypt --email your-email@example.com --agree-tos --no-eff-email -d yourdomain.com -d www.yourdomain.com
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot
+  #   volumes:
+  #     - certbot-etc:/etc/letsencrypt
+  #     - certbot-var:/var/lib/letsencrypt
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  #   command: certonly --webroot --webroot-path=/var/lib/letsencrypt --email your-email@example.com --agree-tos --no-eff-email -d yourdomain.com -d www.yourdomain.com
 
   db:
     image: postgres:15-alpine
@@ -55,8 +55,8 @@ services:
     restart: always
     # command: gunicorn core.wsgi --bind 0.0.0.0:8000
     volumes:
-      - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - static_volume:/home/tax-latest/staticfiles
+      - media_volume:/home/tax-latest/media
     expose:
       - 8000
     env_file:
@@ -142,8 +142,8 @@ volumes:
   static_volume:
   media_volume:
   redis_data:
-  certbot-etc:
-  certbot-var:
+  # certbot-etc:
+  # certbot-var:
 
 networks:
   app_network:
