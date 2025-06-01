@@ -92,12 +92,13 @@ DATABASES = {
         'USER': os.environ.get("DB_USER"),
         'PASSWORD': os.environ.get("DB_PASS"),
         'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT"),
+        'PORT': os.environ.get("DB_PORT", "5432"),
         'OPTIONS': {
-            # Force TCP/IP instead of Unix socket
             'connect_timeout': 5,
+            # Explicitly disable socket connection
+            'client_encoding': 'UTF8',
             'sslmode': 'require' if os.environ.get('DB_SSL') == 'True' else 'prefer'
-        }
+        },
     }
 }
 # print("Database connected successfully")
