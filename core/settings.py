@@ -182,7 +182,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 os.environ["CELERY_STORE_ERRORS_EVEN_IF_IGNORED"] = "True"
 
 # CORS (if needed)
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
+CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", default="")
 
 # Cache (Redis)
 CACHES = {
