@@ -4,17 +4,19 @@ FROM python:3.11.4-slim
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-WORKDIR /app
+WORKDIR /home
 
-COPY requirements.txt /app/
+COPY requirements.txt .
 
 RUN pip install -U pip
 
 RUN pip install -r requirements.txt
 
-COPY . /app/
+COPY . .
 
-ENTRYPOINT [ "sh", "-c", "scripts/start.sh"]
+
+CMD ["gunicorn", "--chdir", "core", "--bind", ":8000", "core.wsgi:application", "--reload"]
+
 # COPY manage.py .
 # COPY core core
 
