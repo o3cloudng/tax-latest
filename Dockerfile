@@ -4,7 +4,7 @@ FROM python:3.11.4-slim
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-WORKDIR /home
+WORKDIR /opt
 
 COPY requirements.txt .
 
