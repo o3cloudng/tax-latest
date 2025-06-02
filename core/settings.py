@@ -15,6 +15,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "*.maxvaafrica.com"]
+CSRF_TRUSTED_ORIGINS = [
+    'https://lasimra.maxvaafrica.com',
+    'https://www.lasimra.maxvaafrica.com',
+]
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -104,10 +108,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # print("Database connected successfully")
 # HTTPS / Security
 # settings.py
-CSRF_TRUSTED_ORIGINS = [
-    "https://lasimra.maxvaafrica.com",
-    "https://www.lasimra.maxvaafrica.com",
-]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
