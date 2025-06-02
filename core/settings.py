@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com", "flower.maxvaafrica.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "*.maxvaafrica.com"]
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
