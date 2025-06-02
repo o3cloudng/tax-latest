@@ -103,6 +103,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # }
 # print("Database connected successfully")
 # HTTPS / Security
+CSRF_TRUSTED_ORIGINS = ["lasimra.maxvaafrica.com", "134.209.187.156", "127.0.0.1"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
