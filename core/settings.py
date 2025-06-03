@@ -166,13 +166,13 @@ if not DEBUG:
     STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
     STATICFILES_DIRS = [BASE_DIR / "static"]
     MEDIA_URL = "/media/"
-    MEDIA_ROOT = BASE_DIR / "assets/media"
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'assets/media')
 else:
     STATIC_URL = '/static/'
     STATIC_ROOT = BASE_DIR / "staticfiles"
     STATICFILES_DIRS = [BASE_DIR / "static"]
-    MEDIA_URL = "/asstes/media/"
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'assets/media')
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
