@@ -14,11 +14,39 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "*.maxvaafrica.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com"]
 CSRF_TRUSTED_ORIGINS = [
+    '.maxvaafrica.com',
     'https://lasimra.maxvaafrica.com',
-    'https://www.lasimra.maxvaafrica.com',
+    'https://127.0.0.1',
+    '134.209.187.156',
 ]
+
+# settings.py
+if not DEBUG:
+    # Ensure all traffic uses HTTPS
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    
+    # Secure cookies
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    
+    # HTTP Strict Transport Security (HSTS)
+    SECURE_HSTS_SECONDS = 30 * 24 * 60 * 60  # 30 days (start with a shorter duration)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    
+    # Additional security headers
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -107,13 +135,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # }
 # print("Database connected successfully")
 # HTTPS / Security
-# settings.py
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
 
 
 # else:
