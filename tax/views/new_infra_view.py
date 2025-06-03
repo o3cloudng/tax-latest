@@ -27,9 +27,15 @@ def new_infrastructure(request):
     # total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost = total_due(request.user.id, False)
 
     current_year = datetime.now().year
-    infrastructures= Infrastructure.objects\
+
+    if Infrastructure.objects\
         .filter(Q(is_existing = False) & Q(processed = False) \
-            & Q(company=request.user)).order_by('-created_at')
+            & Q(company=request.user)).order_by('-created_at').exists():
+        infrastructures= Infrastructure.objects\
+            .filter(Q(is_existing = False) & Q(processed = False) \
+                & Q(company=request.user)).order_by('-created_at')
+    else:
+        infrastructures = []
 
     context = {
         'form':form,
