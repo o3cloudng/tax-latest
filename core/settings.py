@@ -116,33 +116,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
-#         'NAME': os.environ.get("DB_NAME"),
-#         'USER': os.environ.get("DB_USER"),
-#         'PASSWORD': os.environ.get("DB_PASS"),
-#         'HOST': os.environ.get("DB_HOST"),
-#         'PORT': os.environ.get("DB_PORT", "5432"),
-#         'OPTIONS': {
-#             'connect_timeout': 5,
-#             # Explicitly disable socket connection
-#             'client_encoding': 'UTF8',
-#             'sslmode': 'require' if os.environ.get('DB_SSL') == 'True' else 'prefer'
-#         },
-#     }
-# }
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
+            'NAME': os.environ.get("DB_NAME"),
+            'USER': os.environ.get("DB_USER"),
+            'PASSWORD': os.environ.get("DB_PASS"),
+            'HOST': os.environ.get("DB_HOST"),
+            'PORT': os.environ.get("DB_PORT", "5432"),
+            'OPTIONS': {
+                'connect_timeout': 5,
+                # Explicitly disable socket connection
+                'client_encoding': 'UTF8',
+                'sslmode': 'require' if os.environ.get('DB_SSL') == 'True' else 'prefer'
+            },
+        }
+    }
 # print("Database connected successfully")
 # HTTPS / Security
 
 
-# else:
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
     
     
@@ -160,13 +161,21 @@ TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/opt/tax-latest/static/'
-STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+if not DEBUG:
+    STATIC_URL = '/opt/tax-latest/static/'
+    STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
+    STATICFILES_DIRS = [BASE_DIR / "static"]
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "assets/media"
+else:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    STATICFILES_DIRS = [BASE_DIR / "static"]
+    MEDIA_URL = "/asstes/media/"
+    MEDIA_ROOT = BASE_DIR / "assets/media"
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-MEDIA_URL = "/opt/tax-latest/assets/media/"
-MEDIA_ROOT = BASE_DIR / "opt/tax-latest/assets/media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "account.User"
