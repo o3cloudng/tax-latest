@@ -7,7 +7,7 @@ from django.core.management.utils import get_random_secret_key
 # from decouple import config, Csv, AutoConfig
 import dj_database_url
 
-DEBUG=True
+DEBUG=False
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # config = AutoConfig(search_path='/home/tax-latest/.env')
