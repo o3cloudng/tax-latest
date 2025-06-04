@@ -11,7 +11,7 @@ app = Celery('core',
                broker='redis://localhost:6379/0',
                backend='redis://localhost:6379/0')
 
-
+app.conf.broker_url = 'redis://localhost:6379/0'
 
 app.conf.enable_utc = False
 app.conf.update(timezone="Africa/Lagos")
