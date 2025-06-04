@@ -117,6 +117,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 if DEBUG:
+    print(f"We are in production mode")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
@@ -138,6 +139,7 @@ if DEBUG:
 
 
 else:
+    print(f"We are in development mode")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
