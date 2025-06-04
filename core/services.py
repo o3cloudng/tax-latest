@@ -136,7 +136,7 @@ def generate_ref_id():
         # print(f"Last No: {last}")
     else:
         last = 0
-    referenceid = "LA"+year+month + str(1).zfill(8)
+    referenceid = "LA"+year+month + str(int(last) + 1).zfill(8)
     # print(f"Reference No: {referenceid}")
     return referenceid
 
