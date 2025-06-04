@@ -117,15 +117,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # if DEBUG:
-print(f"We are in production mode: {os.environ.get("DB_HOST")}")
+print(f"We are in production mode: {os.environ.get('DB_HOST')}")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASS"),
-        'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT", "25060"),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT', '25060'),
         'OPTIONS': {
             'connect_timeout': 5,
             # Explicitly disable socket connection
