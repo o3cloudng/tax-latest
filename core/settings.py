@@ -117,7 +117,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # if DEBUG:
-print(f"We are in production mode")
+print(f"We are in production mode: {os.environ.get("DB_HOST")}")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
