@@ -195,6 +195,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 
 # Login settings
 LOGIN_URL = "/clients/"
+URL = "https://lasimra.maxvaafrica.com/clients/"
 LOGIN_REDIRECT_URL = "/clients/dashboard/"
 
 # Email (Brevo)
