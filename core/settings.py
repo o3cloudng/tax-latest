@@ -243,7 +243,7 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['console'],
+        'handlers': ['console', 'file'],  # Log to both console and file
         'level': 'INFO' if not DEBUG else 'DEBUG',
     },
 }
