@@ -6,7 +6,13 @@ from celery.schedules import crontab
 # this is also used in manage.py
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
-app = Celery('core')
+# app = Celery('core')
+app = Celery('core',
+               broker='redis://localhost:6379/0',
+               backend='redis://localhost:6379/0')
+
+
+
 app.conf.enable_utc = False
 app.conf.update(timezone="Africa/Lagos")
 

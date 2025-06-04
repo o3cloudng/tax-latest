@@ -213,7 +213,7 @@ PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
 PAYSTACK_PUBLIC_KEY = os.environ.get('PAYSTACK_PUBLIC_KEY')
 
 # Celery
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://127.0.0.1:6379')
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://127.0.0.1:6379/0')
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 CELERY_TIMEZONE = "Africa/Lagos"
@@ -228,7 +228,7 @@ CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", default="")
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.environ.get('REDIS_CACHE_URL', default='redis://127.0.0.1:6379/0'),
+        'LOCATION': os.environ.get('REDIS_CACHE_URL', default='redis://127.0.0.1:6379/1'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
