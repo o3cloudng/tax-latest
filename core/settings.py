@@ -6,6 +6,8 @@ from datetime import timedelta
 from django.core.management.utils import get_random_secret_key
 # from decouple import config, Csv, AutoConfig
 import dj_database_url
+from dotenv import load_dotenv
+load_dotenv()
 
 DEBUG=os.environ.get('DEBUG')
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,7 +118,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# if DEBUG:
+# if os.environ.get('DEBUG'):
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
+# else:
 print(f"We are in production mode: {os.environ.get('DB_HOST')}")
 DATABASES = {
     'default': {
@@ -140,12 +149,7 @@ DATABASES = {
 
 # else:
 #     print(f"We are in development mode")
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
+
 
     
     
