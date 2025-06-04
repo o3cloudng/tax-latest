@@ -7,7 +7,8 @@ from django.core.management.utils import get_random_secret_key
 # from decouple import config, Csv, AutoConfig
 import dj_database_url
 from dotenv import load_dotenv
-load_dotenv()
+# load_dotenv()
+load_dotenv(dotenv_path='/opt/tax-latest/.env')
 
 DEBUG=os.environ.get('DEBUG')
 BASE_DIR = Path(__file__).resolve().parent.parent
