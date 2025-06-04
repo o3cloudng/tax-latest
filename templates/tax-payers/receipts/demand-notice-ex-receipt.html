@@ -22,7 +22,7 @@
       <article class="w-full">
         <div class="flex flex-row justify-between items-center">
           <img
-            src="/media/{{ agency.agency_logo }}"
+            src="{% static 'img/Lasimra_logo-full.png' %}"
             alt=""
             class="w-20 h-20"
           />
@@ -42,7 +42,7 @@
             <h3 class="font-normal text-orange-400">Bill to:</h3>
             <div class="flex flex-row justify-start gap-3 mt-1">
               <img
-                src='/assets/media/{{ request.user.company_logo }}'
+                src='/media/{{ request.user.company_logo }}'
                 alt=""
                 class="w-10 h-10 rounded-full"
               />

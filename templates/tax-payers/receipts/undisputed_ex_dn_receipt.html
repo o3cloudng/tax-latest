@@ -19,7 +19,7 @@
     <section class="border-2 border-gray-100 rounded-md w-[900px] shadow-sm md:mt-20 flex flex-column gap-4 p-6 px-10">
       <article class="w-full">
         <div class="flex flex-row justify-between items-center">
-          <img src="/media/{{ agency.agency_logo }}" alt="" class="w-20 h-20" />
+          <img src="{% static 'img/Lasimra_logo-full.png' %}" alt="" class="w-20 h-20" />
           <div class="w-80 text-left">
             <h1 class="text-orange-400 font-semibold text-4xl my-2">
               Undisputed Demand Notice
@@ -35,7 +35,7 @@
           <div>
             <h3 class="font-normal text-orange-400">Bill to:</h3>
             <div class="flex flex-row justify-start gap-3 mt-1">
-              <img src='/assets/media/{{ user.company_logo }}' alt="" class="w-10 h-10 rounded-full" />
+              <img src='/media/{{ user.company_logo }}' alt="" class="w-10 h-10 rounded-full" />
               <div>
                 <p class="text-l text-gray-800">
                   {{ request.user.company_name }}
