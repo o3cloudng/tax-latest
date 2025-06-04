@@ -116,7 +116,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-if DEBUG:
+if not DEBUG:
     print(f"We are in production mode")
     DATABASES = {
         'default': {
@@ -231,22 +231,23 @@ CACHES = {
 }
 
 # Optional logging for production
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {'class': 'logging.StreamHandler'},
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/tax-latest/app.log',  # Custom path
-            'level': 'DEBUG',
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {'class': 'logging.StreamHandler'},
+            'file': {
+                'class': 'logging.FileHandler',
+                'filename': '/var/log/tax-latest/app.log',  # Custom path
+                'level': 'DEBUG',
+            },
         },
-    },
-    'root': {
-        'handlers': ['console', 'file'],  # Log to both console and file
-        'level': 'INFO' if not DEBUG else 'DEBUG',
-    },
-}
+        'root': {
+            'handlers': ['console', 'file'],  # Log to both console and file
+            'level': 'INFO' if not DEBUG else 'DEBUG',
+        },
+    }
 
 # Sentry (optional)
 # import sentry_sdk
