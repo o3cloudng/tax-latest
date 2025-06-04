@@ -125,12 +125,12 @@ DATABASES = {
         'USER': os.environ.get("DB_USER"),
         'PASSWORD': os.environ.get("DB_PASS"),
         'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT", "5432"),
+        'PORT': os.environ.get("DB_PORT", "25060"),
         'OPTIONS': {
             'connect_timeout': 5,
             # Explicitly disable socket connection
             'client_encoding': 'UTF8',
-            'sslmode': 'require' if os.environ.get('DB_SSL') == 'True' else 'prefer'
+            'sslmode': 'require',
         },
     }
 }
