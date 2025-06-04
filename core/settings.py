@@ -236,6 +236,11 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {'class': 'logging.StreamHandler'},
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/tax-latest/app.log',  # Custom path
+            'level': 'DEBUG',
+        },
     },
     'root': {
         'handlers': ['console'],
