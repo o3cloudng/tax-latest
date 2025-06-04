@@ -116,7 +116,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-if not DEBUG:
+if DEBUG:
     print(f"We are in production mode")
     DATABASES = {
         'default': {
