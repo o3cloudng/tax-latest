@@ -25,7 +25,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    command: gunicorn core.wsgi --bind 0.0.0.0:8000
+    # command: gunicorn core.wsgi --bind 0.0.0.0:8000
     volumes:
       - static_volume:/opt/tax-latest/staticfiles
       - media_volume:/opt/tax-latest/assets/media
