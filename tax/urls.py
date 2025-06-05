@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('apply/permit/', new_infra_view.new_infrastructure, name="apply_for_permit"),
-    path('apply/demand_notice/<str:ref_id>/', new_infra_view.generate_demand_notice, name="generate_demand_notice"),
+    path('apply/demand_notice/', new_infra_view.generate_demand_notice, name="generate_demand_notice"),
     path('apply/demand_notice/receipt/<str:ref_id>/', new_infra_view.generate_receipt, name="generate_receipt"),
     path('apply/permit/resources/', new_infra_view.resources, name="resources"),
     
@@ -25,7 +25,7 @@ urlpatterns = [
 
     ####### Exisiting Infrastructures
     path('apply/permit/exist/', existing_infra_view.apply_for_existing_permit, name="apply_existing_infra"),
-    path('apply/demand_notice/ex/<str:ref_id>/', existing_infra_view.generate_ex_demand_notice, name="generate_ex_demand_notice"),
+    path('apply/demand_notice/ex/', existing_infra_view.generate_ex_demand_notice, name="generate_ex_demand_notice"),
     path('apply/demand_notice/ex/receipt/<str:ref_id>/', existing_infra_view.generate_ex_receipt, name="generate_ex_receipt"),
     
     path('apply/permit/dispute_ex_notice/<str:ref_id>/', existing_infra_view.dispute_ex_demand_notice, name="dispute-ex-demand-notice"),

@@ -1,9 +1,11 @@
 from django.db import models
 from account.models import User
 from datetime import datetime
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from datetime import datetime, date
 # import timezone
 # from simple_history.models import HistoricalRecords
-from core.reference_id import generate_ref_id
 
 
 class InfrastructureType(models.Model):
@@ -109,9 +111,9 @@ def save(self, *args, **kwargs):
             self.site_assessment - self.remittance - self.waiver_applied + self.annual_fee
         return self.total_due
     
-    def cal_referenceid(self):
-        self.referenceid = generate_ref_id()
-        return self.referenceid
+    # def cal_referenceid(self):
+    #     self.referenceid = generate_ref_id()
+    #     return self.referenceid
 
     # def update(self, *args, **kwargs):
     #     self.total_due = self.subtotal + self.penalty + self.application_fee + self.admin_fee + self.site_assessment - self.remittance - self.waiver
@@ -119,7 +121,31 @@ def save(self, *args, **kwargs):
     
     def __str__(self):
         return f"{self.id}"
+    
+def generate_ref_id():
+    today = date.today()
+    year = str(today.year)[-2:]
+    month = str(today.month).zfill(2)
+    
+    if DemandNotice.objects.all().exists(): 
+        last = DemandNotice.objects.all().last().id
+        print(f"Last No: {type(last)}")
+        print(f"Last No: {last}")
+    else:
+        last = 0
+    referenceid = "LA"+year+month + str(last + 1).zfill(8)
+    # print(f"Reference No: {referenceid}")
+    return referenceid
 
+@receiver(post_save, sender=DemandNotice)
+def create_referenceid(sender, instance, created, **kwargs):
+    if created:
+        try: 
+            DemandNotice.objects.filter(pk=instance.pk).update(referenceid=generate_ref_id())
+        except DemandNotice.DoesNotExist:
+            return DemandNotice.objects.get(pk=instance.pk)
+    else:
+        print(f"Reference could not be created.")
 
 
 class Waiver(models.Model):

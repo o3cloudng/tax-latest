@@ -120,7 +120,7 @@ def age(the_date):
 @login_required
 @tax_payer_only
 def apply_for_existing_permit(request):
-    ref_id = generate_ref_id()
+    # ref_id = generate_ref_id()
     # EXISITING: APPLY FOR EXISTING PERMIT
     # form = PermitExForm()
     upload_form = BulkUploadForm()
@@ -136,7 +136,7 @@ def apply_for_existing_permit(request):
     context = {
         # 'form':form,
         'infra': 'Mast',
-        'referenceid': ref_id,
+        'referenceid': "",
         'current_year': current_year,
         'company': request.user,
         'infrastructures': infrastructures,
@@ -151,7 +151,7 @@ def apply_for_existing_permit(request):
 
 
 @login_required
-def generate_ex_demand_notice(request, ref_id):
+def generate_ex_demand_notice(request):
     # ref_id = generate_ref_id()
     company = request.user
     if not Infrastructure.objects.select_related('infra_type') \
@@ -164,7 +164,7 @@ def generate_ex_demand_notice(request, ref_id):
 
     penalty_fee, total_annual_fees = penalty_calculation(request, company)
     penalty = penalty_fee.filter(Q(is_existing=True) & Q(processed=False)).values('penalty_fee').aggregate(penal = Sum('penalty_fee'))
-    penalty = (penalty['penal'] // 10000) * 10000
+    penalty = int((penalty['penal'] // 10000)) * 10000
 
     annual_fees = total_annual_fees.filter(Q(is_existing=True) & Q(processed=False)).values('total_annual_fees').aggregate(total = Sum('total_annual_fees'))['total']
     
@@ -172,7 +172,7 @@ def generate_ex_demand_notice(request, ref_id):
     # referenceid, company, created_by, status (unpaid, disputed, revised, paid, resolved)
     # infrastructure cost, 
     obj, created = DemandNotice.objects.update_or_create(
-        referenceid=ref_id,
+        referenceid="",
         created_by=request.user,
         company=request.user,
         is_exisiting = True,
@@ -186,21 +186,21 @@ def generate_ex_demand_notice(request, ref_id):
         site_assessment = sar_cost,
         total_due = total_sum + penalty + annual_fees,
         status="DEMAND NOTICE",
-        defaults={'referenceid': ref_id},
+        defaults={'referenceid': obj.referenceid},
     )
     if obj or created:
         infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
-        infra.update(processed=True, referenceid=ref_id)
+        infra.update(processed=True)
         messages.success(request, 'Demand notice created.')
         
         # Send Email here for demand notice
-        mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {ref_id}"
+        mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
         to_email = request.user.email
         
         html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
             "company":request.user,
             "amount_due":obj.total_due,
-            "referenceid":ref_id,
+            "referenceid":obj.referenceid,
             "dn_date": obj.created_at,
             "login":settings.URL,
             })
@@ -209,7 +209,7 @@ def generate_ex_demand_notice(request, ref_id):
         send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
         messages.success(request, "Notification sent.")
         print(f"Your email has been sent to {request.user.company_name}")
-        return redirect('generate_ex_receipt', ref_id)
+        return redirect('generate_ex_receipt', obj.referenceid)
     
     messages.error(request, 'Failed to generate demand notice')
     return redirect('apply_existing_infra')

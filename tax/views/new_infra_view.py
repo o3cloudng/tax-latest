@@ -9,7 +9,7 @@ from django_htmx.http import HttpResponseClientRedirect
 from django.db.models import Q, Sum, Count
 from core.decorator import tax_payer_only
 from agency.models import Agency
-from core.services import generate_demand_notice, total_due, generate_ref_id
+from core.services import generate_demand_notice, total_due #, generate_ref_id
 from account.models import AdminSetting
 import json
 from core import settings
@@ -47,14 +47,14 @@ def new_infrastructure(request):
         'infrastructure': InfrastructureType.objects.all().first(),
         'infra_form': InfrastructureForm(),
         'infra_form2': InfrastructureForm2(),
-        'referenceid':  generate_ref_id(),
+        'referenceid':  "",
         'infra_types': InfrastructureType.objects.all().order_by('pk')
 
     }
     return render(request, 'tax-payers/apply_for_permit.html', context)
 
 @login_required
-def generate_demand_notice(request, ref_id):
+def generate_demand_notice(request):
     company = request.user
     if not Infrastructure.objects.select_related('infra_type') \
         .filter(Q(company=company) & Q(processed=False) & Q(created_by=company)).exists():
@@ -66,7 +66,7 @@ def generate_demand_notice(request, ref_id):
     # referenceid, company, created_by, status (unpaid, disputed, revised, paid, resolved)
     # infrastructure cost, 
     obj, created = DemandNotice.objects.update_or_create(
-        referenceid=ref_id,
+        # referenceid=ref_id,
         created_by=request.user,
         company=request.user,
         infra = infra,
@@ -78,11 +78,11 @@ def generate_demand_notice(request, ref_id):
         site_assessment = sar_cost,
         amount_due = subtotal + application_cost + admin_fees + sar_cost,
         status="DEMAND NOTICE",
-        defaults={'referenceid': ref_id},
+        defaults={'referenceid': 'LA2025000000001'},
     )
     if obj or created:
         infra = Infrastructure.objects.filter(Q(is_existing=False) & Q(processed=False))
-        infra.update(processed=True, referenceid=ref_id)
+        infra.update(processed=True, referenceid=obj.referenceid)
         # infra.save()
         messages.success(request, 'Demand notice created.')
         # return redirect('generate_receipt', ref_id)
@@ -91,13 +91,13 @@ def generate_demand_notice(request, ref_id):
         from django.utils.html import strip_tags
 
         # Send Email here for demand notice
-        mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {ref_id}"
+        mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
         to_email = request.user.email
         
         html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
             "company":request.user,
             "amount_due":obj.total_due,
-            "referenceid":ref_id,
+            "referenceid":obj.referenceid,
             "dn_date": obj.created_at,
             "login":settings.URL,
             })
@@ -106,7 +106,7 @@ def generate_demand_notice(request, ref_id):
         send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
         messages.success(request, "Notification sent.")
         print(f"Your email has been sent to {request.user.company_name}")
-        return redirect('generate_receipt', ref_id)
+        return redirect('generate_receipt', obj.referenceid)
     
     messages.error(request, 'Failed to generate demand notice')
     return redirect('apply_for_permit')

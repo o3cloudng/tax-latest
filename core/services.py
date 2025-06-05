@@ -1,7 +1,7 @@
 from account.models import AdminSetting
 from tax.models import DemandNotice ,Infrastructure
 from django.db.models import (F, ExpressionWrapper, Q, Sum, Count, IntegerField, Value, Case, When, Func)
-from django.db.models.functions import Concat, Now
+from django.db.models.functions import Now, Extract, Concat
 from datetime import datetime, date
 from django.http.response import StreamingHttpResponse
 from django.shortcuts import render
@@ -10,6 +10,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 import time
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+
+
+from django.db.models.fields import DateField
+from django.db.models.functions import Cast
 
 
 def landingPage(request):
@@ -189,22 +193,19 @@ def penalty_calculation(request, company):
     infrastructure = Infrastructure.objects.filter(Q(company=company) \
                         & Q(is_existing=True) & Q(created_by=request.user) & Q(processed=False))
     admin_settings = AdminSetting.objects.all()
-    penalty_fee = infrastructure.annotate(
-            days_from_year_till_today = ExpressionWrapper(
-                Func(
-                    Func(
-                        Concat(
-                            F('year_installed')+1,
-                            Value('-01-02')
-                        ),
-                        function='julianday'
-                    ) - Func(Now(), function='julianday'),
-                    function='abs'  # Use abs to ensure the result is positive
-                ),
-                output_field=IntegerField()
-            ),
 
-            num_of_years = ExpressionWrapper(
+    # Penalty for postgresql
+    penalty_fee = infrastructure.annotate(
+        next_year_date=Cast(
+            Concat(F('year_installed')+1, Value('-01-02')),
+            output_field=DateField()
+        )
+    ).annotate(
+        days_from_year_till_today=ExpressionWrapper(
+            Extract(Now() - F('next_year_date'), 'day'),
+            output_field=IntegerField()
+        ),
+        num_of_years = ExpressionWrapper(
                 Func(Now() - (F('year_installed')+1)),
                 output_field=IntegerField()
             ),
@@ -216,9 +217,39 @@ def penalty_calculation(request, company):
 
             penalty_fee = F('penalty_cost') *  F('days_from_year_till_today'),
 
-            # penalty = penalty_fee // 10000 * 10000
+    )
+    # penalty_fee = infrastructure.annotate(
+    #         days_from_year_till_today = ExpressionWrapper(
+    #             Func(
+    #                 Func(
+    #                    Concat(
+    #                         F('year_installed') + 1,
+    #                         Value('-01-02')
+    #                     ),
+    #                     function='CAST',
+    #                     template='%(function)s(%(expressions)s AS DATE)'
+    #                 ) - Now(),
+    #                 function='ABS',
+    #                 template='%(function)s(EXTRACT(DAY FROM %(expressions)s))'
+    #             ),
+    #             output_field=IntegerField()
+    #         ),
 
-        )
+    #         num_of_years = ExpressionWrapper(
+    #             Func(Now() - (F('year_installed')+1)),
+    #             output_field=IntegerField()
+    #         ),
+
+    #         total_annual_fees = F('num_of_years') * Value(admin_settings.get(slug="annual-fee").rate),
+
+
+    #         penalty_cost = Value(AdminSetting.objects.get(slug="penalty").rate),
+
+    #         penalty_fee = F('penalty_cost') *  F('days_from_year_till_today'),
+
+    #         # penalty = penalty_fee // 10000 * 10000
+
+    #     )
     total_annual_fees = infrastructure.annotate(
             num_of_years = ExpressionWrapper(
                 Now() - (F('year_installed')),

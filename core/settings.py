@@ -127,7 +127,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #         }
 #     }
 # else:
-print(f"We are in production mode: {os.environ.get('DB_HOST')}")
+# print(f"We are in production mode: {os.environ.get('DB_HOST')}")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
@@ -237,23 +237,23 @@ CACHES = {
 }
 
 # Optional logging for production
-if DEBUG:
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'console': {'class': 'logging.StreamHandler'},
-            'file': {
-                'class': 'logging.FileHandler',
-                'filename': '/var/log/tax-latest/app.log',  # Custom path
-                'level': 'DEBUG',
-            },
-        },
-        'root': {
-            'handlers': ['console', 'file'],  # Log to both console and file
-            'level': 'INFO' if not DEBUG else 'DEBUG',
-        },
-    }
+# if DEBUG:
+#     LOGGING = {
+#         'version': 1,
+#         'disable_existing_loggers': False,
+#         'handlers': {
+#             'console': {'class': 'logging.StreamHandler'},
+#             'file': {
+#                 'class': 'logging.FileHandler',
+#                 'filename': '/var/log/tax-latest/app.log',  # Custom path
+#                 'level': 'DEBUG',
+#             },
+#         },
+#         'root': {
+#             'handlers': ['console', 'file'],  # Log to both console and file
+#             'level': 'INFO' if not DEBUG else 'DEBUG',
+#         },
+#     }
 
 # Sentry (optional)
 # import sentry_sdk
