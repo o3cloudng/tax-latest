@@ -136,7 +136,7 @@ def generate_ref_id():
     if DemandNotice.objects.all().exists(): 
         last = str(DemandNotice.objects.all().last())
     else:
-        last = 0
+        last = "0"
     referenceid = "LA"+year+month + str(int(last) + 1).zfill(8)
     # print(f"Reference No: {referenceid}")
     return referenceid
