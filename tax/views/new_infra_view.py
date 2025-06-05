@@ -47,7 +47,7 @@ def new_infrastructure(request):
         'infrastructure': InfrastructureType.objects.all().first(),
         'infra_form': InfrastructureForm(),
         'infra_form2': InfrastructureForm2(),
-        'referenceid':  "",
+        # 'referenceid':  "",
         'infra_types': InfrastructureType.objects.all().order_by('pk')
 
     }
