@@ -26,7 +26,7 @@ from core import settings
 from datetime import datetime
 from django.utils import timezone
 from tax.forms import RemittanceForm, BulkUploadForm
-from tax.views.existing_infra_view import generate_ref_id
+# from tax.views.existing_infra_view import generate_ref_id
 from core.services import total_due, subtotal_due, agency_total_due
 from django.contrib.contenttypes.models import ContentType
 from easyaudit.models import CRUDEvent, LoginEvent

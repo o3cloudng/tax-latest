@@ -12,7 +12,7 @@ from django.contrib import messages
 from agency.models import Agency
 from core.decorator import tax_payer_only
 # from agency.penalty_calculation import penalty_calculation
-from core.services import current_year, generate_ref_id, total_due, penalty_calculation, subtotal_due
+from core.services import current_year, total_due, penalty_calculation, subtotal_due
 from core import settings
 import json
 from core.utils import send_email_function, taxpayer_notification_email

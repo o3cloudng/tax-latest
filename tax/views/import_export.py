@@ -5,7 +5,7 @@ from tax.resources import InfrastructureResource
 from tablib import Dataset
 # import tablib
 from core.decorator import tax_payer_only
-from core.services import generate_ref_id
+# from core.services import generate_ref_id
 from tax.models import Infrastructure, InfrastructureType
 from django.contrib import messages
 import csv, io
@@ -16,7 +16,7 @@ from django.db import transaction
 @tax_payer_only
 @transaction.atomic
 def upload_old(request):
-    ref_id = generate_ref_id()
+    # ref_id = generate_ref_id()
     if request.method == 'POST':
         # print("FILES: ", request.FILES['bulk_upload'])
         
@@ -51,7 +51,7 @@ def upload_old(request):
                 created_by=request.user,
                 is_existing = True,
                 processed = False,
-                referenceid = ref_id,
+                # referenceid = ref_id,
                 upload_application_letter=column[6],
                 upload_asBuilt_drawing=column[7]
                 )
@@ -63,7 +63,7 @@ def upload_old(request):
 @tax_payer_only
 @transaction.atomic
 def upload_new(request):
-    ref_id = generate_ref_id()
+    # ref_id = generate_ref_id()
     if request.method == 'POST':
         # print("FILES: ", request.FILES['bulk_upload_new'])
 
@@ -98,7 +98,7 @@ def upload_new(request):
                 created_by=request.user,
                 is_existing = False,
                 processed = False,
-                referenceid = ref_id,
+                # referenceid = ref_id,
                 upload_application_letter=column[6],
                 upload_asBuilt_drawing=column[7]
                 )

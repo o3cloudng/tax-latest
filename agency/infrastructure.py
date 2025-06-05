@@ -7,7 +7,7 @@ from datetime import datetime
 from django.contrib import messages
 from tax.models import Infrastructure, DemandNotice
 from django.db.models import Q
-from tax.views.existing_infra_view import generate_ref_id
+# from tax.views.existing_infra_view import generate_ref_id
 from account.models import User
 
 
@@ -35,7 +35,7 @@ def agency_apply_for_permit(request, pk):
         'infrastructure': InfrastructureType.objects.all().first(),
         'infra_form': InfrastructureForm(),
         'infra_form2': InfrastructureForm2(),
-        'referenceid':  generate_ref_id(),
+        # 'referenceid':  generate_ref_id(),
         'company': company,
         'userid': company.id,
         'infra_types': InfrastructureType.objects.all().order_by('pk')
