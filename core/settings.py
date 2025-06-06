@@ -214,7 +214,10 @@ PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
 PAYSTACK_PUBLIC_KEY = os.environ.get('PAYSTACK_PUBLIC_KEY')
 
 # Celery
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://127.0.0.1:6379/0')
+if os.environ.get('PRODUCTION'):
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL_SSL', default='redis://127.0.0.1:6379/0')
+else:
+    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://127.0.0.1:6379/0')
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 CELERY_TIMEZONE = "Africa/Lagos"

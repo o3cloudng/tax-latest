@@ -11,9 +11,12 @@ import time
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
-
-from django.db.models.fields import DateField
-from django.db.models.functions import Cast
+# 2025-06-06 ######
+from django.db.models import (
+    Case, When, Value, ExpressionWrapper, Sum, Count, F
+)
+from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
+from django.db.models import IntegerField, DurationField
 
 
 def landingPage(request):
@@ -186,76 +189,138 @@ def cal_infrastructure():
     )
     return total_infra_count
 
+# Penalty For SQlite
+# def penalty_calculation(request, company):
+#     infrastructure = Infrastructure.objects.filter(Q(company=company) \
+#                         & Q(is_existing=True) & Q(created_by=request.user) & Q(processed=False))
+#     admin_settings = AdminSetting.objects.all()
+
+#     # Penalty for postgresql
+#     penalty_fee = infrastructure.annotate(
+#         next_year_date=Cast(
+#             Concat(F('year_installed')+1, Value('-01-02')),
+#             output_field=DateField()
+#         )
+#     ).annotate(
+#         days_from_year_till_today=ExpressionWrapper(
+#             Extract(Now() - F('next_year_date'), 'day'),
+#             output_field=IntegerField()
+#         ),
+#         num_of_years = ExpressionWrapper(
+#                 Func(Now() - (F('year_installed')+1)),
+#                 output_field=IntegerField()
+#             ),
+
+#             total_annual_fees = F('num_of_years') * Value(admin_settings.get(slug="annual-fee").rate),
+
+
+#             penalty_cost = Value(AdminSetting.objects.get(slug="penalty").rate),
+
+#             penalty_fee = F('penalty_cost') *  F('days_from_year_till_today'),
+
+#     )
+#     # penalty_fee = infrastructure.annotate(
+#     #         days_from_year_till_today = ExpressionWrapper(
+#     #             Func(
+#     #                 Func(
+#     #                    Concat(
+#     #                         F('year_installed') + 1,
+#     #                         Value('-01-02')
+#     #                     ),
+#     #                     function='CAST',
+#     #                     template='%(function)s(%(expressions)s AS DATE)'
+#     #                 ) - Now(),
+#     #                 function='ABS',
+#     #                 template='%(function)s(EXTRACT(DAY FROM %(expressions)s))'
+#     #             ),
+#     #             output_field=IntegerField()
+#     #         ),
+
+#     #         num_of_years = ExpressionWrapper(
+#     #             Func(Now() - (F('year_installed')+1)),
+#     #             output_field=IntegerField()
+#     #         ),
+
+#     #         total_annual_fees = F('num_of_years') * Value(admin_settings.get(slug="annual-fee").rate),
+
+
+#     #         penalty_cost = Value(AdminSetting.objects.get(slug="penalty").rate),
+
+#     #         penalty_fee = F('penalty_cost') *  F('days_from_year_till_today'),
+
+#     #         # penalty = penalty_fee // 10000 * 10000
+
+#     #     )
+#     total_annual_fees = infrastructure.annotate(
+#             num_of_years = ExpressionWrapper(
+#                 Now() - (F('year_installed')),
+#                 output_field=IntegerField()
+#             ),
+
+#             total_annual_fees = F('num_of_years') * Value(admin_settings.get(slug="annual-fee").rate),
+#         )
+#     return penalty_fee, total_annual_fees
+
+
+# Testing 2025-06-06
+# def penalty_calculation(request, company):
+from django.db.models import Sum, Value, F, ExpressionWrapper, fields
+from django.db.models.functions import Coalesce, Greatest
+from django.utils import timezone
+
 def penalty_calculation(request, company):
-    infrastructure = Infrastructure.objects.filter(Q(company=company) \
-                        & Q(is_existing=True) & Q(created_by=request.user) & Q(processed=False))
+    """
+    Optimized version using database aggregation.
+    """
+    # try:
     admin_settings = AdminSetting.objects.all()
+    if not admin_settings:
+        raise ValueError("AdminSettings not configured")
+        
+    penalty_rate = admin_settings.get(slug='penalty').rate
+    annual_fee = admin_settings.get(slug='annual-fee').rate
+    today = timezone.now().date()
+    
+    # Calculate days for each record in bulk
+    infrastructures = Infrastructure.objects.filter(Q(company=company) \
+                        & Q(is_existing=True) & Q(created_by=request.user) & Q(processed=False))
+    total_days = 0
+    total_years = 0
 
-    # Penalty for postgresql
-    penalty_fee = infrastructure.annotate(
-        next_year_date=Cast(
-            Concat(F('year_installed')+1, Value('-01-02')),
-            output_field=DateField()
-        )
-    ).annotate(
-        days_from_year_till_today=ExpressionWrapper(
-            Extract(Now() - F('next_year_date'), 'day'),
-            output_field=IntegerField()
-        ),
-        num_of_years = ExpressionWrapper(
-                Func(Now() - (F('year_installed')+1)),
-                output_field=IntegerField()
-            ),
+    import math
 
-            total_annual_fees = F('num_of_years') * Value(admin_settings.get(slug="annual-fee").rate),
+    for infra in infrastructures:
+        if infra.year_installed:
+            # Get January 1st of the year following installation
+            next_year_date = date(infra.year_installed + 1, 1, 1)
+            
+            # Calculate days between next year's Jan 1 and today
+            duration = (timezone.now().date() - next_year_date)
+            days = duration.days
+            years = math.ceil(days / 365.2425)
+            
+            # print("INFRA YEAR: ", infra.year_installed, infra.infra_type, " - ", days, " Years: ", years)
 
+            # Only add positive days (in case year_installed is this year)
+            if days > 0:
+                total_days += days
 
-            penalty_cost = Value(AdminSetting.objects.get(slug="penalty").rate),
+            if years > 0:
+                total_years += years
+        else:
+            total_days = 0
+            total_years = 0
+    
+    # Calculate total penalty
+    total_penalty = total_days * penalty_rate
+    total_annual_fee = total_years * annual_fee
 
-            penalty_fee = F('penalty_cost') *  F('days_from_year_till_today'),
+    # print(f"=========================")
+    # print(f"Total Days: {total_days} | Total Penalty: {total_penalty} | Tot Annual Fees: {total_annual_fee}")
+    # print(f"=========================")
 
-    )
-    # penalty_fee = infrastructure.annotate(
-    #         days_from_year_till_today = ExpressionWrapper(
-    #             Func(
-    #                 Func(
-    #                    Concat(
-    #                         F('year_installed') + 1,
-    #                         Value('-01-02')
-    #                     ),
-    #                     function='CAST',
-    #                     template='%(function)s(%(expressions)s AS DATE)'
-    #                 ) - Now(),
-    #                 function='ABS',
-    #                 template='%(function)s(EXTRACT(DAY FROM %(expressions)s))'
-    #             ),
-    #             output_field=IntegerField()
-    #         ),
-
-    #         num_of_years = ExpressionWrapper(
-    #             Func(Now() - (F('year_installed')+1)),
-    #             output_field=IntegerField()
-    #         ),
-
-    #         total_annual_fees = F('num_of_years') * Value(admin_settings.get(slug="annual-fee").rate),
-
-
-    #         penalty_cost = Value(AdminSetting.objects.get(slug="penalty").rate),
-
-    #         penalty_fee = F('penalty_cost') *  F('days_from_year_till_today'),
-
-    #         # penalty = penalty_fee // 10000 * 10000
-
-    #     )
-    total_annual_fees = infrastructure.annotate(
-            num_of_years = ExpressionWrapper(
-                Now() - (F('year_installed')),
-                output_field=IntegerField()
-            ),
-
-            total_annual_fees = F('num_of_years') * Value(admin_settings.get(slug="annual-fee").rate),
-        )
-    return penalty_fee, total_annual_fees
+    return total_penalty, total_annual_fee
+    
 
 
 def agency_penalty_calculation(company):

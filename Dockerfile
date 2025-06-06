@@ -17,7 +17,8 @@ COPY . .
 RUN python manage.py migrate
 RUN python manage.py collectstatic --no-input
 
-CMD ["gunicorn", "--chdir", "core", "--bind", ":8000", "core.wsgi:application", "--reload"]
+CMD ["gunicorn", "core", "--bind", ":8000", "core.wsgi:application"]
+# CMD ["gunicorn", "--chdir", "core", "--bind", ":8000", "core.wsgi:application", "--reload"]
 
 # COPY manage.py .
 # COPY core core

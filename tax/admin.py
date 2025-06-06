@@ -18,7 +18,7 @@ class InfrastructureAdmin(ImportExportModelAdmin):
 
 @admin.register(DemandNotice)
 class DemandNoticeAdmin(ImportExportModelAdmin):
-    list_display = ['id','referenceid', 'company', 'status', 'annual_fee', 'remittance',\
+    list_display = ['id','referenceid', 'company', 'status', 'penalty', 'amount_due', 'total_due', 'remittance',\
                     'waiver_applied', 'amount_paid','created_by']
 
 # @admin.register(Infrastructure)
