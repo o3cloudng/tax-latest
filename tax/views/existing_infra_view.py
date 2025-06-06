@@ -166,7 +166,7 @@ def generate_ex_demand_notice(request):
     penalty = penalty_fee
     annual_fees = total_annual_fees
 
-    print(f"PENALTY: {penalty} | TOTAL ANNUAL FEE: {annual_fees}")
+    # print(f"PENALTY: {penalty} | TOTAL ANNUAL FEE: {annual_fees}")
     try: 
          demand_notice = DemandNotice.objects.create(
              created_by=request.user,
@@ -212,7 +212,7 @@ def generate_ex_demand_notice(request):
                  
 
     except Exception as e:
-        print("Unexpected error while creating DemandNotice:", e)
+        # print("Unexpected error while creating DemandNotice:", e)
         messages.error(request, 'Failed to generate demand notice')
         return redirect('apply_existing_infra')
 
