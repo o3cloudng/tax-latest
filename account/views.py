@@ -64,6 +64,10 @@ def signup(request):
             message = f'Hello {user.email}! You have been logged in'
             messages.success(request, message)
             return redirect("setup_profile")
+        else:
+            message = form.errors
+            # print(f'{form.error_messages}')
+            messages.error(request, message)
     else:
         form = SignupForm()
     context = {

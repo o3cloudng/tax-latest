@@ -168,7 +168,7 @@ TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
 USE_TZ = True
 
-if not DEBUG:
+if os.environ.get('ENV') == 'production':
     STATIC_URL = '/opt/tax-latest/static/'
     STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
     STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -214,7 +214,7 @@ PAYSTACK_SECRET_KEY = os.environ.get('PAYSTACK_SECRET_KEY')
 PAYSTACK_PUBLIC_KEY = os.environ.get('PAYSTACK_PUBLIC_KEY')
 
 # Celery
-if os.environ.get('PRODUCTION'):
+if os.environ.get('ENV') == 'production':
     CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL_SSL', default='redis://127.0.0.1:6379/0')
 else:
     CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', default='redis://127.0.0.1:6379/0')
