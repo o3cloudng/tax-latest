@@ -1,17 +1,31 @@
-// let eyeIcon = document.getElementById('eye-icon')
-// let password = document.getElementById('password')
+let eyeIcon = document.getElementById('eye-icon')
 
-// eyeIcon.onclick = function () {
-//   if (password.type == 'password') {
-//     password.type = 'text'
+eyeIcon.onclick = function () {
+  if (password.type == 'password') {
+    password.type = 'text'
 
-//     eyeIcon.src = '/static/img/eye-show.png'
-//   } else {
-//     password.type = 'password'
+    eyeIcon.src = '/static/img/eye-show.png'
+  } else {
+    password.type = 'password'
+    
+    eyeIcon.src = '/static/img/eye-close.png'
+  }
+}
 
-//     eyeIcon.src = '/static/img/eye-close.png'
-//   }
-// }
+let eyeIconConfirm = document.getElementById('eye-icon-confirm')
+let passwordConfirm = document.getElementById('password-confirm')
+
+eyeIconConfirm.onclick = function () {
+  if (passwordConfirm.type == 'password') {
+    passwordConfirm.type = 'text'
+
+    eyeIconConfirm.src = '/static/img/eye-show.png'
+  } else {
+    passwordConfirm.type = 'password'
+
+    eyeIconConfirm.src = '/static/img/eye-close.png'
+  }
+}
 
 modal = getElementById('modal')
 closeButton = getElementById('close-modal-btn')
