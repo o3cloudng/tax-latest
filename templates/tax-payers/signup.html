@@ -40,7 +40,7 @@
             <label for="email" class="label text-sm text-gray600">Email address</label>
             <div class="mt-2">
               <input id="email" name="email" type="email" autocomplete="email" placeholder="Email address"
-                value="{{ form.email.value }}"
+                value="{% if form.email.value %} {{ form.email.value }}{% endif %}"
                class="py-3" required />
             </div>
           </div>
@@ -48,7 +48,7 @@
             <label for="email" class="label text-sm text-gray600">Phone number</label>
             <div class="mt-2">
               <input id="email" name="phone_number" type="tel" autocomplete="email"
-                value="{{ form.phone_number.value }}" placeholder="Phone number" class="py-3" required />
+                value="{% if form.email.value %} {{ form.phone_number.value }}{% endif %}" placeholder="Phone number" class="py-3" required />
             </div>
           </div>
           <div>
@@ -58,7 +58,7 @@
             <div
               class="mt-2 w-full bg-white p-0 flex flex-row justify-between items-center border border-gray300 rounded-md">
               <input id="password" name="password1" type="password" autocomplete="current-password"
-                value="{{ form.password1.value }}"
+                value=""
                 placeholder="******************" required class="py-3 block bg-white border-0"  />
               <div class="w-5 space-x-2 mr-1 cursor-pointer">
                 <img src="{% static 'img/eye-close.png' %}" alt="show password" id="eye-icon" />
