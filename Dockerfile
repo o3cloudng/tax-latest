@@ -1,6 +1,6 @@
 FROM python:3.11.4-slim
 
-WORKDIR /opt/tax-lates 
+WORKDIR /opt/tax-latest 
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
