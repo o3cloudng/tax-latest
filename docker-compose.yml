@@ -19,6 +19,8 @@ services:
       dockerfile: Dockerfile
     container_name: web
     restart: unless-stopped
+    ports:
+      - "8000:8000"
     volumes:
       - /opt/tax-latest:/opt/tax-latest
       - static_volume:/opt/tax-latest/staticfiles
