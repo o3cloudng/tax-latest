@@ -20,9 +20,9 @@ services:
     container_name: web
     restart: unless-stopped
     volumes:
-      - /opt/tax-latest:/app
-      - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - /opt/tax-latest:/opt/tax-latest
+      - static_volume:/opt/tax-latest/staticfiles
+      - media_volume:/opt/tax-latest/media
     networks:
       - tax_network
     env_file:
@@ -38,7 +38,7 @@ services:
     container_name: celery_worker
     restart: unless-stopped
     volumes:
-      - /opt/tax-latest:/app
+      - /opt/tax-latest:/opt/latest
     networks:
       - tax_network
     env_file:
@@ -54,7 +54,7 @@ services:
     container_name: celery_beat
     restart: unless-stopped
     volumes:
-      - /opt/tax-latest:/app
+      - /opt/tax-latest:/opt/tax-latest
     networks:
       - tax_network
     env_file:
@@ -70,7 +70,7 @@ services:
     container_name: flower
     restart: unless-stopped
     volumes:
-      - /opt/tax-latest:/app
+      - /opt/tax-latest:/opt/tax-latest
     networks:
       - tax_network
     env_file:
@@ -80,7 +80,7 @@ services:
       - celery_worker
     ports:
       - "5555:5555"
-    command: celery -A core flower --broker=redis://redis:6379/0 --env-files=.env --basic_auth=admin:1Million
+    command: celery -A core flower --broker=redis://redis:6379/0 --basic_auth=admin:1Million
 
 volumes:
   redis_data:
