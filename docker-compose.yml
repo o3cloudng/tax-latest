@@ -45,7 +45,7 @@ services:
       - .env.production
     depends_on:
       - redis
-    command: celery -A tax worker --loglevel=info --concurrency=4
+    command: celery -A core worker --loglevel=info --concurrency=4
 
   celery_beat:
     build:
@@ -61,7 +61,7 @@ services:
       - .env.production
     depends_on:
       - redis
-    command: celery -A tax beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: celery -A core beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
   flower:
     build:
@@ -80,7 +80,7 @@ services:
       - celery_worker
     ports:
       - "5555:5555"
-    command: celery -A tax flower --port=5555 --broker=redis://redis:6379/0
+    command: celery -A core flower --broker=redis://redis:6379/0 --env-files=.env --basic_auth=admin:1Million
 
 volumes:
   redis_data:
