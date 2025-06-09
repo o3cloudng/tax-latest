@@ -13,22 +13,15 @@
             </p>
           </article> -->
   <div class="flex flex-row justify-start items-center gap-4">
-    <img src="/assets/media/{{ company.company_logo }}" alt="" class="w-12 h-12 rounded-full" />
+    <img src="/media/{{ company.company_logo }}" alt="" class="w-12 h-12 rounded-full" />
     <div>
       <h2 class="text-xl text-darkBlue">{{ company.company_name}}</h2>
       <p class="text-sm">{{ company.sector }}</p>
     </div>
   </div>
 
-  <article
-    class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3">
-    <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
-      alt="appointment-reminders--v1" />
-    <p class="text-sm text-gray800">{{ request.user.email }}</p>
-    <div class="w-6 h-6 rounded-full">
-      <img src="/assets/media/{{ request.user.company_logo }}" alt="user--v1" />
-    </div>
-  </article>
+  {% include 'tax-payers/partials/toasts.html' %}
+  {% include 'tax-payers/partials/inc/user_logo.html' %}
 </section>
 <section class="md:w-full w-content border-1 h-screen mt-20">
 

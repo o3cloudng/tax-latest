@@ -8,7 +8,7 @@
   <td>{{ forloop.counter }}</td>
   <td>
     <a class="flex flex-row" href="">
-      <img width="20px" src="/assets/media/{{m.company_logo}}" />&nbsp;
+      <img width="20px" src="/media/{{m.company_logo}}" />&nbsp;
       {{ m.company_name }}
     </a>
   </td>
@@ -38,17 +38,8 @@
     </p>
   </article>
 
-  <article
-    class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3">
-    <img width="20" height="20" src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
-      alt="appointment-reminders--v1" />
-    <p class="text-sm text-gray800">{{ request.user.company_name }}</p>
-    <div class="w-6 h-6 rounded-full">
-      <img src="/assets/media/{{ request.user.company_logo }}" />
-    </div>
-
-  </article>
   {% include 'tax-payers/partials/toasts.html' %}
+  {% include 'tax-payers/partials/inc/user_logo.html' %}
 </section>
 <!-- Form Tab -->
 <section class="w-full flex flex-row justify-between items-center mt-10">

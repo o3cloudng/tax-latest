@@ -8,7 +8,7 @@ from django_htmx.http import HttpResponseClientRedirect
 from django.db.models import Q, Sum, Count
 from core.decorator import tax_payer_only
 from agency.models import Agency
-from core.services import generate_demand_notice, total_due, generate_ref_id, agency_total_due, agency_penalty_calculation
+from core.services import generate_demand_notice, total_due, agency_total_due, agency_penalty_calculation
 from account.models import AdminSetting, User
 import json
 # from agency.penalty_calculation import penalty_calculation
@@ -32,7 +32,7 @@ def agency_process_infrastructure(request, pk):
 @login_required
 def agency_generate_demand_notice(request, pk):
     # GENERATE DEMAND NOTICE FOR NEW INFRASTRUCTURES
-    ref_id = generate_ref_id()
+    # ref_id = generate_ref_id()
     company = User.objects.get(pk=pk)
     agency = request.user
 
@@ -44,11 +44,67 @@ def agency_generate_demand_notice(request, pk):
     
     total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = agency_total_due(company, False, agency)
     
-    # Save to Demand Notice Table
-    # referenceid, company, created_by, status (unpaid, disputed, revised, paid, resolved)
-    # infrastructure cost, 
+    # total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = total_due(company, True)
+    # print("TOTAL DUES: ", total_sum, sum_cost_infrastructure, application_cost, admin_fees, sar_cost)
+
+    penalty_fee, total_annual_fees = penalty_calculation(request, company)
+    penalty = penalty_fee
+    annual_fees = total_annual_fees 
+
+    try: 
+         demand_notice = DemandNotice.objects.create(
+             created_by=request.user,
+            company=request.user,
+            is_exisiting = True,
+            infra = infra,
+            subtotal = subtotal,
+            amount_due = subtotal + application_cost + admin_fees + sar_cost,
+            annual_fee = annual_fees,
+            penalty = penalty,
+            application_fee = application_cost,
+            admin_fee = admin_fees,
+            site_assessment = sar_cost,
+            total_due = total_sum + penalty + annual_fees,
+            status="DEMAND NOTICE"
+         )
+
+         if demand_notice:
+            obj = DemandNotice.objects.get(id=demand_notice.id)
+            # Mark infrastructure as processed
+            infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
+            infra.update(processed=True)
+             # Send Email here for demand notice
+            mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
+            to_email = request.user.email
+            
+            html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
+                "company":request.user,
+                "amount_due":obj.total_due,
+                "referenceid":obj.referenceid,
+                "dn_date": obj.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            # Email User
+            send_email_function(html_content, text_content, to_email, mail_subject) 
+            # Email Agent
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
+            messages.success(request, 'Demand notice created.')
+            # messages.success(request, "Notification sent.")
+            # print(f"Your email has been sent to {request.user.company_name}")
+            return redirect('generate_ex_receipt', obj.referenceid)
+                 
+
+    except Exception as e:
+        # print("Unexpected error while creating DemandNotice:", e)
+        messages.error(request, 'Failed to generate demand notice')
+        return redirect('apply_existing_infra')
+
+
+
+
     obj, created = DemandNotice.objects.update_or_create(
-        referenceid=ref_id,
+        # referenceid=ref_id,
         created_by=agency,
         company=company,
         infra = infra,
@@ -117,7 +173,7 @@ def apply_for_existing_permit(request, pk):
     # EXISTING: APPLY FOR EXISTING PERMIT
     company = User.objects.get(pk=pk)
     agency = request.user
-    ref_id = generate_ref_id()
+    # ref_id = generate_ref_id()
     current_year = []
     for year in range(int(datetime.now().year), 2001, -1): 
         current_year.append(year)
@@ -129,7 +185,7 @@ def apply_for_existing_permit(request, pk):
         
     context = {
         'infra': 'Mast',
-        'referenceid': ref_id,
+        # 'referenceid': ref_id,
         'current_year': current_year,
         'company': company,
         'userid': company.id,
@@ -141,50 +197,98 @@ def apply_for_existing_permit(request, pk):
 
     return render(request, 'agency/pages/forms/apply_for_exist.html', context)
 
-
+# @admin_only
 @login_required
 def generate_ex_demand_notice(request):
     company = User.objects.get(pk=request.POST.get("company"))
     agency = request.user
-    ref_id = generate_ref_id()
+    # ref_id = generate_ref_id()
     
     total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = agency_total_due(company, True, agency)
 
-    penalty_fee, total_annual_fees = agency_penalty_calculation(company)
-    penalty = penalty_fee.filter(Q(is_existing=True) & Q(processed=False) & Q(created_by=request.user)).values('penalty_fee').aggregate(penal = Sum('penalty_fee'))
-    penalty = (penalty['penal'] // 10000) * 10000
+    # penalty_fee, total_annual_fees = agency_penalty_calculation(request, company)
+    # penalty = penalty_fee.filter(Q(is_existing=True) & Q(processed=False) & Q(created_by=request.user)).values('penalty_fee').aggregate(penal = Sum('penalty_fee'))
+    # penalty = (penalty['penal'] // 10000) * 10000
 
-    annual_fees = total_annual_fees.filter(Q(is_existing=True) & Q(processed=False)).values('total_annual_fees').aggregate(total = Sum('total_annual_fees'))['total']
+    # annual_fees = total_annual_fees.filter(Q(is_existing=True) & Q(processed=False)).values('total_annual_fees').aggregate(total = Sum('total_annual_fees'))['total']
+    penalty_fee, total_annual_fees = agency_penalty_calculation(request, company)
+    penalty = penalty_fee
+    annual_fees = total_annual_fees
+    try: 
+         demand_notice = DemandNotice.objects.create(
+             created_by=request.user,
+            company=company,
+            is_exisiting = True,
+            infra = infra,
+            subtotal = subtotal,
+            amount_due = subtotal + application_cost + admin_fees + sar_cost,
+            annual_fee = annual_fees,
+            penalty = penalty,
+            application_fee = application_cost,
+            admin_fee = admin_fees,
+            site_assessment = sar_cost,
+            total_due = total_sum + penalty + annual_fees,
+            status="DEMAND NOTICE"
+         )
+
+         if demand_notice:
+            obj = DemandNotice.objects.get(id=demand_notice.id)
+            # Mark infrastructure as processed
+            infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
+            infra.update(processed=True)
+             # Send Email here for demand notice
+            mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
+            to_email = request.user.email
+            
+            html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
+                "company":request.user,
+                "amount_due":obj.total_due,
+                "referenceid":obj.referenceid,
+                "dn_date": obj.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            # Email User
+            send_email_function(html_content, text_content, to_email, mail_subject) 
+            # Email Agent
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
+            messages.success(request, 'Demand notice created.')
+            # messages.success(request, "Notification sent.")
+            # print(f"Your email has been sent to {request.user.company_name}")
+            return redirect('agency_generate_ex_receipt', obj.pk)
+                 
+
+    except Exception as e:
+        # print("Unexpected error while creating DemandNotice:", e)
+        messages.error(request, 'Failed to generate demand notice')
+        return redirect('agency_apply_for_exist', company.id)
     
-    # Save to Demand Notice Table
-    # referenceid, company, created_by, status (unpaid, disputed, revised, paid, resolved)
-    # infrastructure cost, 
-    obj, created = DemandNotice.objects.update_or_create(
-        referenceid=ref_id,
-        created_by=request.user,
-        company=company,
-        is_exisiting = True,
-        infra = infra,
-        subtotal = subtotal,
-        amount_due = subtotal + application_cost + admin_fees + sar_cost,
-        annual_fee = annual_fees,
-        penalty = penalty,
-        application_fee = application_cost,
-        admin_fee = admin_fees,
-        site_assessment = sar_cost,
-        total_due = total_sum + penalty + annual_fees,
-        status="DEMAND NOTICE",
-        defaults={'referenceid': ref_id},
-    )
-    if obj or created:
-        infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
-        infra.update(processed=True, referenceid=ref_id, updated_at=datetime.now())
-        messages.success(request, 'Demand notice created.')
-        # return redirect('agency_generate_ex_receipt')
-        return redirect('agency_generate_ex_receipt', ref_id)
+    # obj, created = DemandNotice.objects.update_or_create(
+    #     referenceid=ref_id,
+    #     created_by=request.user,
+    #     company=company,
+    #     is_exisiting = True,
+    #     infra = infra,
+    #     subtotal = subtotal,
+    #     amount_due = subtotal + application_cost + admin_fees + sar_cost,
+    #     annual_fee = annual_fees,
+    #     penalty = penalty,
+    #     application_fee = application_cost,
+    #     admin_fee = admin_fees,
+    #     site_assessment = sar_cost,
+    #     total_due = total_sum + penalty + annual_fees,
+    #     status="DEMAND NOTICE",
+    #     defaults={'referenceid': ref_id},
+    # )
+    # if obj or created:
+    #     infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
+    #     infra.update(processed=True, referenceid=ref_id, updated_at=datetime.now())
+    #     messages.success(request, 'Demand notice created.')
+    #     # return redirect('agency_generate_ex_receipt')
+    #     return redirect('agency_generate_ex_receipt', ref_id)
     
-    messages.error(request, 'Failed to generate demand notice')
-    return redirect('agency_apply_for_exist', company.id)
+    # messages.error(request, 'Failed to generate demand notice')
+    # return redirect('agency_apply_for_exist', company.id)
 
 
 @login_required

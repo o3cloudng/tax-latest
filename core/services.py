@@ -323,7 +323,55 @@ def penalty_calculation(request, company):
     
 
 
-def agency_penalty_calculation(company):
+def agency_penalty_calculation(request, company):
+    """
+    Optimized version using database aggregation.
+    """
+    # try:
+    admin_settings = AdminSetting.objects.all()
+    if not admin_settings:
+        raise ValueError("AdminSettings not configured")
+        
+    penalty_rate = admin_settings.get(slug='penalty').rate
+    annual_fee = admin_settings.get(slug='annual-fee').rate
+    today = timezone.now().date()
+    
+    # Calculate days for each record in bulk
+    infrastructures = Infrastructure.objects.filter(Q(company=company) \
+                        & Q(is_existing=True) & Q(created_by=request.user) & Q(processed=False))
+    total_days = 0
+    total_years = 0
+
+    import math
+
+    for infra in infrastructures:
+        if infra.year_installed:
+            # Get January 1st of the year following installation
+            next_year_date = date(infra.year_installed + 1, 1, 1)
+            
+            # Calculate days between next year's Jan 1 and today
+            duration = (timezone.now().date() - next_year_date)
+            days = duration.days
+            years = math.ceil(days / 365.2425)
+            # Only add positive days (in case year_installed is this year)
+            if days > 0:
+                total_days += days
+
+            if years > 0:
+                total_years += years
+        else:
+            total_days = 0
+            total_years = 0
+    
+    # Calculate total penalty
+    total_penalty = total_days * penalty_rate
+    total_annual_fee = total_years * annual_fee
+
+    return total_penalty, total_annual_fee
+    
+
+
+def agency_penalty_calculation1(company):
     infrastructure = Infrastructure.objects.filter(Q(company=company) & Q(is_existing=True))
     admin_settings = AdminSetting.objects.all()
     penalty_fee = infrastructure.annotate(
@@ -380,6 +428,8 @@ def agency_total_due(company, ex, agency):
     # Application cost
     application_cost = infrastructure.count() * AdminSetting.objects.get(slug='application-fee').rate
     # Administartive fees
+    print(f"ADMIN FEE: {AdminSetting.objects.get(slug='admin-pm-fees').rate} | {type(AdminSetting.objects.get(slug='admin-pm-fees').rate)}")
+    print(f"SUM: {sum_cost_infrastructure} | {type(sum_cost_infrastructure)}")
     admin_fees = AdminSetting.objects.get(slug='admin-pm-fees').rate * sum_cost_infrastructure / 100
 
     sar_count = Infrastructure.objects.filter(Q(company=company) & Q(processed=False) & (Q(infra_type__infra_name__icontains='mast') | Q(infra_type__infra_name__icontains='rooftop'))).count()
