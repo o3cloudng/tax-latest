@@ -1,122 +1,216 @@
+version: '3.8'
+
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - app_network
-
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    # command: gunicorn core.wsgi --bind 0.0.0.0:8000
-    volumes:
-      - static_volume:/opt/tax-latest/staticfiles
-      - media_volume:/opt/tax-latest/assets/media
-    expose:
-      - 8000
-    env_file:
-      - .env
-    depends_on:
-      - db
-    networks:
-      - app_network
-    container_name: app
-
   redis:
     image: redis:7-alpine
     container_name: redis
-    ports:
-      - "6379:6379"
+    restart: unless-stopped
     volumes:
       - redis_data:/data
     networks:
-      - app_network
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-    restart: unless-stopped
-    
-  celery-worker:
-    build: .
-    container_name: celery-worker
-    command: celery -A core worker --loglevel=info
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/1
-    volumes:
-      - .:/opt/tax-latest
-    networks:
-      - app_network
-    depends_on:
-      - redis
-      - db
-      - app
-      # redis:
-      #   condition: service_healthy
-    restart: unless-stopped
+      - tax_network
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
 
-  celery-beat:
+  web:
     build:
-      context: .
-      # dockerfile: Dockerfile.prod
-    command: celery -A core beat -l info
+      context: /opt/tax-latest
+      dockerfile: Dockerfile
+    container_name: web
+    restart: unless-stopped
     volumes:
-      - .:/opt/tax-latest
-    env_file:
-      - .env
+      - /opt/tax-latest:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     networks:
-      - app_network
+      - tax_network
+    env_file:
+      - .env.production
     depends_on:
-      - db
       - redis
-      - app
-    container_name: beat
+    command: gunicorn tax.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --access-logfile -
+
+  celery_worker:
+    build:
+      context: /opt/tax-latest
+      dockerfile: Dockerfile
+    container_name: celery_worker
+    restart: unless-stopped
+    volumes:
+      - /opt/tax-latest:/app
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+    command: celery -A tax worker --loglevel=info --concurrency=4
+
+  celery_beat:
+    build:
+      context: /opt/tax-latest
+      dockerfile: Dockerfile
+    container_name: celery_beat
+    restart: unless-stopped
+    volumes:
+      - /opt/tax-latest:/app
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+    command: celery -A tax beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
   flower:
     build:
-      context: .
+      context: /opt/tax-latest
       dockerfile: Dockerfile
-    command: "celery -A core flower --broker=redis://redis:6379/0 --env-files=.env --basic_auth=admin:1Million"
-    ports:
-      - 5555:5555
-    env_file:
-      - .env
-    depends_on:
-      - db
-      - app
-      - redis
-      - celery-worker
-    networks:
-      - app_network
     container_name: flower
+    restart: unless-stopped
+    volumes:
+      - /opt/tax-latest:/app
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - celery_worker
+    ports:
+      - "5555:5555"
+    command: celery -A tax flower --port=5555 --broker=redis://redis:6379/0
 
 volumes:
-  postgres_data:
+  redis_data:
   static_volume:
   media_volume:
-  redis_data:
-  # certbot-etc:
-  # certbot-var:
 
 networks:
-  app_network:
+  tax_network:
     driver: bridge
+
+
+# services:
+#   db:
+#     image: postgres:15-alpine
+#     container_name: db
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#       POSTGRES_DB: postgres
+#       PGDATA: /var/lib/postgresql/data/pgdata
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+#     restart: unless-stopped
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U postgres"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+#     networks:
+#       - app_network
+
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     restart: always
+#     # command: gunicorn core.wsgi --bind 0.0.0.0:8000
+#     volumes:
+#       - static_volume:/opt/tax-latest/staticfiles
+#       - media_volume:/opt/tax-latest/assets/media
+#     expose:
+#       - 8000
+#     env_file:
+#       - .env
+#     depends_on:
+#       - db
+#     networks:
+#       - app_network
+#     container_name: app
+
+#   redis:
+#     image: redis:7-alpine
+#     container_name: redis
+#     ports:
+#       - "6379:6379"
+#     volumes:
+#       - redis_data:/data
+#     networks:
+#       - app_network
+#     healthcheck:
+#       test: ["CMD", "redis-cli", "ping"]
+#       interval: 5s
+#       timeout: 3s
+#       retries: 5
+#     restart: unless-stopped
+    
+#   celery-worker:
+#     build: .
+#     container_name: celery-worker
+#     command: celery -A core worker --loglevel=info
+#     environment:
+#       - CELERY_BROKER_URL=redis://redis:6379/0
+#       - CELERY_RESULT_BACKEND=redis://redis:6379/1
+#     volumes:
+#       - .:/opt/tax-latest
+#     networks:
+#       - app_network
+#     depends_on:
+#       - redis
+#       - db
+#       - app
+#       # redis:
+#       #   condition: service_healthy
+#     restart: unless-stopped
+
+#   celery-beat:
+#     build:
+#       context: .
+#       # dockerfile: Dockerfile.prod
+#     command: celery -A core beat -l info
+#     volumes:
+#       - .:/opt/tax-latest
+#     env_file:
+#       - .env
+#     networks:
+#       - app_network
+#     depends_on:
+#       - db
+#       - redis
+#       - app
+#     container_name: beat
+
+#   flower:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     command: "celery -A core flower --broker=redis://redis:6379/0 --env-files=.env --basic_auth=admin:1Million"
+#     ports:
+#       - 5555:5555
+#     env_file:
+#       - .env
+#     depends_on:
+#       - db
+#       - app
+#       - redis
+#       - celery-worker
+#     networks:
+#       - app_network
+#     container_name: flower
+
+# volumes:
+#   postgres_data:
+#   static_volume:
+#   media_volume:
+#   redis_data:
+#   # certbot-etc:
+#   # certbot-var:
+
+# networks:
+#   app_network:
+#     driver: bridge

@@ -1,74 +1,41 @@
-# start from an official image
-FROM python:3.11.4-slim
+FROM python:3.9-slim
 
-ENV PYTHONUNBUFFERED 1
+WORKDIR /app
+
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-WORKDIR /opt/tax-latest
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-
-RUN pip install -U pip
-
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py migrate
-RUN python manage.py collectstatic --no-input
-
-CMD ["gunicorn", "core", "--bind", ":8000", "core.wsgi:application"]
-# CMD ["gunicorn", "--chdir", "core", "--bind", ":8000", "core.wsgi:application", "--reload"]
-
-# COPY manage.py .
-# COPY core core
-
-# RUN python manage.py collectstatic --noinput
 
 
 
 
+# # start from an official image
+# FROM python:3.11.4-slim
 
-
-
-# # set environment variables
-# ENV PYTHONDONTWRITEBYTECODE 1
 # ENV PYTHONUNBUFFERED 1
+# ENV PYTHONDONTWRITEBYTECODE 1
 
-# WORKDIR /app
+# WORKDIR /opt/tax-latest
 
-# RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser ./
+# COPY requirements.txt .
 
-# USER appuser
+# RUN pip install -U pip
 
-
-# RUN pip install --upgrade pip
-
-# # install our dependencies
-# COPY ./requirements.txt /app/requirements.txt
-
-# RUN python -m pip install --no-cache-dir -r requirements.txt
+# RUN pip install -r requirements.txt
 
 # COPY . .
 
-# # RUN python manage.py makemigrations --no-input
+# RUN python manage.py migrate
+# RUN python manage.py collectstatic --no-input
 
-# # RUN python manage.py migrate --no-input 
-
-# # RUN python manage.py collectstatic --no-input -v 2
-
-# # expose the port 8000
-# # CMD ['python', 'manage.py', 'runserver']
-
-# EXPOSE 8000
-# # define the default command to run when starting the container
-
-# # CMD ["gunicorn", "--chdir", "core", "--bind", ":8000", "core.wsgi:application", "--reload"]
-
-# # RUN python manage.py migrate
-
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# # runs the production server
-# # ENTRYPOINT ["python", "./manage.py"]
-# # CMD ["runserver", "0.0.0.0:8000"]
+# CMD ["gunicorn", "core", "--bind", ":8000", "core.wsgi:application"]
