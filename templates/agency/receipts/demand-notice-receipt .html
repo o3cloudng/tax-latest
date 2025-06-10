@@ -8,23 +8,8 @@
         <p class="text-sm text-gray600">View your receipt</p>
       </article>
 
-      <article
-        class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3"
-      >
-        <img
-          width="20"
-          height="20"
-          src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
-          alt="appointment-reminders--v1"
-        />
-        <p class="text-sm text-gray800">{{ request.user }}</p>
-        <div class="w-6 h-6 rounded-full">
-          <img
-            src="/assets/media/{{ request.user.company_logo }}"
-            alt="user--v1"
-          />
-        </div>
-      </article>
+      {% include 'tax-payers/partials/toasts.html' %}
+      {% include 'tax-payers/partials/inc/user_logo.html' %}
     </section>
     <!-- Form Tab -->
     <!-- bg-[image-url] bg-cover bg-center bg-no-repeat -->
@@ -34,7 +19,7 @@
       <article class="w-full">
         <div class="flex flex-row justify-between items-center">
           <img
-            src="/assets/media/{{ agency.agency_logo }}"
+            src="/media/{{ agency.agency_logo }}"
             alt=""
             class="w-20 h-20"
           />
@@ -54,7 +39,7 @@
             <h3 class="font-normal text-orange-400">Bill to:</h3>
             <div class="flex flex-row justify-start gap-3 mt-1">
               <img
-                src='/assets/media/{{ request.user.company_logo }}'
+                src='/media/{{ request.user.company_logo }}'
                 alt=""
                 class="w-10 h-10 rounded-full"
               />
@@ -209,7 +194,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                   </svg>&nbsp;
-                  <a href="/assets/media/{{ permit.upload_application_letter }}" target="_blank">Application:
+                  <a href="/media/{{ permit.upload_application_letter }}" target="_blank">Application:
                     ({{permit.infra_type}})</a>
                 </p>
                 {% endif %}
@@ -221,7 +206,7 @@
                       d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                   </svg>&nbsp;
                   <!-- <object id="svg1" width="20px" data="{% static 'img/download.svg' %}" type="image/svg+xml"></object> -->
-                  <a href="/assets/media/{{ permit.upload_asBuilt_drawing }}" target="_blank">Design Drawing:
+                  <a href="/media/{{ permit.upload_asBuilt_drawing }}" target="_blank">Design Drawing:
                     ({{permit.infra_type}})</a>
                 </p>
                 {% endif %}
