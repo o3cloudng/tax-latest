@@ -74,7 +74,7 @@ def agency_generate_demand_notice(request, pk):
             print(f"DEMAIND NOTICE WAS CREATED.....")
             obj = DemandNotice.objects.get(id=demand_notice.id)
             # Mark infrastructure as processed
-            infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
+            infra = Infrastructure.objects.filter(Q(processed=False))
             infra.update(processed=True)
                 # Send Email here for demand notice
             mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
