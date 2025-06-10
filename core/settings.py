@@ -273,3 +273,12 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 TAX_AUTHOURITY_EMAIL = os.environ.get("TAX_AUTHOURITY_EMAIL")
 # Django Commands
 DJANGO_SETTINGS_MODULE='core.settings'
+
+# Pay4it Config
+PAY4IT_CONFIG = {
+    'API_KEY': os.environ.get('PAY4IT_API_KEY'),
+    'MERCHANT_ID': os.environ.get('PAY4IT_MERCHANT_ID'),
+    'BASE_URL': 'https://usepay4it.com/payment/collection',  # Sandbox or production URL
+    'CALLBACK_URL': 'https://lasimra.maxvaafrica.com/pay4it/callback/',
+    'RETURN_URL': 'https://lasimra.maxvaafrica.com//pay4it/return/',
+}

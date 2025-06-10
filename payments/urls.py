@@ -1,8 +1,11 @@
 from django.urls import path
-from . import views
+from payments.views import initiate_payment, paystack_verify, Pay4ItInitiatePayment
 
 urlpatterns = [
-    path('initiate-payment/', views.initiate_payment, name='initiate_payment'),
-    path('verify-payment/<str:ref>/', views.paystack_verify, name='verify_payment'),
+    path('initiate-payment/', initiate_payment, name='initiate_payment'),
+    path('verify-payment/<str:ref>/', paystack_verify, name='verify_payment'),
+    # Pay4it
+    path('initiate/', Pay4ItInitiatePayment.as_view(), name='initiate'),
+    path('verify/<str:ref>/', paystack_verify, name='verify'),
 ]
 
