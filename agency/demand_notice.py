@@ -47,35 +47,38 @@ def agency_generate_demand_notice(request, pk):
     # total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = total_due(company, True)
     # print("TOTAL DUES: ", total_sum, sum_cost_infrastructure, application_cost, admin_fees, sar_cost)
 
-    penalty_fee, total_annual_fees = penalty_calculation(request, company)
-    penalty = penalty_fee
-    annual_fees = total_annual_fees 
+    # penalty_fee, total_annual_fees = agency_penalty_calculation(request, company)
+    # penalty = penalty_fee
+    # annual_fees = total_annual_fees 
+    annual_fees = AdminSetting.objects.get(slug="annual-fee").rate
+    # print(f"ANNUAL FEE: {annual_fees}")
 
     try: 
-         demand_notice = DemandNotice.objects.create(
-             created_by=request.user,
-            company=request.user,
+        demand_notice = DemandNotice.objects.create(
+            created_by=request.user,
+            company=company,
             is_exisiting = True,
             infra = infra,
             subtotal = subtotal,
             amount_due = subtotal + application_cost + admin_fees + sar_cost,
             annual_fee = annual_fees,
-            penalty = penalty,
+            penalty = 0,
             application_fee = application_cost,
             admin_fee = admin_fees,
             site_assessment = sar_cost,
-            total_due = total_sum + penalty + annual_fees,
+            total_due = total_sum + annual_fees,
             status="DEMAND NOTICE"
-         )
+        )
 
-         if demand_notice:
+        if demand_notice:
+            print(f"DEMAIND NOTICE WAS CREATED.....")
             obj = DemandNotice.objects.get(id=demand_notice.id)
             # Mark infrastructure as processed
             infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
             infra.update(processed=True)
-             # Send Email here for demand notice
+                # Send Email here for demand notice
             mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
-            to_email = request.user.email
+            to_email = company.email
             
             html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
                 "company":request.user,
@@ -92,41 +95,44 @@ def agency_generate_demand_notice(request, pk):
             messages.success(request, 'Demand notice created.')
             # messages.success(request, "Notification sent.")
             # print(f"Your email has been sent to {request.user.company_name}")
-            return redirect('generate_ex_receipt', obj.referenceid)
+            return redirect('agency_generate_receipt', obj.referenceid)
+        
+        messages.error(request, 'Failed to generate demand notice')
+        return redirect('agency_add_infrastructure', company.id)
                  
 
     except Exception as e:
         # print("Unexpected error while creating DemandNotice:", e)
         messages.error(request, 'Failed to generate demand notice')
-        return redirect('apply_existing_infra')
+        return redirect('agency_add_infrastructure', company.id)
 
 
 
 
-    obj, created = DemandNotice.objects.update_or_create(
-        # referenceid=ref_id,
-        created_by=agency,
-        company=company,
-        infra = infra,
-        subtotal = subtotal,
-        total_due = total_sum,
-        penalty = 0,
-        application_fee = application_cost,
-        admin_fee = admin_fees,
-        site_assessment = sar_cost,
-        amount_due = subtotal + application_cost + admin_fees + sar_cost,
-        status="DEMAND NOTICE",
-        defaults={'referenceid': ref_id},
-    )
-    if obj or created:
-        infra = Infrastructure.objects.filter(Q(is_existing=False) & Q(processed=False))
-        infra.update(processed=True, referenceid=ref_id, updated_at=datetime.now())
-        # infra.save()
-        messages.success(request, 'Demand notice created.')
-        return redirect('agency_generate_receipt', ref_id)
+    # obj, created = DemandNotice.objects.update_or_create(
+    #     # referenceid=ref_id,
+    #     created_by=agency,
+    #     company=company,
+    #     infra = infra,
+    #     subtotal = subtotal,
+    #     total_due = total_sum,
+    #     penalty = 0,
+    #     application_fee = application_cost,
+    #     admin_fee = admin_fees,
+    #     site_assessment = sar_cost,
+    #     amount_due = subtotal + application_cost + admin_fees + sar_cost,
+    #     status="DEMAND NOTICE",
+    #     defaults={'referenceid': ref_id},
+    # )
+    # if obj or created:
+    #     infra = Infrastructure.objects.filter(Q(is_existing=False) & Q(processed=False))
+    #     infra.update(processed=True, referenceid=ref_id, updated_at=datetime.now())
+    #     # infra.save()
+    #     messages.success(request, 'Demand notice created.')
+    #     return redirect('agency_generate_receipt', ref_id)
     
-    messages.error(request, 'Failed to generate demand notice')
-    return redirect('apply_for_permit')
+    # messages.error(request, 'Failed to generate demand notice')
+    # return redirect('apply_for_permit')
 
 @login_required
 def agency_generate_receipt(request, ref_id):
