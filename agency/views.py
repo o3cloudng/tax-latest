@@ -15,7 +15,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from agency.tasks import task_func, send_email_func
-from agency.forms import AgencyForm, InfrastructureSettingsForm, AddUserForm, NotificationForm, RevenueForm
+from agency.forms import AgencyForm, InfrastructureSettingsForm, AddUserForm, AgencyAddUserForm, NotificationForm, RevenueForm
 from tax.forms import InfrastructureForm, InfrastructureForm2
 from agency.models import Agency, Notification
 from agency.forms import InfrastructureSettingsForm, RevenueForm, SectorForm

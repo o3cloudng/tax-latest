@@ -116,7 +116,7 @@ def setup_profile(request):
                 "company_name":profile.company_name,
                 "agency_email":agency.agency_email,
                 "agency_phone":agency.phone_number,
-                "login":settings.LOGIN_REDIRECT_URL,
+                "login":settings.URL,
                 })
             text_content = strip_tags(html_content)
             send_email_function(html_content, text_content, to_email, mail_subject)

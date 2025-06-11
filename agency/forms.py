@@ -90,6 +90,51 @@ class AddUserForm(UserCreationForm):
         model = User
         fields = ['company_name', 'email', 'password1', 'password2', 'company_logo', 'is_tax_admin']
 
+class AgencyAddUserForm(UserCreationForm):
+    USER_TYPE_CHOICES =( 
+        (0, "Company"), 
+        (1, "Agency Admin 1"), 
+        (1, "Agency Admin 2"), 
+        (1, "Agency Admin 3"), 
+    ) 
+    is_tax_admin = forms.ChoiceField(
+        choices = USER_TYPE_CHOICES,
+        required=True, 
+        widget=forms.widgets.Select(
+            attrs={
+                "placeholder": "Choose a user type", 
+                "type":"text",
+                "class": "w-full py-4", 
+                }),
+            )
+    company_name = forms.CharField(
+        max_length=255,
+        required=True, 
+        widget=forms.widgets.Input(
+            attrs={
+                "placeholder": "Company name", 
+                # "hx-post": reverse_lazy("validate_name"),
+                # "hx-target": "#usernameError",
+                # "hx-trigger": "keyup[target.value.length > 3]",
+                "type":"text",
+                "class": "w-full py-4", 
+                }),
+            )
+    email = forms.EmailField(
+        max_length=255, 
+        required=True, 
+        widget=forms.widgets.Input(
+            attrs={
+                 "placeholder": "Company email", 
+                 "type":"email",
+                 "class": "w-full py-4", 
+                 }),
+            label="Email address",)
+    
+    class Meta:
+        model = User
+        fields = ['company_name', 'email', 'is_tax_admin']
+
 
 class AgencyForm(forms.ModelForm):
     agency_name = forms.CharField(

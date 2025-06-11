@@ -34,10 +34,10 @@
         </button>
         <form method="POST" action="{% url 'initiate' %}">
           {% csrf_token %}
-          <input type="hidden" name="amount_value" value="{{ amount_value }}" />
-          <input type="hidden" name="amount" value="{{ amount }}" />
-          <input type="hidden" name="ref" value="{{ ref }}" />
-          <input type="hidden" name="referenceid" value="{{ referenceid }}" />
+          <input type="hidden" name="amount_value" value="{{ display_amount_value }}" />
+          <input type="hidden" name="amount" value="{{ display_amount_value }}" />
+          <input type="hidden" name="ref" value="{{ payment.ref }}" />
+          <input type="hidden" name="referenceid" value="{{ payment.referenceid }}" />
           <button
             class="flex w-full justify-center border-orange-500 hover:bg-transparent bg-orange-500 text-white hover:text-orange-500 border-2 mt-4 p-4 rounded-md hover:bg-lightBlue">
             Pay Now (Pay4IT)

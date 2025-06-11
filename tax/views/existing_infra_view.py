@@ -337,12 +337,14 @@ def undispute_ex_demand_notice_receipt(request, ref_id):
     admin_settings = AdminSetting.objects.all()
 
     demand_notice = DemandNotice.objects.get(referenceid=ref_id)
-    if demand_notice:
+    # if demand_notice AN emand_notice.amount_due == 0:
+    if demand_notice and demand_notice.amount_paid == 0:
+        messages.success(request, "Undisputed demand notice updated")
         DemandNotice.objects.filter(referenceid=ref_id).update(status="UNDISPUTED UNPAID")
 
     infra = demand_notice.infra
     infra = infra.replace("'", '"')
-    infra = json.loads(infra)
+    infra = json.loads(infra)  
     # print(type(infra), infra)
 
     context = {
@@ -366,7 +368,6 @@ def undispute_ex_demand_notice_receipt(request, ref_id):
         'total_liability': demand_notice.total_due,
         'site_assessment_cost': demand_notice.site_assessment       
     }
-    messages.success(request, "Demand notice updated.")
     return render(request, 'tax-payers/receipts/undisputed_ex_dn_receipt.html', context)
 
 
