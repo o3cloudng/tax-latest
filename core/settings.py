@@ -278,7 +278,14 @@ DJANGO_SETTINGS_MODULE='core.settings'
 PAY4IT_CONFIG = {
     'API_KEY': os.environ.get('PAY4IT_API_KEY'),
     'MERCHANT_ID': os.environ.get('PAY4IT_MERCHANT_ID'),
-    'BASE_URL': 'https://usepay4it.com/payment/collection',  # Sandbox or production URL
-    'CALLBACK_URL': 'https://lasimra.maxvaafrica.com/pay4it/callback/',
+    'BASE_URL': 'https://usepay4it.com/payment/collection/',  # Sandbox or production URL
+    'CALLBACK_URL': 'https://lasimra.maxvaafrica.com/payments/verify/',
     'RETURN_URL': 'https://lasimra.maxvaafrica.com//pay4it/return/',
+    
 }
+PAY4IT_API_KEY = os.environ.get('PAY4IT_API_KEY')
+PAY4IT_CALLBACK_URL='https://lasimra.maxvaafrica.com/payments/verify/'
+CBS_URL='https://sandbox.usepay4it.com/api/v1/abc/BillReferenceGeneration'
+CBS_URL_VERIFY='https://usepay4it.com/api/v1/abc/GetTransactionByPaymentRef'
+REVENUE_CODE='4010002'
+AGENCY_CODE='4250000'

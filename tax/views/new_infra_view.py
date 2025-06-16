@@ -62,11 +62,8 @@ def generate_demand_notice(request):
         return redirect('apply_for_permit')
     
     total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = total_due(company, False)
-    # Save to Demand Notice Table
-    # referenceid, company, created_by, status (unpaid, disputed, revised, paid, resolved)
-    # infrastructure cost, 
-    obj, created = DemandNotice.objects.update_or_create(
-        # referenceid=ref_id,
+    # print(f"total_sum = {total_sum} | Sub = {subtotal} | Sum Cost {sum_cost_infrastructure} | Admin = {admin_fees}")
+    demand_notice = DemandNotice.objects.create(
         created_by=request.user,
         company=request.user,
         infra = infra,
@@ -78,9 +75,9 @@ def generate_demand_notice(request):
         site_assessment = sar_cost,
         amount_due = subtotal + application_cost + admin_fees + sar_cost,
         status="DEMAND NOTICE",
-        defaults={'referenceid': 'LA2025000000001'},
     )
-    if obj or created:
+    if demand_notice:
+        obj = DemandNotice.objects.get(pk=demand_notice.id)
         infra = Infrastructure.objects.filter(Q(is_existing=False) & Q(processed=False))
         infra.update(processed=True, referenceid=obj.referenceid)
         # infra.save()
@@ -90,7 +87,7 @@ def generate_demand_notice(request):
         from django.template.loader import render_to_string
         from django.utils.html import strip_tags
 
-        # Send Email here for demand notice
+        # # Send Email here for demand notice
         mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
         to_email = request.user.email
         
@@ -104,8 +101,7 @@ def generate_demand_notice(request):
         text_content = strip_tags(html_content)
         send_email_function(html_content, text_content, to_email, mail_subject)
         send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
-        messages.success(request, "Notification sent.")
-        print(f"Your email has been sent to {request.user.company_name}")
+        # print(f"Your email has been sent to {request.user.company_name}")
         return redirect('generate_receipt', obj.referenceid)
     
     messages.error(request, 'Failed to generate demand notice')

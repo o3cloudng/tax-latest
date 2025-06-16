@@ -13,13 +13,24 @@ class UserWallet(models.Model):
         return self.user.__str__()
 
 class Payment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('success', 'Success'),
+        ('failed', 'Failed'),
+    ]
+        
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     referenceid = models.CharField(max_length=20)
-    amount = models.PositiveIntegerField()
+    reference = models.CharField(max_length=20)
     ref = models.CharField(max_length=200)
+    paymentReference = models.CharField(max_length=200)
+    amount = models.PositiveIntegerField()
     email = models.EmailField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    receipt = models.CharField(max_length=200, null=True)
     verified = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         ordering = ('-date_created',)
