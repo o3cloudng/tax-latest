@@ -91,16 +91,16 @@ def generate_demand_notice(request):
         mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
         to_email = request.user.email
         
-        html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
-            "company":request.user,
-            "amount_due":obj.total_due,
-            "referenceid":obj.referenceid,
-            "dn_date": obj.created_at,
-            "login":settings.URL,
-            })
-        text_content = strip_tags(html_content)
-        send_email_function(html_content, text_content, to_email, mail_subject)
-        send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
+        # html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
+        #     "company":request.user,
+        #     "amount_due":obj.total_due,
+        #     "referenceid":obj.referenceid,
+        #     "dn_date": obj.created_at,
+        #     "login":settings.URL,
+        #     })
+        # text_content = strip_tags(html_content)
+        # send_email_function(html_content, text_content, to_email, mail_subject)
+        # send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
         # print(f"Your email has been sent to {request.user.company_name}")
         return redirect('generate_receipt', obj.referenceid)
     
