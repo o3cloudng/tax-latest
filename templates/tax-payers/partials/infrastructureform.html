@@ -1,4 +1,7 @@
-<form hx-post="{% url 'add_infrastructure' %}" hx-target="#infra-table" hx-swap="innerHTML"
+<form 
+    hx-post="{% url 'add_infrastructure' %}" 
+    hx-target="#infra-table" 
+    hx-swap="innerHTML"
     hx-encoding='multipart/form-data'>
     {% csrf_token %}
 

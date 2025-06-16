@@ -90,14 +90,14 @@ class InfrastructureForm2(forms.ModelForm):
                 'required': True,
                 'placeholder': 'Address'
                 }),
-            'upload_application_letter': forms.HiddenInput(attrs={
+            'upload_application_letter': forms.FileInput(attrs={
                 'class': "form-control",
-                'style': 'border:2px solid #999;',
+                'style': 'max-width: 150px;',
                 'required': False,
                 'accept': '.pdf,.jpg,.png,.gif',
                 'placeholder': 'Upload application letter'
                 }),
-            'upload_asBuilt_drawing': forms.HiddenInput(attrs={
+            'upload_asBuilt_drawing': forms.FileInput(attrs={
                 'class': "form-control",
                 'style': 'max-width: 150px;',
                 'required': False,
