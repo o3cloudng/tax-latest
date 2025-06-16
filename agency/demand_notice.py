@@ -18,6 +18,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from core.utils import send_email_function
 from core import settings 
+from core.services import send_demand_notice_email
 
 
 @login_required
@@ -379,43 +380,7 @@ def agency_apply_waiver(request):
         print("REF ID----------------------: ", request.POST['referenceid'])
         print("COMPANY----------------------: ", request.POST['company'])
         print("WAIVER APPLIED----------------------: ", request.POST['waiver_applied'])
-    # if request.method == 'POST':
-    #     company = User.objects.get(request.POST.get('company'))
-    #     ref_id = request.POST.get('referenceid')
-    #     print("COMAPANY: REFID: | ",company, ref_id)
-    #     demand_notice = DemandNotice.objects.filter(referenceid = ref_id)
-    #     # form = WaiverForm(request.POST or None, request.FILES or None)
-        
-    #     dn = demand_notice.get(Q(referenceid = ref_id))
-    #     print("NEW DN: ", dn)
-    #     # if form.is_valid():
-    #     #     print("WAVER HERE FORM IS VALID ")
-    #     #     if not int(request.POST.get('waiver_applied')):
-    #     #         total_due = dn.subtotal + dn.annual_fee + dn.penalty + dn.application_fee + \
-    #     #             dn.admin_fee + dn.site_assessment - int(request.POST.get('waiver_applied'))
-    #     #     else:
-    #     #         total_due = dn.subtotal + dn.annual_fee + dn.application_fee + \
-    #     #         dn.admin_fee + dn.site_assessment - int(request.POST.get('waiver_applied'))
-            
-    #     #     print("TOTAL DUE: ", total_due)
-
-    #     #     # remit = DemandNotice.objects.filter(Q(company=request.user) & Q(referenceid = request.POST.get('referenceid')))
-    #     #     # print("TOTAL DUE: ", total_due)
-    #     #     dn.update(waiver_applied=request.POST.get('waiver_applied'), total_due=total_due, updated_at=datetime.now())
-            
-    #     #     # waiver = form.save(commit=False)
-    #     #     # waiver.referenceid = ref_id
-    #     #     # waiver.company = company
-    #     #     # waiver.apply_for_waver = request.POST.get('apply_for_waver')
-    #     #     # waiver.save()
-
-    #     #     messages.success(request, 'Waiver was added successfully.')
-    #     #     # return redirect('agency_waiver', ref_id)
-    #     # else:
-    #     #     print("FILE FORMAT INVALID", form.errors)
-      
-    #     messages.error(request, 'Waiver failed.')
-        # return redirect('agency_waiver', ref_id)
+   
     return "DONE"
 
 
@@ -444,19 +409,25 @@ def agency_waiver(request, ref_id):
             messages.success(request, 'Waiver was added successfully.')
 
             # SEND EMAIL TO TAX PAYER (REVISED)
-            mail_subject = "REVISED DEMAND NOTICE BY AGENCY!"
-            to_email = company.email
-            agency = request.user
-            html_content = render_to_string("Emails/admin/revised_notice.html", {
-                "company":company,
-                "agency_email":agency,
-                "agency_phone":request.user.phone_number,
-                "referenceid":ref_id,
-                "total_due": total_due,
-                "login":settings.URL,
-                })
-            text_content = strip_tags(html_content)
-            send_email_function(html_content, text_content, to_email, mail_subject)
+            # mail_subject = "REVISED DEMAND NOTICE BY AGENCY!"
+            # to_email = company.email
+            # agency = request.user
+            # html_content = render_to_string("Emails/admin/revised_notice.html", {
+            #     "company":company,
+            #     "agency_email":agency,
+            #     "agency_phone":request.user.phone_number,
+            #     "referenceid":ref_id,
+            #     "total_due": total_due,
+            #     "login":settings.URL,
+            #     })
+            # text_content = strip_tags(html_content)
+            # send_email_function(html_content, text_content, to_email, mail_subject)
+
+            mail_subject = f"REVISED DEMAND NOTICE BY AGENCY!: {ref_id}"
+            email_template = "Emails/admin/revised_notice.html"
+            agency_email_subject = f"REVISED DEMAND NOTICE - {company.company_name}"
+            send_demand_notice_email(request, mail_subject, ref_id, demand_notice.created_at,\
+                                        total_due, email_template, agency_email_subject)
         else:
             messages.error(request, 'Waiver failed.')
 

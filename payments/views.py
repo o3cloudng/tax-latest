@@ -15,6 +15,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from datetime import date
+from core.services import send_demand_notice_email
 # from payments.paystack import verify_payment
 
 
@@ -171,12 +172,21 @@ def pay4it_callback(request):
             if total <= 0:
                 DemandNotice.objects.filter(referenceid=payment.referenceid) \
                 .update(amount_paid=total_paid, status='RESOLVED', total_due=total)
-                # print("RESOLVED: ")
+
+                mail_subject = f"Resolved Demand Notice - Ref No: {referenceid}"
+                email_template = "Emails/tax_payer/paid_notice.html"
+                agency_email_subject = f"RESOLVED DEMAND NOTICE - {request.user.company_name}"
+                send_demand_notice_email(request, mail_subject, referenceid, demand_notice.created_at,\
+                                          demand_notice.total_due, email_template, agency_email_subject)
             else:
                 DemandNotice.objects.filter(referenceid=payment.referenceid) \
                     .update(amount_paid=total_paid, status='UNDISPUTED PAID', total_due=total)
-                # print("UNDISPUETD PAID: ")
-            # Payment.objects.filter(ref=payment.ref).update(verified=True)
+                
+                mail_subject = f"Undisputed Paid Demand Notice - Ref No: {referenceid}"
+                email_template = "Emails/tax_payer/paid_undisputed.html"
+                agency_email_subject = f"RESOLVED DEMAND NOTICE - {request.user.company_name}"
+                send_demand_notice_email(request, mail_subject, referenceid, demand_notice.created_at,\
+                                          demand_notice.total_due, email_template, agency_email_subject)
 
             infra = demand_notice.infra
             infra = infra.replace("'", '"')

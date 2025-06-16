@@ -17,6 +17,25 @@ from django.db.models import (
 )
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
 from django.db.models import IntegerField, DurationField
+from core import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from core.utils import send_email_function
+
+
+def send_demand_notice_email(request, mail_subject, referenceid, created_at, total_due, email_template, agency_email_subject):
+    to_email = request.user.email
+    
+    html_content = render_to_string(email_template, {
+        "company":request.user,
+        "amount_due":total_due,
+        "referenceid":referenceid,
+        "dn_date": created_at,
+        "login":settings.URL,
+        })
+    text_content = strip_tags(html_content)
+    send_email_function(html_content, text_content, to_email, mail_subject)
+    send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, agency_email_subject)
 
 
 def landingPage(request):
