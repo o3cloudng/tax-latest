@@ -1,3 +1,4 @@
+{% load humanize %}
 <html>
     <head>
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,9 +16,17 @@
                 width: 600px; 
                 border-radius: 10px;
             }
+            h2 {
+                color: rgb(255, 145, 0);
+            }
 
             .links {
-                color:rgb(255, 145, 0);
+                color:white; 
+                border:1px solid rgb(255, 145, 0); 
+                padding: 5px 10px;
+                background-color: rgb(255, 145, 0);
+                border-radius: 5px; 
+                text-decoration: none;
             }
         </style>
     </head>
@@ -41,6 +50,7 @@
 
 
 Dear {{company.company_name }},
+<h2>PAID UNDISPUTED</h2>
 <p>
     We are pleased to inform you that the payment for your undisputed demand notice has been successfully processed. Below
 are the details of your paid undisputed demand notice:
@@ -57,16 +67,17 @@ are the details of your paid undisputed demand notice:
     Thank you for your prompt payment. You can view the details of your payment and the status of your demand notice by
 logging into your account using the link below:
 </p>
-<a href="{{ login }}"><strong>Login to Lasimra e-Collection System</strong></a></p>
+<a href="{{ login }}" class="links">
+    <strong>Login to Lasimra e-Collection System</strong>
+</a>
 <p>
-    If you have any questions or need further assistance, please contact our support team at [Support Email] or [Support
-Phone Number].
+    If you have any questions or need further assistance, please contact our support team at {{agency_email}} or
+{{agency_phone}}.
 </p>
-<p>
-    Thank you for using Lasimra e-Collection System.
-</p>
-Best regards,
-<strong><i>Lasimra e-Collection System Team</i></strong> 
+<p>Thank you for using Lasimra e-Collection System.</p>
+
+Best regards,<br/>
+<strong style="color:rgb(255, 145, 0)"><i>Lasimra e-Collection System Team</i></strong>
 <p>&nbsp;</p>
 <hr style="color: #EFEFEF; border:0.5px solid #EfEFEF; width: 100% !important;">
 <table style="font-size: 14px; color: #AAA;">

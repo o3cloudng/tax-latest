@@ -1,3 +1,4 @@
+{% load humanize %}
 <html>
     <head>
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,9 +16,17 @@
                 width: 600px; 
                 border-radius: 10px;
             }
+            h2 {
+                color: rgb(255, 145, 0);
+            }
 
             .links {
-                color:rgb(255, 145, 0);
+                color:white; 
+                border:1px solid rgb(255, 145, 0); 
+                padding: 5px 10px;
+                background-color: rgb(255, 145, 0);
+                border-radius: 5px; 
+                text-decoration: none;
             }
         </style>
     </head>
@@ -39,7 +48,7 @@
 </table> 
     <hr style="color: #EFEFEF; border:0.5px solid #EfEFEF; width: 100% !important;">
 <p>Dear {{company_name}},</p>
-<h2 class="links">Welcome to Lasimra e-Collection System!</h2>
+<h2>Welcome to Lasimra e-Collection System!</h2>
 
 <p>We are excited to have you on board. With your new account, you can now take advantage of our platform to manage your
     infrastructure tax dues efficiently.</p>
@@ -47,7 +56,10 @@
 <p>To get started, you can apply for a new permit to create infrastructure or register an existing infrastructure. </p>
 
 <p>To explore these options and start using our services, please log in to your account using the link below:
-    <a href="{{ login }}" style="color:rgb(255, 145, 0)"><strong>Login to Lasimra e-Collection System</strong></a>
+
+    <a href="{{ login }}" class="links">
+    <strong>Login to Lasimra e-Collection System</strong>
+</a>
 </p>
 
 
