@@ -1,0 +1,79 @@
+{% load humanize %}
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+        <style>
+            .nunito {
+                font-family: "Nunito", sans-serif;
+                font-optical-sizing: auto;
+                font-weight: 300;
+                font-style: normal;
+                border:1px solid #EfEFEF; 
+                padding: 80px; 
+                margin: 10 auto; 
+                width: 600px; 
+                border-radius: 10px;
+            }
+            h2 {
+                color: rgb(255, 145, 0);
+            }
+
+            .links {
+                color:white; 
+                border:1px solid rgb(255, 145, 0); 
+                padding: 5px 10px;
+                background-color: rgb(255, 145, 0);
+                border-radius: 5px; 
+                text-decoration: none;
+            }
+        </style>
+    </head>
+<body>
+
+<div class="nunito" style="background-color: #fcfcfc;">
+   <table>
+    <tr>
+        <td>
+            <img src="https://lasimra.maxvaafrica.com/static/img/Lasimra_logo-full.png" width="100px" /> 
+        </td>
+        <td style="width: 50px;">&nbsp;</td>
+        <td style="vertical-align: bottom; padding-bottom: 5px;">
+            <h1>
+                e-Collections System
+            </h1>
+        </td>
+    </tr>
+</table> 
+    <hr style="color: #EFEFEF; border:0.5px solid #EfEFEF; width: 100% !important;">
+
+{% block content %}{%endblock %}
+
+Best regards,<br/>
+<strong style="color:rgb(255, 145, 0)"><i>Lasimra e-Collection System Team</i></strong>
+<p>&nbsp;</p>
+<hr style="color: #EFEFEF; border:0.5px solid #EfEFEF; width: 100% !important;">
+<table style="font-size: 14px; color: #AAA;">
+    <tr>
+        <td>
+            Lasimra <br>
+            <div class="flex">
+            </div>
+        </td>
+        <td>
+            Powered by Maximum Collections
+            +234 806 364 7344 | info@maximumcollections.com
+            Copyright 2024 © Maximum Collection Systems
+        </td>
+    </tr>
+</table>
+<hr style="color: #EFEFEF; border:0.5px solid #EfEFEF; width: 100% !important;">
+<p style="color: #BBB; font-size:13px;">
+    <center>Privacy Policy | Terms of Use | Visit Lasimra Webiste</center>
+</p>
+
+
+</div>
+</body>
+</html>
