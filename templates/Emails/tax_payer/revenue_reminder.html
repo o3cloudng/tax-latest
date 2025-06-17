@@ -1,17 +1,31 @@
-11. PAYMENT DUE REMINDER
+{% extends 'emailbase.html' %}
+{% block content %}
 
-Subject: Reminder: Upcoming Payment Due - Ref No: [Reference Number]
-Dear Company Name,
-This is a reminder that the payment for your demand notice is due soon. Below are the details of the upcoming payment:
-• Reference Number: [Reference Number]
-• Due Date: [Due Date]
-• Amount Due: [Amount Due]
-Please ensure that the payment is made by the due date to avoid any penalties or additional charges. You can view and
-make the payment by logging into your account using the link below:
-[Login to Lasimra e-Collection System]
-If you have any questions or need further assistance, please contact our support team at [Support Email] or [Support
-Phone Number].
-Thank you for using Lasimra e-Collection System.
 
-Best regards,
-Lasimra e-Collection System Team
+Dear {{company.company_name }},
+<h2>PAYMENT DUE REMINDER</h2>
+
+<!-- Subject: Reminder: Upcoming Payment Due - Ref No: [Reference Number] -->
+
+<p>This is a reminder that the payment for your demand notice is due soon. Below are the details of the upcoming payment:</p>
+<p>
+    <ul>
+        <li>Reference Number: {{referenceid}}</li>
+        <li>Date: {{ dn_date|date:"M d, Y"}}</li>
+        <li>Amount Due: &#8358;{{ amount_due | floatformat:2 | intcomma }}</li>
+    </ul>
+</p>
+
+<p>Please ensure that the payment is made by the due date to avoid any penalties or additional charges. You can view and
+make the payment by logging into your account using the link below:</p>
+
+<p><a href="{{ login }}" class="links">
+    <strong>Login to Lasimra e-Collection System</strong>
+</a></p>
+
+<p>If you have any questions or need further assistance, please contact our support team at {{agency_email}} or
+{{agency_phone}}.</p>
+
+<p>Thank you for using Lasimra e-Collection System.</p>
+
+{% endblock %}

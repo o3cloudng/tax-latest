@@ -1,5 +1,7 @@
-{% load humanize %}
-Dear {{company.company_name}},<br><br>
+{% extends 'emailbase.html' %}
+{% block content %}
+
+<p>Dear Admin,</p>
 <p>Your demand notice has been reviewed by our admin team, and a revised sum has been determined. Below are the updated
     details of your demand notice:</p>
 <p>
@@ -11,7 +13,9 @@ Dear {{company.company_name}},<br><br>
 </p>
 
 <p>To view the revised demand notice, please log in to your account using the link below:</p>
-<p><a href="{{ login }}"><strong>Login to Lasimra e-Collection System</strong></a></p>
+<p><a href="{{ login }}" class="links">
+    <strong>Login to Lasimra e-Collection System</strong>
+</a></p>
 
 <p>Please ensure that the revised amount due is paid by the specified date to avoid any penalties or additional charges.
     If
@@ -20,5 +24,5 @@ Dear {{company.company_name}},<br><br>
     [{{agency_phone}}].</p>
 Thank you for your cooperation and for using Lasimra e-Collection System.
 
-Best regards,<br>
-<strong><i>Lasimra e-Collection System Team</i></strong>
+
+{% endblock %}
