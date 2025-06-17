@@ -61,7 +61,7 @@ class User(AbstractUser, TrackingModel, PermissionsMixin):
     country = models.CharField(max_length=300, default="Nigeria")
     state = models.CharField(max_length=300, default="Lagos State")
     address = models.CharField(max_length=300, null=True)
-    company_logo = models.ImageField(upload_to='uploads/logo/', blank=True, default='uploads/logo/default.png')
+    company_logo = models.ImageField(upload_to='uploads/logo/', blank=True, default='media/uploads/logo/default.png')
     bio_data = models.TextField(blank=True)
     date_enrolled = models.DateField(blank=True, null=True)
     sector = models.ForeignKey(Sector, related_name="sector", on_delete=models.CASCADE, null=True)
