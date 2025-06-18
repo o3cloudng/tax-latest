@@ -110,8 +110,8 @@ def generate_demand_notice(request):
             "login":settings.URL,
             })
         text_content = strip_tags(html_content)
-        send_email_function(html_content, text_content, agency_email, "NEW DEMAND NOTICE")
-        send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
+        send_email_function(html_content, text_content, agency_email, "NOTICE: NEW DEMAND NOTICE")
+        send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: NEW DEMAND NOTICE")
         return redirect('generate_receipt', obj.referenceid)
     
     messages.error(request, 'Failed to generate demand notice')

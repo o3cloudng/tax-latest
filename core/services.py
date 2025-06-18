@@ -10,6 +10,8 @@ from django.core.serializers.json import DjangoJSONEncoder
 import time
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from agency.models import Agency
+
 
 # 2025-06-06 ######
 from django.db.models import (
@@ -33,8 +35,10 @@ def send_demand_notice_email(request, mail_subject, referenceid, created_at, tot
         "dn_date": created_at,
         "login":settings.URL,
         })
+    agency_email = Agency.objects.all().first().agency_email
     text_content = strip_tags(html_content)
     send_email_function(html_content, text_content, to_email, mail_subject)
+    send_email_function(html_content, text_content, agency_email, agency_email_subject)
     send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, agency_email_subject)
 
 
