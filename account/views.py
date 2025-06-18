@@ -120,9 +120,9 @@ def setup_profile(request):
                 })
             text_content = strip_tags(html_content)
             send_email_function(html_content, text_content, to_email, mail_subject)
-            # EMAIL TO ADMIN OF NEW COMAPNY
-            to_email = agency.agency_email
-            
+            # EMAIL TO ADMIN OF NEW COMAPNY            
+            agency_email = agency.agency_email
+            agency_mail_subject = f"New Company Registration Alert - {profile.company_name}"
             html_content = render_to_string("Emails/admin/new_company_reg.html", {
                 "company_name":profile.company_name,
                 "reg_date":profile.created_at,
@@ -133,7 +133,8 @@ def setup_profile(request):
                 "login":settings.URL,
                 })
             text_content = strip_tags(html_content)
-            send_email_function(html_content, text_content, to_email, mail_subject)
+            send_email_function(html_content, text_content, agency_email, agency_mail_subject)
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, agency_mail_subject)
 
 
             messages.success(request, "Profile completed successfully")
