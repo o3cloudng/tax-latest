@@ -35,7 +35,7 @@ def send_demand_notice_email(request, mail_subject, referenceid, created_at, tot
         "dn_date": created_at,
         "login":settings.URL,
         })
-    agency_email = Agency.objects.all().first().agency_email
+    agency_email = Agency.objects.values_list('agency_email', flat=True).first()
     text_content = strip_tags(html_content)
     send_email_function(html_content, text_content, to_email, mail_subject)
     send_email_function(html_content, text_content, agency_email, agency_email_subject)

@@ -204,7 +204,17 @@ def generate_ex_demand_notice(request):
             # Email User
             send_email_function(html_content, text_content, to_email, mail_subject) 
             # Email Agent
-            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
+            html_content = render_to_string("Emails/admin/new_demand_notice.html", {
+                "company":request.user,
+                "amount_due":obj.total_due,
+                "referenceid":obj.referenceid,
+                "dn_date": obj.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            agency_email = Agency.objects.values_list('agency_email', flat=True).first()
+            send_email_function(html_content, text_content, agency_email, "NOTICE: NEW DEMAND NOTICE")
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: NEW DEMAND NOTICE")
             messages.success(request, 'Demand notice created.')
             # messages.success(request, "Notification sent.")
             # print(f"Your email has been sent to {request.user.company_name}")
