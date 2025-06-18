@@ -99,14 +99,15 @@ def apply_remittance(request):
             # remittance.receipt = request.POST.get('receipt')
             remittance.save()
             
+            dn = DemandNotice.objects.get(Q(company=request.user) & Q(referenceid = remittance.referenceid))
             mail_subject = f"UNDISPUTED DEMAND NOTICE - Ref No: {remittance.referenceid}"
             to_email = request.user.email
             
             html_content = render_to_string("Emails/tax_payer/undisputed_notice.html", {
                 "company":request.user,
-                "amount_due":remittance.total_due,
-                "referenceid":remittance.referenceid,
-                "dn_date": remittance.created_at,
+                "amount_due":dn.total_due,
+                "referenceid":dn.referenceid,
+                "dn_date": dn.created_at,
                 "login":settings.URL,
                 })
             text_content = strip_tags(html_content)
@@ -115,9 +116,9 @@ def apply_remittance(request):
             agency_email = Agency.objects.all().first().agency_email
             html_content = render_to_string("Emails/admin/undisputed_demand_notice.html", {
                 "company":request.user,
-                "amount_due":remittance.total_due,
-                "referenceid":remittance.referenceid,
-                "dn_date": remittance.created_at,
+                "amount_due":dn.total_due,
+                "referenceid":dn.referenceid,
+                "dn_date": dn.created_at,
                 "login":settings.URL,
                 })
             text_content = strip_tags(html_content)
