@@ -184,7 +184,7 @@ def pay4it_callback(request):
                 
                 mail_subject = f"Undisputed Paid Demand Notice - Ref No: {referenceid}"
                 email_template = "Emails/tax_payer/paid_undisputed.html"
-                agency_email_subject = f"RESOLVED DEMAND NOTICE - {request.user.company_name}"
+                agency_email_subject = f"UNDISPUTED PAID DEMAND NOTICE - {request.user.company_name}"
                 send_demand_notice_email(request, mail_subject, referenceid, demand_notice.created_at,\
                                           demand_notice.total_due, email_template, agency_email_subject)
 
