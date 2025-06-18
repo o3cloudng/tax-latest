@@ -12,7 +12,7 @@ from django.contrib import messages
 from agency.models import Agency
 from core.decorator import tax_payer_only
 # from agency.penalty_calculation import penalty_calculation
-from core.services import current_year, total_due, penalty_calculation, subtotal_due
+from core.services import current_year, total_due, penalty_calculation, subtotal_due, send_demand_notice_email
 from core import settings
 import json
 from core.utils import send_email_function, taxpayer_notification_email
@@ -98,6 +98,32 @@ def apply_remittance(request):
             remittance.apply_for_waver = request.POST.get('apply_for_waver')
             # remittance.receipt = request.POST.get('receipt')
             remittance.save()
+            
+            mail_subject = f"UNDISPUTED DEMAND NOTICE - Ref No: {remittance.referenceid}"
+            to_email = request.user.email
+            
+            html_content = render_to_string("Emails/tax_payer/undisputed_notice.html", {
+                "company":request.user,
+                "amount_due":remittance.total_due,
+                "referenceid":remittance.referenceid,
+                "dn_date": remittance.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            send_email_function(html_content, text_content, to_email, mail_subject)
+
+            agency_email = Agency.objects.all().first().agency_email
+            html_content = render_to_string("Emails/admin/undisputed_demand_notice.html", {
+                "company":request.user,
+                "amount_due":remittance.total_due,
+                "referenceid":remittance.referenceid,
+                "dn_date": remittance.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            send_email_function(html_content, text_content, agency_email, "NOTICE: UNDISPUTED DEMAND NOTICE")
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: UNDISPUTED DEMAND NOTICE")
+            
 
             messages.success(request, 'Your remittance was added successfully.')
             return redirect('dispute-ex-demand-notice', request.POST.get('referenceid'))
