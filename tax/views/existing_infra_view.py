@@ -212,40 +212,40 @@ def generate_ex_demand_notice(request):
         )
 
         if demand_notice:
-        obj = DemandNotice.objects.get(id=demand_notice.id)
-        # Mark infrastructure as processed
-        infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
-        infra.update(processed=True)
-            # Send Email here for demand notice
-        mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
-        to_email = request.user.email
-        
-        html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
-            "company":request.user,
-            "amount_due":obj.total_due,
-            "referenceid":obj.referenceid,
-            "dn_date": obj.created_at,
-            "login":settings.URL,
-            })
-        text_content = strip_tags(html_content)
-        # Email User
-        send_email_function(html_content, text_content, to_email, mail_subject) 
-        # Email Agent
-        html_content = render_to_string("Emails/admin/new_demand_notice.html", {
-            "company":request.user,
-            "amount_due":obj.total_due,
-            "referenceid":obj.referenceid,
-            "dn_date": obj.created_at,
-            "login":settings.URL,
-            })
-        text_content = strip_tags(html_content)
-        agency_email = Agency.objects.values_list('agency_email', flat=True).first()
-        send_email_function(html_content, text_content, agency_email, "NOTICE: NEW DEMAND NOTICE")
-        send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: NEW DEMAND NOTICE")
-        messages.success(request, 'Demand notice created.')
-        # messages.success(request, "Notification sent.")
-        # print(f"Your email has been sent to {request.user.company_name}")
-        return redirect('generate_ex_receipt', obj.referenceid)
+            obj = DemandNotice.objects.get(id=demand_notice.id)
+            # Mark infrastructure as processed
+            infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
+            infra.update(processed=True)
+                # Send Email here for demand notice
+            mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
+            to_email = request.user.email
+            
+            html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
+                "company":request.user,
+                "amount_due":obj.total_due,
+                "referenceid":obj.referenceid,
+                "dn_date": obj.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            # Email User
+            send_email_function(html_content, text_content, to_email, mail_subject) 
+            # Email Agent
+            html_content = render_to_string("Emails/admin/new_demand_notice.html", {
+                "company":request.user,
+                "amount_due":obj.total_due,
+                "referenceid":obj.referenceid,
+                "dn_date": obj.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            agency_email = Agency.objects.values_list('agency_email', flat=True).first()
+            send_email_function(html_content, text_content, agency_email, "NOTICE: NEW DEMAND NOTICE")
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: NEW DEMAND NOTICE")
+            messages.success(request, 'Demand notice created.')
+            # messages.success(request, "Notification sent.")
+            # print(f"Your email has been sent to {request.user.company_name}")
+            return redirect('generate_ex_receipt', obj.referenceid)
                 
     except Exception as e:
         # print("Unexpected error while creating DemandNotice:", e)
