@@ -98,33 +98,6 @@ def apply_remittance(request):
             remittance.apply_for_waver = request.POST.get('apply_for_waver')
             # remittance.receipt = request.POST.get('receipt')
             remittance.save()
-            
-            dn = DemandNotice.objects.get(Q(company=request.user) & Q(referenceid = remittance.referenceid))
-            mail_subject = f"UNDISPUTED DEMAND NOTICE - Ref No: {remittance.referenceid}"
-            to_email = request.user.email
-            
-            html_content = render_to_string("Emails/tax_payer/undisputed_notice.html", {
-                "company":request.user,
-                "amount_due":dn.total_due,
-                "referenceid":dn.referenceid,
-                "dn_date": dn.created_at,
-                "login":settings.URL,
-                })
-            text_content = strip_tags(html_content)
-            send_email_function(html_content, text_content, to_email, mail_subject)
-
-            agency_email = Agency.objects.all().first().agency_email
-            html_content = render_to_string("Emails/admin/undisputed_demand_notice.html", {
-                "company":request.user,
-                "amount_due":dn.total_due,
-                "referenceid":dn.referenceid,
-                "dn_date": dn.created_at,
-                "login":settings.URL,
-                })
-            text_content = strip_tags(html_content)
-            send_email_function(html_content, text_content, agency_email, "NOTICE: UNDISPUTED DEMAND NOTICE")
-            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: UNDISPUTED DEMAND NOTICE")
-            
 
             messages.success(request, 'Your remittance was added successfully.')
             return redirect('dispute-ex-demand-notice', request.POST.get('referenceid'))
@@ -348,6 +321,33 @@ def dispute_ex_demand_notice(request, ref_id):
     amount_due = demand_notice.amount_due
     annual_fee = demand_notice.annual_fee
     total_liability = demand_notice.total_due #- demand_notice.penalty
+
+    # EMAIL UNDISPUTED
+    mail_subject = f"UNDISPUTED DEMAND NOTICE - Ref No: {remittance.referenceid}"
+    to_email = request.user.email
+    
+    html_content = render_to_string("Emails/tax_payer/undisputed_notice.html", {
+        "company":request.user,
+        "amount_due":demand_notice.total_due,
+        "referenceid":demand_notice.referenceid,
+        "dn_date": demand_notice.created_at,
+        "login":settings.URL,
+        })
+    text_content = strip_tags(html_content)
+    send_email_function(html_content, text_content, to_email, mail_subject)
+
+    agency_email = Agency.objects.all().first().agency_email
+    html_content = render_to_string("Emails/admin/undisputed_demand_notice.html", {
+        "company":request.user,
+        "amount_due":demand_notice.total_due,
+        "referenceid":demand_notice.referenceid,
+        "dn_date": demand_notice.created_at,
+        "login":settings.URL,
+        })
+    text_content = strip_tags(html_content)
+    send_email_function(html_content, text_content, agency_email, "NOTICE: UNDISPUTED DEMAND NOTICE")
+    send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: UNDISPUTED DEMAND NOTICE")
+    
 
     context = {
         'ref_id': ref_id,
