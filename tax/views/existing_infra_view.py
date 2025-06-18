@@ -196,7 +196,7 @@ def generate_ex_demand_notice(request):
     # print(f"PENALTY: {penalty} | TOTAL ANNUAL FEE: {annual_fees}")
     try: 
          demand_notice = DemandNotice.objects.create(
-             created_by=request.user,
+            created_by=request.user,
             company=request.user,
             is_exisiting = True,
             infra = infra,
