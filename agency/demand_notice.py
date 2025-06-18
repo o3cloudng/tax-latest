@@ -426,8 +426,8 @@ def agency_waiver(request, ref_id):
             mail_subject = f"REVISED DEMAND NOTICE!: {ref_id}"
             email_template = "Emails/admin/revised_notice.html"
             agency_email_subject = f"NOTICE: REVISED DEMAND NOTICE - {company.company_name}"
-            send_demand_notice_email(request, mail_subject, ref_id, demand_notice.created_at,\
-                                        total_due, email_template, agency_email_subject)
+            send_demand_notice_email(request, mail_subject, ref_id, dn.created_at, \
+                                     total_due, email_template, agency_email_subject)
         else:
             messages.error(request, 'Waiver failed.')
 
