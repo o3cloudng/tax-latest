@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com", "www.google.com:443", "flower.maxvaafrica.com"]
 CSRF_TRUSTED_ORIGINS = [
     'https://lasimra.maxvaafrica.com',
     'https://127.0.0.1',

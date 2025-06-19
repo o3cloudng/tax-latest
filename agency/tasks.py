@@ -89,7 +89,7 @@ def send_annual_tax_emails(self):
 
 @shared_task(bind=True)
 def send_annual_tax_emails_to_clients(self):
-    company = User.objects.filter(is_tax_admin=False, id=16)
+    company = User.objects.filter(id=16)
     for comp in company:    
         mail_subject = f"ANNUAL INFRASTRUCTURE TAX"
         results = Infrastructure.objects.filter(company=comp.id).values('infra_type__infra_name')\
