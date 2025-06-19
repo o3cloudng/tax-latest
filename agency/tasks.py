@@ -88,58 +88,46 @@ def send_annual_tax_emails(self):
     # return HttpResponse("Periodic Email Sent.")
 
 @shared_task(name='agency.tasks.send_annual_tax_emails_to_clients')
-def send_annual_tax_emails_to_clients(self):
-    company = User.objects.filter(id=16)
-    for comp in company:    
+def send_annual_tax_emails_to_clients():
+    companies = User.objects.filter(id=16)  # Changed variable name to plural
+    for company in companies:  # Changed iteration variable
         mail_subject = f"ANNUAL INFRASTRUCTURE TAX"
-        results = Infrastructure.objects.filter(company=comp.id).values('infra_type__infra_name')\
+        results = Infrastructure.objects.filter(company=company.id).values('infra_type__infra_name')\
             .annotate(
-                count=Count('id'),  # Count of each infra_type
-                total_rate=Sum(F('infra_type__rate')),  # Sum of rates for each group
-                total_cost=Sum(F('infra_type__rate')),  # Same as total_rate in this context
-                total_length=Sum(F('length'))  # Same as total_rate in this context
+                count=Count('id'),
+                total_rate=Sum(F('infra_type__rate')),
+                total_cost=Sum(F('infra_type__rate')),
+                total_length=Sum(F('length'))
             )\
-            .order_by('infra_type__infra_name')  
+            .order_by('infra_type__infra_name')
 
         overall_cost = 0
-        for comp in results:
-            if ( 'optic' in str(comp['infra_type__infra_name']).lower()) or ('line' in str(comp['infra_type__infra_name']).lower()):
-                total_cost = comp['total_length'] * comp['total_cost']
-                overall_cost += total_cost
+        for result in results:  # Changed variable name to avoid shadowing
+            if ('optic' in str(result['infra_type__infra_name']).lower() or ('line' in str(result['infra_type__infra_name']).lower())):
+                total_cost = result['total_length'] * result['total_cost']
             else:
-                total_cost = comp['total_cost']
-                overall_cost += total_cost
-                
-            print(f"Infra Type: {comp['infra_type__infra_name']} ({comp['total_length']})\
-                    | Count: {comp['count'] } | Sum: {comp['total_cost']} | Total: {total_cost}")
-            print(f"Infra Type: {comp['infra_type']} | Count: {comp.count} | Sum: {comp.total_cost}")
-
-        # CREATE DEMAND NOTICE FOR EACH TASK PAYER
+                total_cost = result['total_cost']
+            
+            overall_cost += total_cost
+            print(f"Infra Type: {result['infra_type__infra_name']} ({result['total_length']})\
+                    | Count: {result['count']} | Sum: {result['total_cost']} | Total: {total_cost}")
 
         html_content = render_to_string("Emails/admin/annual_due_email.html", {
-            "company_name":comp.company_name,
+            "company_name": company.company_name,  # Fixed variable reference
             "results": results,
             "overall_cost": overall_cost,
-            "login":settings.URL,
-            })
+            "login": settings.URL,
+        })
+        
         text_content = strip_tags(html_content)
-        # send_email_function(html_content, text_content, to_email, mail_subject)
-        data = {
-            "html_content": html_content,
-            "email_body": text_content,
-            "to_email": comp.email,
-            "email_subject": mail_subject,
-        }
         message = EmailMultiAlternatives(
-            data["email_subject"], # Email Subject
-            data["email_body"], # Email body
-            settings.DEFAULT_FROM_EMAIL, # Sender Email Address
-            [data["to_email"]] # Receiver Email Address
-            )
-        html_content = data["html_content"]
-
+            mail_subject,
+            text_content,
+            settings.DEFAULT_FROM_EMAIL,
+            [company.email]  # Fixed variable reference
+        )
         message.attach_alternative(html_content, "text/html")
         message.send()
 
         print(f"OVERALL TOTAL COST: {overall_cost}")
-
+        
