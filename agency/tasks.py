@@ -87,7 +87,7 @@ def send_annual_tax_emails(self):
     return "Periodic Email Sent."
     # return HttpResponse("Periodic Email Sent.")
 
-@shared_task(bind=True)
+@shared_task(name='agency.tasks.send_annual_tax_emails_to_clients')
 def send_annual_tax_emails_to_clients(self):
     company = User.objects.filter(id=16)
     for comp in company:    
