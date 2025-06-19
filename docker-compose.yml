@@ -84,7 +84,7 @@ services:
       - celery_beat
     ports:
       - "5555:5555"
-    command: celery --broker=redis://redis:6379/0 -A core flower --inspect_timeout=10000 --basic_auth=admin:1Million
+    command: celery --broker=redis://127.0.0.1:6379/0 -A core flower --persistent=True  --worker_timeout=60 --inspect_timeout=20000 --basic_auth=admin:1Million
 
 volumes:
   redis_data:
