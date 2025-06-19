@@ -63,6 +63,7 @@ services:
       - .env.production
     depends_on:
       - redis
+      - celery_worker
     command: celery -A core beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
   flower:
