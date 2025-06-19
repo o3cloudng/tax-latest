@@ -83,7 +83,7 @@ services:
       - celery_worker
     ports:
       - "5555:5555"
-    command: celery --broker=redis://127.0.0.1:6379/0 -A core flower --basic_auth=admin:1Million
+    command: celery --broker=redis://127.0.0.1:6379/0 -A core flower --basic_auth=admin:1Million --port=5555
 
 volumes:
   redis_data:
