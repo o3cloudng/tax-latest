@@ -289,3 +289,12 @@ CBS_URL='https://sandbox.usepay4it.com/api/v1/abc/BillReferenceGeneration'
 CBS_URL_VERIFY='https://usepay4it.com/api/v1/abc/GetTransactionByPaymentRef'
 REVENUE_CODE='4010002'
 AGENCY_CODE='4250000'
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    'send-annual-tax-emails': {
+        'task': 'agency.tasks.send_annual_tax_emails_to_clients',
+        'schedule': timedelta(minutes=2),
+    },
+}
