@@ -110,9 +110,9 @@ def send_annual_tax_emails_to_clients(self):
                 total_cost = comp['total_cost']
                 overall_cost += total_cost
                 
-            # print(f"Infra Type: {comp['infra_type__infra_name']} ({comp['total_length']})\
-            #         | Count: {comp['count'] } | Sum: {comp['total_cost']} | Total: {total_cost}")
-            # print(f"Infra Type: {comp['infra_type']} | Count: {comp.count} | Sum: {comp.total_cost}")
+            print(f"Infra Type: {comp['infra_type__infra_name']} ({comp['total_length']})\
+                    | Count: {comp['count'] } | Sum: {comp['total_cost']} | Total: {total_cost}")
+            print(f"Infra Type: {comp['infra_type']} | Count: {comp.count} | Sum: {comp.total_cost}")
 
         # CREATE DEMAND NOTICE FOR EACH TASK PAYER
 

@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 # load_dotenv()
 load_dotenv(dotenv_path='/opt/tax-latest/.env.production')
 
-DEBUG=os.environ.get('DEBUG')
+DEBUG=os.environ.get('DEBUG', 'False')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # config = AutoConfig(search_path='/home/tax-latest/.env')
