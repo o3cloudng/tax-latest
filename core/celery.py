@@ -30,7 +30,8 @@ app.conf.beat_scheduler = {
     }
 }
 # Load task modules from all registered Django app configs.
-app.autodiscover_tasks()
+# app.autodiscover_tasks()
+app.autodiscover_tasks(['agency'])
 
 # We used CELERY_BROKER_URL in settings.py instead of:
 # app.conf.broker_url = ''
