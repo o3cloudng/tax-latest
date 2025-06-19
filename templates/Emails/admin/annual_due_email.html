@@ -1,0 +1,46 @@
+{% extends 'emailbase.html' %}
+{% load humanize %}
+{% block content %}
+
+<p>Dear {{company_name}},</p>
+<h2>ANNUAL INFRASTRUCTURE DUE</h2>
+
+<p>We are excited to have you on board. With your new account, you can now take advantage of our platform to manage your
+    infrastructure tax dues efficiently.</p>
+
+<p>To get started, you can apply for a new permit to create infrastructure or register an existing infrastructure. </p>
+
+<p>To explore these options and start using our services, please log in to your account using the link below:</p>
+<P>
+    <table>
+        <tr>
+            <th>No</th>
+            <th>Infrastructure</th>
+            <th>Quantity</th>
+            <th>Cost (&#8358;)</th>
+        </tr>
+        {% for res in results %}
+        <tr>
+            <td></td>
+            <td>{{res['infra_type__infra_name']}}</td>
+            <td>{{ res['count'] }}</td>
+            <td>{{ res['total_cost'] | floatformat:2 | intcomma }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th colspan="3">&nbsp;</th>
+            <th>&#8358;{{ overall_cost | floatformat:2 | intcomma }}</th>
+        </tr>
+    </table>
+</P>
+<p><a href="{{ login }}" class="links">
+    <strong>Login to Lasimra e-Collection System</strong>
+</a></p>
+
+<p>If you have any questions or need assistance, our support team is here to help. You can reach us at
+    [{{agency_email}}] or
+    [{{agency_phone}}].</p>
+
+<p>Thank you for choosing Lasimra e-Collection System. We look forward to serving you.</p>
+
+{% endblock %}
