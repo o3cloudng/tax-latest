@@ -293,7 +293,7 @@ AGENCY_CODE='4250000'
 
 
 CELERY_BEAT_SCHEDULE = {
-    'send-annual-tax-emails': {
+    'send_annual_tax_emails_to_clients': {
         'task': 'agency.tasks.send_annual_tax_emails_to_clients',
         'schedule': timedelta(minutes=2),
     },
