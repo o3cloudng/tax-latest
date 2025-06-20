@@ -1,6 +1,24 @@
 {% extends 'emailbase.html' %}
 {% load humanize %}
 {% block content %}
+<style>
+    .table-bordered {
+        border-collapse: collapse; /* Ensures borders are merged */
+        width: 100%; /* Optional: Adjust width as needed */
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #000; /* 1px solid black border */
+        padding: 8px; /* Optional: Adds padding inside cells */
+        text-align: left; /* Optional: Aligns text to the left */
+    }
+
+    /* Optional: Add a different background for headers */
+    .table-bordered th {
+        background-color: #f2f2f2;
+    }
+</style>
 
 <p>Dear {{company_name}},</p>
 <h2>ANNUAL INFRASTRUCTURE DUE</h2>
@@ -12,7 +30,7 @@
 
 <p>To explore these options and start using our services, please log in to your account using the link below:</p>
 <P>
-    <table>
+    <table class="table-bordered">
         <tr>
             <th>No</th>
             <th>Infrastructure</th>
@@ -21,15 +39,15 @@
         </tr>
         {% for res in results %}
         <tr>
-            <td></td>
-            <td>{{res['infra_type__infra_name']}}</td>
-            <td>{{ res['count'] }}</td>
-            <td>{{ res['total_cost'] | floatformat:2 | intcomma }}</td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ res.infra_type__infra_name }}</td>
+            <td>{{ res.count }}</td>
+            <td style="float: left;">{{ res.total_cost  | floatformat:2 | intcomma }}</td>
         </tr>
         {% endfor %}
         <tr>
             <th colspan="3">&nbsp;</th>
-            <th>&#8358;{{ overall_cost | floatformat:2 | intcomma }}</th>
+            <th style="float: left;">&#8358;{{ overall_cost | floatformat:2 | intcomma }}</th>
         </tr>
     </table>
 </P>

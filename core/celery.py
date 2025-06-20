@@ -24,9 +24,9 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 
 app.conf.beat_scheduler = {
-    'send-annual-email': {
-        'task':'agency.tasks.send_periodic_emails',
-        'schedule': crontab(hour=10, minute=30),
+    'send_annual_tax_emails_to_clients': {
+        'task':'agency.tasks.send_annual_tax_emails_to_clients',
+        'schedule': crontab(hour=12, minute=1),
     }
 }
 # Load task modules from all registered Django app configs.

@@ -90,6 +90,7 @@ def send_annual_tax_emails(self):
 @shared_task(name='agency.tasks.send_annual_tax_emails_to_clients')
 def send_annual_tax_emails_to_clients():
     companies = User.objects.filter(id=16)  # Changed variable name to plural
+    # companies = User.objects.filter(id__in=[7, 16])  # Testing
     for company in companies:  # Changed iteration variable
         mail_subject = f"ANNUAL INFRASTRUCTURE TAX"
         results = Infrastructure.objects.filter(company=company.id).values('infra_type__infra_name')\
@@ -109,8 +110,8 @@ def send_annual_tax_emails_to_clients():
                 total_cost = result['total_cost']
             
             overall_cost += total_cost
-            print(f"Infra Type: {result['infra_type__infra_name']} ({result['total_length']})\
-                    | Count: {result['count']} | Sum: {result['total_cost']} | Total: {total_cost}")
+            # print(f"Infra Type: {result['infra_type__infra_name']} ({result['total_length']})\
+            #         | Count: {result['count']} | Sum: {result['total_cost']} | Total: {total_cost}")
 
         html_content = render_to_string("Emails/admin/annual_due_email.html", {
             "company_name": company.company_name,  # Fixed variable reference
