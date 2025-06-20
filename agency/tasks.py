@@ -89,8 +89,8 @@ def send_annual_tax_emails(self):
 
 @shared_task(name='agency.tasks.send_annual_tax_emails_to_clients')
 def send_annual_tax_emails_to_clients():
-    companies = User.objects.filter(id=16)  # Changed variable name to plural
-    # companies = User.objects.filter(id__in=[7, 16])  # Testing
+    # companies = User.objects.filter(id=16)  # Changed variable name to plural
+    companies = User.objects.filter(id__in=[7, 16])  # Testing
     for company in companies:  # Changed iteration variable
         mail_subject = f"ANNUAL INFRASTRUCTURE TAX"
         results = Infrastructure.objects.filter(company=company.id).values('infra_type__infra_name')\
