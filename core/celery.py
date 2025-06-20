@@ -23,7 +23,7 @@ app.conf.update(timezone="Africa/Lagos")
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 
-app.conf.beat_scheduler = {
+app.conf.beat_schedule = {
     'send_annual_tax_emails_to_clients': {
         'task':'agency.tasks.send_annual_tax_emails_to_clients',
         'schedule': crontab(hour=12, minute=1),
