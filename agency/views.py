@@ -331,6 +331,76 @@ def agency_infrastructure(request):
 
 @login_required
 @admin_only
+def agency_company_infrastructure(request, pk):
+    company = User.objects.get(pk=pk)
+    infrastructures = Infrastructure.objects.filter(company=company.id)
+    masts = infrastructures.filter(Q(infra_type__infra_name__icontains="mast"))
+    rooftop = infrastructures.filter(Q(infra_type__infra_name__icontains="rooftop"))
+    m = Q(infra_type__infra_name__icontains="mast")
+    r = Q(infra_type__infra_name__icontains="roof")
+    f = Q(infra_type__infra_name__icontains="fibre")
+    others = infrastructures.filter(~m & ~r & ~f)
+    # mast_roof = Q(infra_type__infra_name__icontains="roof") | Q(infra_type__infra_name__icontains="mast")
+    
+    one_month = Q(created_at__gte=(now()-relativedelta(months=1)))
+    # roof = Permit.objects.filter(is_disp & roof)
+    fibre = infrastructures.filter(Q(infra_type__infra_name__icontains="fibre"))
+    power_line = infrastructures.filter(Q(infra_type__infra_name__icontains="power"))
+    pipeline = infrastructures.filter(Q(infra_type__infra_name__icontains="pipe"))
+    gas_powerline = infrastructures.filter(Q(infra_type__infra_name__icontains="gas") &\
+                                            Q(infra_type__infra_name__icontains="line"))
+
+    # infrastructures = Permit.objects.all()
+
+    # Percentage in the past 1 Month
+    if masts.exists():
+        mast_last_month =  infrastructures.filter(one_month)
+        mast_last_month_perc = mast_last_month.count() / masts.count() * 100
+    else:
+        mast_last_month_perc = 0 
+
+    if fibre.exists():
+        fibre_last_month =  infrastructures.filter(one_month & Q(infra_type__infra_name__icontains="fibre"))
+        fibre_last_month_perc = fibre_last_month.count() / fibre.count() * 100
+        
+    else:
+        fibre_last_month_perc = 0
+
+    if power_line.exists():
+        power_line_last_month =  infrastructures.filter(one_month & Q(infra_type__infra_name__icontains="power"))
+        power_line_last_month_perc = power_line_last_month.count() / power_line.count() * 100
+        
+    else:
+        power_line_last_month_perc = 0
+    if pipeline.exists():
+        pipeline_last_month =  infrastructures.filter(one_month & Q(infra_type__infra_name__icontains="pipe"))
+        pipeline_last_month_perc = pipeline_last_month.count() / pipeline.count() * 100
+        
+    else:
+        pipeline_last_month = 0
+
+    
+
+    # mast_count = masts.aggregate(no_m = Sum('amount'))
+    
+    context = {
+        "company": company,
+        "infrastructures": infrastructures,
+        "rooftop": rooftop,
+        "masts": masts,
+        "others": others,
+        "mast_last_month_perc": mast_last_month_perc,
+        "power_line": power_line,
+        "power_line_last_month_perc": power_line_last_month_perc,
+        "pipeline": pipeline,
+        "fibre": fibre,
+        "fibre_last_month_perc": fibre_last_month_perc,
+        "gas_powerline": gas_powerline
+    }
+    return render(request, 'agency/pages/admin-company-infrastructure.html', context)
+
+@login_required
+@admin_only
 def agency_companies(request):
     companies = User.objects.filter(Q(is_tax_admin = False) & Q(is_superuser = False))
     comp_count = companies.count()

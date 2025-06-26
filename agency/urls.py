@@ -15,6 +15,7 @@ urlpatterns = [
     path('table2/', DemandTable.as_view(), name="demand_notice_table2"),
     path('dispute-notice/', agency_disputes, name="agency_disputes"),
     path('infrastructure/', agency_infrastructure, name="agency_infrastructure"),
+    path('companies/<int:pk>/infrastructure/', agency_company_infrastructure, name="agency_company_infrastructure"),
     path('companies/', agency_companies, name="agency_companies"),
     path('companies/details/<int:pk>/', agency_companies_details, name="agency_companies_details"),
     path('companies/revised/notify/', send_revised_notice, name="send_revised_notice"),
