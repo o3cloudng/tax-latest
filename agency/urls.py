@@ -45,7 +45,7 @@ urlpatterns = [
 
     # DEMAND NOTICE
     path('infrastructure/demand_notice/ex/', generate_ex_demand_notice, name="agency_company_ex_add"),
-    path('infrastructure/process/<str:ref_id>/ex/', agency_generate_ex_receipt, name="agency_generate_ex_receipt"),
+    path('infrastructure/process/ex/<str:ref_id>/', agency_generate_ex_receipt, name="agency_generate_ex_receipt"),
     
     # Edit Demand Notice
     path('companies/disputed/edit/<str:ref_id>/', edit_disputed_demand_notice, name="edit_disputed_demand_notice"),

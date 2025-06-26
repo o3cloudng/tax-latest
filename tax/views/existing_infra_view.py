@@ -279,6 +279,8 @@ def generate_ex_receipt(request, ref_id):
         'sar_fee':admin_settings.get(slug='site-assessment').rate,
         'infrastructure': infra,
         'penalty': demand_notice.penalty,
+        'total_b4_penalty': demand_notice.subtotal + demand_notice.admin_fee + demand_notice.site_assessment +\
+            demand_notice.application_fee + demand_notice.annual_fee,
         'total_liability': demand_notice.total_due,
         'site_assessment_cost': demand_notice.site_assessment       
     }
@@ -366,12 +368,15 @@ def undispute_ex_demand_notice_receipt(request, ref_id):
         'admin_pm_fees_sum': demand_notice.admin_fee,
         'site_assessment': demand_notice.site_assessment,
         'total_due': demand_notice.total_due,
+        'total_b4_penalty': demand_notice.subtotal + demand_notice.admin_fee + demand_notice.site_assessment +\
+            demand_notice.application_fee + demand_notice.annual_fee,
         'admin_rate':admin_settings.get(slug='admin-pm-fees').rate,
         'sar_fee':admin_settings.get(slug='site-assessment').rate,
         'annual_fee':admin_settings.get(slug='annual-fee').rate,
         'infrastructure': infra,
         'penalty': demand_notice.penalty,
         'remittance': demand_notice.remittance,
+        'amount_paid': demand_notice.amount_paid,
         'annual_fees': demand_notice.annual_fee,
         'total_liability': demand_notice.total_due,
         'site_assessment_cost': demand_notice.site_assessment       

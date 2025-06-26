@@ -137,9 +137,21 @@
                 <td>Annual fees</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
+                <td class="!text-right">&#8358;{{ annualfee | floatformat:2 | intcomma }}</td>
                 <td class="!text-right">&#8358;{{ annual_fee | floatformat:2 | intcomma }}</td>
-                <td class="!text-right">&#8358;{{ annual_fees | floatformat:2 | intcomma }}</td>
               </tr>
+              <div class="font-normal w-full text-sm text-orange-800 flex flex-row justify-between items-center p-3">
+                <p>Total Due</p>
+                <h4>&#8358;{{ amount_due | floatformat:2 | intcomma }}</h4>
+              </div>
+              <div class="font-normal text-sm w-full text-red-800 flex flex-row justify-between items-center p-3">
+                <p>Penalty</p>
+                <p>&nbsp;</p>
+                <p></p>
+                <p>&nbsp;</p>
+                <p class="!text-right"></p>
+                <h4 class="">&#8358;{{ penalty | floatformat:2 | intcomma }}</h4>
+              </div>
               <tr>
                 <td class="text-green-600">Remittance</td>
                 <td>
@@ -152,18 +164,6 @@
               </tr>
             </tbody>
           </table>
-          <div class="font-normal w-full text-sm text-orange-800 flex flex-row justify-between items-center p-3">
-            <p>Total Due</p>
-            <h4>&#8358;{{ amount_due | floatformat:2 | intcomma }}</h4>
-          </div>
-          <div class="font-normal text-sm w-full text-red-800 flex flex-row justify-between items-center p-3">
-            <p>Penalty</p>
-            <p>&nbsp;</p>
-            <p></p>
-            <p>&nbsp;</p>
-            <p class="!text-right"></p>
-            <h4 class="">&#8358;{{ penalty | floatformat:2 | intcomma }}</h4>
-          </div>
           <div class="font-normal text-sm w-full text-green-800 flex flex-row justify-between items-center p-3">
             <p>Waiver Applied</p>
             <h4 class="">&#8358;{{ waiver_applied | floatformat:2 | intcomma }}</h4>

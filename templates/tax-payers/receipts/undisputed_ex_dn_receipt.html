@@ -21,8 +21,11 @@
         <div class="flex flex-row justify-between items-center">
           <img src="{% static 'img/Lasimra_logo-full.png' %}" alt="" class="w-20 h-20" />
           <div class="w-80 text-left">
-            <h1 class="text-orange-400 font-semibold text-4xl my-2">
-              Undisputed Demand Notice
+            <h1 class="text-orange-800 font-semibold text-4xl my-2">
+              Undisputed 
+              {% if amount_paid %}
+              (Paid)
+              {% endif %} Demand Notice
             </h1>
             <p class="text-xs text-gray-800 font-semibold">
               Reference ID: {{ ref_id }}
@@ -69,7 +72,7 @@
                 <p class="font-semibold">Terms: <span class="text-gray-600">Due on Receipt</span></p>
               </div>
               <div
-                class="text-orange-400 font-semibold mt-2 bg-gray-100 rounded-md shadow-sm p-2 hover:bg-orange-400 hover:text-white">
+                class="text-orange-800 font-semibold mt-2 bg-gray-100 rounded-md shadow-sm p-2 hover:bg-orange-400 hover:text-white">
                 <h2 class="block text-sm">Amount Due:</h2>
                 <h2 class="text-2xl font-bold">&#8358;{{ total_liability | floatformat:2 | intcomma }}</h2>
               </div>
@@ -139,7 +142,7 @@
                 <td class="!text-right">&#8358;{{ annual_fee | floatformat:2 | intcomma }}</td>
                 <td class="!text-right">&#8358;{{ annual_fees | floatformat:2 | intcomma }}</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="text-green-600">Remittance</td>
                 <td>
                 </td>
@@ -148,12 +151,12 @@
                 <td class="!text-right text-green-600">
                   &#8358;{{ remittance | floatformat:2 | intcomma }}
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
           <div class="font-normal w-full text-sm text-orange-800 flex flex-row justify-between items-center p-3">
-            <p>Total Due</p>
-            <h4>&#8358;{{ total_due | floatformat:2 | intcomma }}</h4>
+            <p>Total Due (No penalty)</p>
+            <h4>&#8358;{{ total_b4_penalty | floatformat:2 | intcomma }}</h4>
           </div>
           <div class="font-normal text-sm w-full text-red-800 flex flex-row justify-between items-center p-3">
             <p>Penalty</p>
@@ -162,6 +165,22 @@
             <p>&nbsp;</p>
             <p class="!text-right"></p>
             <h4 class=""><strike>&#8358;{{ penalty | floatformat:2 | intcomma }}</strike></h4>
+          </div>
+          <div class="font-normal text-sm w-full text-green-600 flex flex-row justify-between items-center p-3">
+            <p>Remittance</p>
+            <p>&nbsp;</p>
+            <p></p>
+            <p>&nbsp;</p>
+            <p class="!text-right"></p>
+            <h4 class="!text-right text-green-600">&#8358;{{ remittance | floatformat:2 | intcomma }}</h4>
+          </div>
+          <div class="font-normal text-sm w-full text-green-600 flex flex-row justify-between items-center p-3">
+            <p>Amount Paid</p>
+            <p>&nbsp;</p>
+            <p></p>
+            <p>&nbsp;</p>
+            <p class="!text-right"></p>
+            <h4 class="!text-right text-green-600">&#8358;{{ amount_paid | floatformat:2 | intcomma }}</h4>
           </div>
           <!-- <div class="font-normal text-sm w-full text-green-800 flex flex-row justify-between items-center p-3">
             <p>Waiver Applied</p>
@@ -172,8 +191,15 @@
             <h3>&#8358;{{ total_liability | floatformat:2 | intcomma }}</h3>
           </div>
         </div>
+        {% if not request.user.is_tax_admin %}
+        <div class="mt-5 bg-orange-100 border border-red-700 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong class="font-bold">Thank you!</strong>
+          <span class="block sm:inline">Your undisputed demand notice payment has been received. A LASIMRA designated account manager
+              will contact you to RESOLVE outstanding dues (e.g. accrued penalties and other applicable fees)</span>
+        </div>
+        {% endif %}
         <div class="flex flex-col p-3 gap-4 w-full">
-          <div class="w-80 flex flex-row mx-auto gap-4 my-4 justify-center">
+          <div class="w-80 flex flex-row mx-auto gap-4 justify-center">
             <form action="{% url 'initiate_payment' %}" method="POST">
               {% csrf_token %}
               <input type="hidden" name="email" value="{{ request.user }}" />

@@ -92,7 +92,8 @@ def agency_generate_demand_notice(request, pk):
             # Email User
             send_email_function(html_content, text_content, to_email, mail_subject) 
             # Email Agent
-            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: NEW DEMAND NOTICE")
+            send_email_function(html_content, text_content, agency.email, "NOTICE: NEW DEMAND NOTICE")
             messages.success(request, 'Demand notice created.')
             # messages.success(request, "Notification sent.")
             # print(f"Your email has been sent to {request.user.company_name}")
@@ -209,7 +210,7 @@ def apply_for_existing_permit(request, pk):
 def generate_ex_demand_notice(request):
     company = User.objects.get(pk=request.POST.get("company"))
     agency = request.user
-    # ref_id = generate_ref_id()
+    # ref_id = request.POST.get("referenceid")
     
     total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = agency_total_due(company, True, agency)
 
@@ -222,33 +223,34 @@ def generate_ex_demand_notice(request):
     penalty = penalty_fee
     annual_fees = total_annual_fees
     try: 
-         demand_notice = DemandNotice.objects.create(
-             created_by=request.user,
-            company=company,
-            is_exisiting = True,
-            infra = infra,
-            subtotal = subtotal,
-            amount_due = subtotal + application_cost + admin_fees + sar_cost,
-            annual_fee = annual_fees,
-            penalty = penalty,
-            application_fee = application_cost,
-            admin_fee = admin_fees,
-            site_assessment = sar_cost,
-            total_due = total_sum + penalty + annual_fees,
-            status="DEMAND NOTICE"
-         )
+        demand_notice = DemandNotice.objects.create(
+        created_by=request.user,
+        company=company,
+        is_exisiting = True,
+        infra = infra,
+        subtotal = subtotal,
+        amount_due = subtotal + application_cost + admin_fees + sar_cost,
+        annual_fee = annual_fees,
+        penalty = penalty,
+        application_fee = application_cost,
+        admin_fee = admin_fees,
+        site_assessment = sar_cost,
+        total_due = total_sum + penalty + annual_fees,
+        status="DEMAND NOTICE"
+        )
 
-         if demand_notice:
+        if demand_notice:
             obj = DemandNotice.objects.get(id=demand_notice.id)
             # Mark infrastructure as processed
             infra = Infrastructure.objects.filter(Q(is_existing=True) & Q(processed=False))
             infra.update(processed=True)
-             # Send Email here for demand notice
+                # Send Email here for demand notice
             mail_subject = f"Your Demand Notice Has Been Created Successfully - Ref No: {obj.referenceid}"
-            to_email = request.user.email
+            # to_email = request.user.email
+            to_email = company.email
             
             html_content = render_to_string("Emails/tax_payer/demand_notice.html", {
-                "company":request.user,
+                "company":company,
                 "amount_due":obj.total_due,
                 "referenceid":obj.referenceid,
                 "dn_date": obj.created_at,
@@ -258,12 +260,20 @@ def generate_ex_demand_notice(request):
             # Email User
             send_email_function(html_content, text_content, to_email, mail_subject) 
             # Email Agent
-            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NEW DEMAND NOTICE")
+            html_content = render_to_string("Emails/admin/new_demand_notice.html", {
+                "company":company,
+                "amount_due":obj.total_due,
+                "referenceid":obj.referenceid,
+                "dn_date": obj.created_at,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: NEW DEMAND NOTICE")
+            send_email_function(html_content, text_content, request.user.email, "NOTICE: NEW DEMAND NOTICE")
             messages.success(request, 'Demand notice created.')
-            # messages.success(request, "Notification sent.")
-            # print(f"Your email has been sent to {request.user.company_name}")
-            return redirect('agency_generate_ex_receipt', obj.pk)
-                 
+            print(f"OBJ REF: {obj.referenceid}")
+            return redirect('agency_generate_ex_receipt', obj.referenceid)
+                
 
     except Exception as e:
         # print("Unexpected error while creating DemandNotice:", e)
@@ -304,7 +314,10 @@ def agency_generate_ex_receipt(request, ref_id):
     # ref_id = request.POST.get('referenceid')
     # company = User.objects.get(pk=request.POST.get('company'))
 
+    print(f"REF ID: {ref_id}")
+
     demand_notice = DemandNotice.objects.get(referenceid=ref_id)
+    print(f"DEMAND NOTICE: {demand_notice}")
 
     infra = demand_notice.infra
     infra = infra.replace("'", '"')

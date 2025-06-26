@@ -453,12 +453,13 @@ def agency_total_due(company, ex, agency):
         .annotate(num = Count('infra_type'), costing = Sum('cost'))\
             .order_by('infra_type')
     # Cost of all Infrastructure
+    print(f"INFRASTRUCTURE: {infrastructure}")
     sum_cost_infrastructure = infrastructure.aggregate(total_sum = Sum('cost'))['total_sum']
     subtotal = infrastructure.aggregate(total = Sum('costing'))['total']
     # Application cost
     application_cost = infrastructure.count() * AdminSetting.objects.get(slug='application-fee').rate
     # Administartive fees
-    print(f"ADMIN FEE: {AdminSetting.objects.get(slug='admin-pm-fees').rate} | {type(AdminSetting.objects.get(slug='admin-pm-fees').rate)}")
+    # print(f"ADMIN FEE: {AdminSetting.objects.get(slug='admin-pm-fees').rate} | {type(AdminSetting.objects.get(slug='admin-pm-fees').rate)}")
     print(f"SUM: {sum_cost_infrastructure} | {type(sum_cost_infrastructure)}")
     admin_fees = AdminSetting.objects.get(slug='admin-pm-fees').rate * sum_cost_infrastructure / 100
 
