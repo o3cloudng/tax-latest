@@ -120,30 +120,30 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # if os.environ.get('DEBUG'):
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#         }
+#     }
 # else:
 # print(f"We are in production mode: {os.environ.get('DB_HOST')}")
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
-#         'NAME': os.environ.get('DB_NAME'),
-#         'USER': os.environ.get('DB_USER'),
-#         'PASSWORD': os.environ.get('DB_PASS'),
-#         'HOST': os.environ.get('DB_HOST'),
-#         'PORT': os.environ.get('DB_PORT', '25060'),
-#         'OPTIONS': {
-#             'connect_timeout': 5,
-#             # Explicitly disable socket connection
-#             'client_encoding': 'UTF8',
-#             'sslmode': 'require',
-#         },
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT', '25060'),
+        'OPTIONS': {
+            'connect_timeout': 5,
+            # Explicitly disable socket connection
+            'client_encoding': 'UTF8',
+            'sslmode': 'require',
+        },
+    }
+}
 # print("Database connected successfully")
 # HTTPS / Security
 
