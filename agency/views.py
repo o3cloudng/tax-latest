@@ -347,11 +347,13 @@ def agency_company_infrastructure(request, pk):
     fibre = infrastructures.filter(Q(infra_type__infra_name__icontains="fibre"))
     power_line = infrastructures.filter(Q(infra_type__infra_name__icontains="power"))
     pipeline = infrastructures.filter(Q(infra_type__infra_name__icontains="pipe"))
-    gas_powerline = infrastructures.filter(Q(infra_type__infra_name__icontains="gas") &\
-                                            Q(infra_type__infra_name__icontains="line"))
-
-    # infrastructures = Permit.objects.all()
-
+    gas_powerline = infrastructures.filter(Q(infra_type__infra_name__icontains='gas') | \
+                     Q(infra_type__infra_name__icontains='line'))
+    
+    test = Infrastructure.objects.filter(Q(infra_type__infra_name__icontains='gas') | \
+                     Q(infra_type__infra_name__icontains='line'))
+    
+    # infrastructures = Permit.objects.all(
     # Percentage in the past 1 Month
     if masts.exists():
         mast_last_month =  infrastructures.filter(one_month)

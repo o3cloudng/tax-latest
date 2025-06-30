@@ -49,7 +49,7 @@
           <div class="card">
           
             <p>Gas/Powerlines</p>
-            <h4>{{ others.count }}</h4>
+            <h4>{{ gas_powerline.count }}</h4>
           
           </div>
         </div>
@@ -591,8 +591,8 @@
                       </thead>
                       <!-- hover:[&>*:nth-child(odd)]:bg-white -->
                     <tbody class="divide-y divide-gray-100 bg-white ">
-                    {% if gas.exists %}
-                     {% for m in gas %}
+                    {% if gas_powerline.exists %}
+                     {% for m in gas_powerline %}
                       <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ m.infra_type }}</td>

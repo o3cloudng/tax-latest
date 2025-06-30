@@ -101,7 +101,7 @@ def demand_notice(request):
 def infrastructures(request):
     # Infrastructure should appear for only paid
     all = Infrastructure.objects.select_related('infra_type').\
-        filter(Q(company=request.user) & Q(processed=True)).order_by('-updated_at')
+        filter(Q(company=request.user)).order_by('-created_at')
     # all = all.values('infra_type__infra_name', 'cost')\
     #     .annotate(num = Count('infra_type'), dt = Max('created_at'))\
     #         .order_by('infra_type')
@@ -114,11 +114,13 @@ def infrastructures(request):
 
     fibre = all.filter(infra_type__infra_name__icontains='fibre')
     pipe = all.filter(infra_type__infra_name__icontains='pipe')
-    gas = all.filter(Q(infra_type__infra_name__icontains='gas') | \
+    gas_powerline = all.filter(Q(infra_type__infra_name__icontains='gas') | \
                      Q(infra_type__infra_name__icontains='line'))
     others = all.filter(~Q(infra_type__infra_name__icontains='mast') & \
                         ~Q(infra_type__infra_name__icontains='roof') & \
                             ~Q(infra_type__infra_name__icontains='fibre'))
+    
+    print(f"CLIENT - GAS/PIPELINE: {gas_powerline.count()}")
     context = {
         "infrastructures": infrastructures,
          "masts": masts,
@@ -128,7 +130,7 @@ def infrastructures(request):
          "others": others,
          "fibre": fibre,
         "pipe": pipe,
-        "gas": gas
+        "gas_powerline": gas_powerline
     }
     return render(request, 'tax-payers/infrastructure.html', context)
 

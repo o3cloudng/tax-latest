@@ -23,16 +23,16 @@
       <h4>
         {{ masts.count }}
       </h4>
-      <p class="text-xs font-thin"><span class="font-normal text-orange-400">+{{mast_last_month_perc | floatformat:1 }}%
-        </span>in the past 30 days</p>
+      <!-- <p class="text-xs font-thin"><span class="font-normal text-orange-400">+{{mast_last_month_perc | floatformat:1 }}%
+        </span>in the past 30 days</p> -->
     </div>
 
   </div><div class="card">
     <p class="text-md font-thin">Rooftop</p>
     <div class="flex flex-col mb-3">
       <h4>{{ rooftop.count }}</h4>
-      <p class="text-xs font-thin"><span class="font-normal text-orange-400">+{{power_line_last_month_perc}}%
-        </span>from last month</p>
+      <!-- <p class="text-xs font-thin"><span class="font-normal text-orange-400">+{{power_line_last_month_perc}}%
+        </span>from last month</p> -->
     </div>
   </div>
   <div class="card">
@@ -40,12 +40,12 @@
     <div class="flex flex-col mb-3">
       {% if fibre.exists %}
       <h4>{{ fibre.count }}</h4>
-      <p class="text-xs font-thin"><span class="font-normal text-orange-400">
-          +{{ fibre_last_month_perc | floatformat:1 }}% </span>in the past 30 days</p>
+      <!-- <p class="text-xs font-thin"><span class="font-normal text-orange-400">
+          +{{ fibre_last_month_perc | floatformat:1 }}% </span>in the past 30 days</p> -->
       {% else %}
       <h4>0</h4>
-      <p class="text-xs font-thin"><span class="font-normal text-orange-400">+0%
-        </span>in the past 30 days</p>
+      <!-- <p class="text-xs font-thin"><span class="font-normal text-orange-400">+0%
+        </span>in the past 30 days</p> -->
       {% endif %}
     </div>
 
@@ -55,10 +55,10 @@
     <div class="flex flex-col mb-3">
       {% if gas_powerline.exists %}
       <h4>{{ gas_powerline.count }}</h4>
-      <p class="text-xs font-thin"><span class="font-normal text-orange-400">+25% </span>from last month</p>
+      <!-- <p class="text-xs font-thin"><span class="font-normal text-orange-400">+25% </span>from last month</p> -->
       {% else %}
       <h4>0</h4>
-      <p class="text-xs font-thin"><span class="font-normal text-orange-400">+0% </span>from last month</p>
+      <!-- <p class="text-xs font-thin"><span class="font-normal text-orange-400">+0% </span>from last month</p> -->
       {% endif %}
     </div>
   </div>
