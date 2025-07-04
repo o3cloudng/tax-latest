@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   redis:
@@ -22,7 +22,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /opt/tax-latest:/opt/tax-latest
+      - ./:/opt/tax-latest
       - static_volume:/opt/tax-latest/staticfiles
       - media_volume:/opt/tax-latest/media
     networks:
