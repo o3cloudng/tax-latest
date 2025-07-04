@@ -22,7 +22,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./:/opt/tax-latest
+      - .:/opt/tax-latest
       - static_volume:/opt/tax-latest/staticfiles
       - media_volume:/opt/tax-latest/media
     networks:
@@ -40,7 +40,7 @@ services:
     container_name: celery_worker
     restart: unless-stopped
     volumes:
-      - /opt/tax-latest:/opt/latest
+      - .:/opt/latest
     networks:
       - tax_network
     env_file:
@@ -56,7 +56,7 @@ services:
     container_name: celery_beat
     restart: unless-stopped
     volumes:
-      - /opt/tax-latest:/opt/tax-latest
+      - .:/opt/tax-latest
     networks:
       - tax_network
     env_file:
