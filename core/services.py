@@ -98,13 +98,6 @@ def total_due(company, ex):
     infra = list(infrastructure)
 
     total_sum = sum_cost_infrastructure + application_cost + admin_fees + sar_cost
-    # print(f"infrastructure: {infrastructure}")
-    # print(f"infrastructure.count: {infrastructure.count()}")
-    # print(f"subtotal: {subtotal}")
-    # print(f"total_sum: {total_sum}")
-    # print(f"sum_cost_infrastructure: {sum_cost_infrastructure}")
-    # print(f"application_cost: {application_cost}")
-    # print(f"sar_cost: {sar_cost}")
 
     return total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra
 
