@@ -5,25 +5,14 @@
     <!-- Top Bar with title page, buttons and notification tabs -->
     <section class="w-full flex flex-col md:flex-row justify-between items-center gap-6">
       <article class="flex flex-col flex-grow">
-        <h2 class="text-xl text-darkBlue">Apply waiver</h2>
-        <p class="text-sm text-gray400">
-          Apply relevant waivers
+        <h2 class="text-xl text-darkBlue">{{ company.company_name}} (Apply waiver)</h2>
+        <p class="text-sm text-gray600 mt-5">
+          <a href="{% url 'agency_companies_details' company.id %}" class="text-sm mt-3">
+              &laquo; Back 
+          </a>
         </p>
       </article>
       <article class="flex flex-row w-80 justify-end gap-4 items-center">
-        <!-- <button
-          class="border-2 border-gray-300 px-6 py-2 text-gray-900 rounded-md text-sm flex justify-center items-center gap-2">
-          <span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-            </svg>
-          </span>
-          Bulk Upload
-        </button>
-        <a href="/assets/media/uploads/bulk_upload_sample.csv" class="text-sm text-gray-800 underline">Download
-          Format</a> -->
       </article>
 
       {% include 'tax-payers/partials/toasts.html' %}
@@ -43,7 +32,7 @@
               <th class="w-24 p-3 text-xs font-semibold tracking-wide text-left">Waiver</th>
               <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Total Due</th>
               <th class="w-32 p-3 text-xs font-semibold tracking-wide text-left">Created Date</th>
-              <th class="text-xs font-semibold"></th>
+              <th class="text-xs font-semibold">Receipt</th>
             </tr>
           </thead>
           <tbody id="table">
@@ -62,13 +51,17 @@
               <td>&#8358;{{ total_liability | floatformat:2 | intcomma }}</td>
               <td>{{ demand_notice.created_at | date:"M, d Y" }}</td>
               <td>
-                <a href="/assets/media/{{ receipt.receipt }}" target="_blank">
+                {% if receipt %}
+                <a href="/media/{{ receipt }}" target="_blank">
                   <svg version="1.0" encoding="utf-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                     stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round"
                       d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                   </svg>
                 </a>
+                {% else %}
+                -
+                {% endif %}
                 </td>
             </tr>
           </tbody>
@@ -82,10 +75,6 @@
           type="button">
           Apply Waiver
         </button>
-        <!-- <a href="{% url 'undispute_ex_demand_notice_receipt' ref_id %}" id="submit-all-permit" type="submit"
-          class="bg-orange-500 border-2 border-orange-500 px-20 py-3 text-white rounded-md hover:bg-transparent hover:border-orange-500 hover:text-orange-500">
-          Update
-        </a> -->
       </div>
     </section>
   </main>
@@ -118,7 +107,7 @@
           <div class="w-full text-base leading-relaxed text-gray-500 dark:text-gray-400">
             Enter amount <span style="color:red">*</span>
             <input type="hidden" name="referenceid" value="{{ ref_id }}" />
-            <input type="hidden" name="company" value="{{ company }}" />
+            <input type="hidden" name="company" value="{{ company.id }}" />
             <input text="number" name="waiver_applied" value="{{ waiver_applied }}" class="w-full form-control" />
           </div>
         </div>
