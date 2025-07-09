@@ -17,7 +17,7 @@
 
     <!-- Form Tab -->
     <!-- bg-[image-url] bg-cover bg-center bg-no-repeat -->
-    <section class="border-2 border-gray-100 rounded-md w-[900px] shadow-sm md:mt-20 flex flex-column gap-4 p-6 px-10">
+    <section id="pdfdownload" class="border-2 border-gray-100 rounded-md w-[900px] shadow-sm md:mt-20 flex flex-column gap-4 p-6 px-10">
       <article class="w-full">
         <div class="flex flex-row justify-between items-center">
           <img src="{% static 'img/Lasimra_logo-full.png' %}" alt="" class="w-20 h-20" />
@@ -209,7 +209,7 @@
           <div class="flex flex-row justify-center items-center gap-10 px-auto my-4">
             <div
               class="text-darkBlue font-normal text-sm flex flex-row justify-start items-center gap-1 hover:text-black">
-              <div>
+              <!-- <div>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -217,7 +217,7 @@
                 </svg>
               </div>
               <a href="#" class="hover:underline">Print Demand Notice</a>
-            </div>
+            </div> -->
             <div
               class="text-darkBlue font-normal text-sm flex flex-row justify-start items-center gap-1 hover:text-black">
               <div>
@@ -227,7 +227,7 @@
                     d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                 </svg>
               </div>
-              <a href="#" class="hover:underline">Download Demand Notice</a>
+              <a href="#" id="download" class="hover:underline">Download Demand Notice</a>
             </div>
           </div>
         </div>

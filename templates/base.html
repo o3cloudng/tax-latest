@@ -95,15 +95,49 @@
         <a href="https://maxvaafrica.com" target="_blank"><img src="{% static 'img/new_logo.png' %}" class="w-20" alt="MaxVa" srcset="" /></a>
       </div>
   </footer>
+<script>
+  const now = new Date();
 
-  <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-      $(document).ready(function() {
-          $('.js-example-basic-single').select2();
+  // Get components with leading zeros
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  // Join them with hyphens
+  const formatted = `${year}-${month}-${day}-${hours}-${minutes}`;
+
+  console.log(formatted); // e.g., "2025-07-09 - 22-15-43"
+
+</script>
+
+<!-- html-to-image from JSDelivr -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+
+<script>
+  async function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+
+    const node = document.getElementById('pdfdownload');
+    const dataUrl = await htmlToImage.toPng(node, { pixelRatio: 2 });
+
+    const img = new Image();
+    img.src = dataUrl;
+    img.onload = () => {
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [img.width, img.height]
       });
-    </script> -->
 
-
+      pdf.addImage(dataUrl, 'PNG', 0, 0, img.width, img.height);
+      pdf.save(`demand-notice-{{ref_id}}-${formatted}.pdf`);
+    };
+  }
+</script>
 
 </body>
 
