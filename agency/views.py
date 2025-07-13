@@ -32,6 +32,7 @@ from django.contrib.contenttypes.models import ContentType
 from easyaudit.models import CRUDEvent, LoginEvent
 import csv, io
 from django.db import transaction
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -153,6 +154,25 @@ def agency_dashboard(request):
     }
     return render(request, 'agency/pages/admin-dashboard.html', context)
 
+
+def demand_notice_htmx_pagination(request):
+    demand_notices = DemandNotice.objects.all().order_by('-created_at')
+     # Pagination
+    page_number = request.GET.get("page", 1)
+    paginator = Paginator(demand_notices, 10)  # Show 10 posts per page
+    page_obj = paginator.get_page(page_number)
+
+    print(f"PAGE NUM: {page_number}")
+    print(f"PAGINATION: {page_obj}")
+
+    if request.htmx:
+        return render(request, "agency/pages/admin-demand-notices.html", {"demand_notice_pagination": page_obj})
+
+    return render(request, "agency/partials/demand-notices.html", {"demand_notice_pagination": page_obj})
+
+     
+    
+
 @login_required
 @admin_only
 def agency_demand_notice(request):
@@ -187,6 +207,19 @@ def agency_demand_notice(request):
     if not total_resolved:
         total_resolved = 0.00
 
+    # Pagination
+    page_number = request.GET.get("page", 1)
+    paginator = Paginator(demand_notices, 10)  # Show 10 posts per page
+    page_obj = paginator.get_page(page_number)
+
+    # print(f"PAGE NUM: {page_number}")
+    # print(f"PAGINATION: {page_obj}")
+
+    # if request.htmx:
+    #     return render(request, "partials/post_list_partial.html", {"page_obj": page_obj})
+
+    # return render(request, "post_list.html", {"page_obj": page_obj})
+
     context = {
         "is_profile_complete" : False,
         "demand_notices": demand_notices,
@@ -199,6 +232,7 @@ def agency_demand_notice(request):
         "revised": revised,
         "disputed": disputed,
         "demand_notice": demand_notice,
+        "demand_notice_pagination": page_obj,
     }
     return render(request, 'agency/pages/admin-demand-notices.html', context)
 

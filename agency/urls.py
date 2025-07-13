@@ -79,6 +79,7 @@ urlpatterns = [
     path('reactivate_company/<int:pk>/', reactivate_company, name="reactivate_company"),
     path('add_notification/', add_notification, name="add_notification"),
     path('validate_name/', validate_name, name="validate_name"),
+    path('dn_pagination/', demand_notice_htmx_pagination, name="demand_notice_htmx_pagination"),
 
     path('notification/', notification_view, name="notification"),
     # HTMX DELETE

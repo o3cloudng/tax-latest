@@ -2,6 +2,26 @@
 {% load humanize %} 
 {% block title %}Demand Notices{% endblock %}
 {% block content %}
+
+<style>
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        .htmx-request .spinner {
+            display: block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 <!-- Top Bar with title page, buttons and notification tabs -->
 <section class="w-full flex flex-row justify-between items-center mb-10">
   <article class="flex flex-col">
@@ -100,22 +120,9 @@
               </thead>
               <!-- hover:[&>*:nth-child(odd)]:bg-white -->
               <tbody class="divide-y divide-gray-100 bg-white" id="search-result">
-                  {% if demand_notices.exists %}
-                  {% for dn in demand_notices %}
-                  {% include 'agency/partials/demand-notices.html' %}
-                  {% endfor %}
-                  {% else %}
-                  <tr>
-                    <td colspan="10"> No demand notice
-                    </td>
-                  </tr>
-                  {% endif %}
+                {% include 'agency/partials/demand-notices.html' %}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="10">Rows per page</td>
-                </tr>
-              </tfoot>
+              
             </table>
           </article>
         </section>

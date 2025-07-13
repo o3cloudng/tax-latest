@@ -100,13 +100,13 @@ def search_infrastructure(request):
 @login_required
 def search_demand_notices(request):
     search = request.POST.get('search')
-    all_demand_notices = DemandNotice.objects.all()
+    all_demand_notices = DemandNotice.objects.order_by('-created_at').all()
     if search:
         demand_notices = all_demand_notices.filter(Q(referenceid__icontains=search)\
             | Q(company__company_name__icontains=search) \
                 | Q(status__icontains=search))
     else:
-        demand_notices = DemandNotice.objects.all()[:20]
+        demand_notices = DemandNotice.objects.order_by('-created_at').all()[:10]
 
     context = {
         "search": search,
