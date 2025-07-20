@@ -1,6 +1,6 @@
 {% load humanize %}
 {% if demand_notices.exists %}
-{% for dn in demand_notice_pagination %}
+{% for dn in demand_notices %}
 
 <tr>
     <td>
@@ -73,15 +73,5 @@
 </tr>
 {% endif %}
 <tfoot>
-    <tr>
-        <td colspan="10">
-            {% if demand_notice_pagination.has_next %}
-            <!-- <button
-                hx-get="?page={{ demand_notice_pagination.next_page_number }}"
-                hx-target="#search-result" hx-swap="afterend" class="btn load-more-button">
-                Load More
-            </button> -->
-            {% endif %} Total Demand Notice Count - {{ demand_notices.count }}
-        </td>
-    </tr>
+   
 </tfoot>

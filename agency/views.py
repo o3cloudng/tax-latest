@@ -843,19 +843,24 @@ def email_template(request):
 
 
 @login_required
-# @tax_payer_only
+@admin_only
 @transaction.atomic
 def agency_upload_new(request):
-    ref_id = generate_ref_id()
+    # ref_id = generate_ref_id()
     if request.method == 'POST':
-        bulk_upload = request.FILES['bulk_upload']
+
+        if not request.FILES.get('bulk_upload_new', False):
+            messages.error(request, 'No file attached.')
+            return redirect('agency_apply_for_exist')
+        
+        bulk_upload = request.FILES['bulk_upload_new']
         company = User.objects.get(pk=request.POST['company'])
         # resource = InfrastructureResource()
         # return f"COMPANY: {company}"
     
-        if not bulk_upload.name.endswith('csv'):
+        if not (bulk_upload.name.endswith('csv')  | bulk_upload.name.endswith('xlxs')):
             messages.error(request, 'Wrong file format')
-            return redirect('apply_existing_infra')
+            return redirect('agency_apply_for_exist')
         
         dataset = bulk_upload.read().decode('UTF-8')
         io_string = io.StringIO(dataset)
@@ -877,7 +882,7 @@ def agency_upload_new(request):
                 created_by=request.user,
                 is_existing = True,
                 processed = False,
-                referenceid = ref_id,
+                # referenceid = ref_id,
                 upload_application_letter=column[6],
                 upload_asBuilt_drawing=column[7]
                 )

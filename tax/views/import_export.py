@@ -105,3 +105,4 @@ def upload_new(request):
                 
         messages.success(request, "Bulk upload successful")
     return redirect('apply_for_permit')
+

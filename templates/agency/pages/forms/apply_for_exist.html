@@ -16,11 +16,11 @@
         </p>
       </article>
       <article class="flex flex-row w-80 justify-end gap-4 items-center">
-        <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal"
+        <button data-modal-target="authentication-modal1" data-modal-toggle="authentication-modal1"
           class="border-2 border-gray-300 px-6 py-2 text-gray-900 rounded-md text-sm flex justify-center items-center gap-2">
           <span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+              class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
             </svg>
@@ -148,5 +148,5 @@ async function uploadFile() {
     alert('The file has been uploaded successfully.');
 }
 </script> -->
-
+{% include 'tax-payers/partials/upload-admin.html' %}
 {% endblock %}
