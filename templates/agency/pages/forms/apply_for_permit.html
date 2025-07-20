@@ -4,9 +4,11 @@
 <!-- Top Bar with title page, buttons and notification tabs -->
 <section class="w-full flex flex-col md:flex-row justify-between items-center gap-6">
   <article class="flex flex-col flex-grow">
-    <h2 class="text-xl text-darkBlue">Application for Permit to Build Facilities</h2>
-    <p class="text-sm text-gray400">
-      Request access to install your new infrastructure
+    <h2 class="text-xl text-darkBlue">{{ company.company_name}} (Application for Permit to Build Facilities)</h2>
+    <p class="text-sm text-gray600 mt-5">
+      <a href="{% url 'agency_companies_details' company.id %}" class="text-sm mt-3">
+          &laquo; Back 
+      </a>
     </p>
   </article>
   <article class="flex flex-row w-80 justify-end gap-4 items-center">
