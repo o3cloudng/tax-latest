@@ -20,7 +20,7 @@ def admin_only(view_func):
         if request.user.is_tax_admin:
             return view_func(request, *args, **kwargs)
         else: # Logout
-            # logout(request)
+            logout(request)
             raise PermissionDenied
     return wrap
 
@@ -30,6 +30,6 @@ def tax_payer_only(view_func):
         if not request.user.is_tax_admin:
             return view_func(request, *args, **kwargs)
         else: # Logout
-            # logout(request)
+            logout(request)
             raise PermissionDenied
     return wrap
