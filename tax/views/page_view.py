@@ -16,7 +16,7 @@ class DateDiff(Func):
     template = '%(function)s(%(expressions)s)'
 
 @login_required
-# @tax_payer_only
+@tax_payer_only
 def dashboard(request):
     # user = User.objects.get(id = request.user.id)
     all = DemandNotice.objects.filter(company=request.user).order_by('-updated_at')
@@ -46,7 +46,7 @@ def dashboard(request):
 
 
 @login_required
-# @tax_payer_only
+@tax_payer_only
 def demand_notice(request):
     all = DemandNotice.objects.filter(company=request.user).order_by('-updated_at')
     demand_notices = all.all()
