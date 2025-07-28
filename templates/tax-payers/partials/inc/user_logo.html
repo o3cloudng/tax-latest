@@ -11,7 +11,7 @@
         <p class="text-sm text-gray800">{{ request.user }}</p>
         <div class="w-6 h-6 rounded-full">
           {% if company.company_logo %}
-            <img src="/media/{{ request.user.company_logo }}" alt="LG" class="w-10 h-10 rounded-full" />
+            <img src="/media/{{ request.user.company_logo }}" alt="LG" class="w-20 h-20 rounded-full" />
           {% else %}
             <img src="/media/agency/logo/lasimra_-512x512.png" alt="" class="w-10 h-10 rounded-full" />
           {% endif %}
