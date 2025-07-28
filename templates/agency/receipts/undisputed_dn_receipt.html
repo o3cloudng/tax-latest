@@ -17,7 +17,11 @@
 <section class="border-2 border-gray-100 rounded-md w-[900px] shadow-sm md:mt-20 flex flex-column gap-4 p-6 px-10">
   <article class="w-full">
     <div class="flex flex-row justify-between items-center">
-      <img src="/media/{{ agency.agency_logo }}" alt="" class="w-20 h-20" />
+      {% if agency.agency_logo %}
+        <img src='/media/{{ agency.agency_logo }}' alt="" class="w-10 h-10 rounded-full" />
+      {% else %}
+        <img src='/media/agency/logo/lasimra_-512x512.png' alt="" class="w-10 h-10 rounded-full" />
+      {% endif %}
       <div>
         <h1 class="text-orange-400 font-normal text-2xl my-2">
           Undisputed Demand Notice
@@ -78,7 +82,7 @@
 
     <div
       class="border-2 border-gray-50 rounded-md shadow-sm bg-contain bg-center bg-transparent bg-opacity-20 bg-no-repeat bg-white bg-opacity-40 w-full"
-      style="background-image: url('{% static " img/paid_receipt.pn" %}')">
+      >
       <table class="md:w-full">
         <thead class="bg-orange-50 border-b-2 border-gray-50">
           <tr class="[&>th]:text-orange-800">

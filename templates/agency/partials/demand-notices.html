@@ -1,7 +1,6 @@
 {% load humanize %}
-{% if demand_notices.exists %}
+{% if demand_notices %}
 {% for dn in demand_notices %}
-
 <tr>
     <td>
         {% if dn.status in 'UNDISPUTED UNPAID' %}

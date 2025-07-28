@@ -72,8 +72,9 @@ def agency_generate_demand_notice(request, pk):
         )
 
         if demand_notice:
-            print(f"DEMAIND NOTICE WAS CREATED.....")
+            # print(f"DEMAND NOTICE WAS CREATED.....")
             obj = DemandNotice.objects.get(id=demand_notice.id)
+            print(f"REFERENCE ID: {obj.referenceid}")
             # Mark infrastructure as processed
             infra = Infrastructure.objects.filter(Q(processed=False))
             infra.update(processed=True)
@@ -143,11 +144,13 @@ def agency_generate_receipt(request, ref_id):
 
     demand_notice = DemandNotice.objects.get(referenceid=ref_id)
     # company = demand_notice.company.company_name
-    # print(company)
+    print(f"{demand_notice.company.company_name}")
 
     infra = demand_notice.infra
     infra = infra.replace("'", '"')
     infra = json.loads(infra)
+
+    print(infra)
 
     context = {
         # 'infrastructure': infrastructure,
@@ -167,7 +170,8 @@ def agency_generate_receipt(request, ref_id):
         'total_liability': demand_notice.total_due,
         'site_assessment_cost': demand_notice.site_assessment       
     }
-    messages.success(request, "Demand notice generated.")
+    # print(context)
+    # messages.success(request, "Demand notice generated.")
     
     return render(request, 'agency/receipts/demand-notice.html', context)
 
@@ -314,10 +318,10 @@ def agency_generate_ex_receipt(request, ref_id):
     # ref_id = request.POST.get('referenceid')
     # company = User.objects.get(pk=request.POST.get('company'))
 
-    print(f"REF ID: {ref_id}")
+    # print(f"REF ID: {ref_id}")
 
     demand_notice = DemandNotice.objects.get(referenceid=ref_id)
-    print(f"DEMAND NOTICE: {demand_notice}")
+    # print(f"DEMAND NOTICE: {demand_notice}")
 
     infra = demand_notice.infra
     infra = infra.replace("'", '"')

@@ -19,11 +19,12 @@
     >
       <article class="w-full">
         <div class="flex flex-row justify-between items-center">
-          <img
-            src="/media/{{ agency.agency_logo }}"
-            alt=""
-            class="w-20 h-20"
-          />
+          {% if company.company_logo %}
+            <img src="/media/{{ agency.agency_logo }}" alt="" class="w-20 h-20" />
+          {% else %}
+            <img src="/media/agency/logo/lasimra_-512x512.png" alt="" class="w-20 h-20" />
+          {% endif %}
+          <!-- <img src="/media/{{ agency.agency_logo }}" alt="" class="w-20 h-20" /> -->
           <div class="w-80 text-left">
             <h1 class="text-orange-400 font-semibold text-4xl my-2">
               Demand Notice
@@ -39,11 +40,12 @@
           <div>
             <h3 class="font-normal text-orange-400">Bill to:</h3>
             <div class="flex flex-row justify-start gap-3 mt-1">
-              <img
-                src='/media/{{ company.company_logo }}'
-                alt=""
-                class="w-10 h-10 rounded-full"
-              />
+              {% if company.company_logo %}
+                <img src='/media/{{ company.company_logo }}' alt="" class="w-10 h-10 rounded-full" />
+              {% else %}
+                <img src='/media/agency/logo/lasimra_-512x512.png' alt="" class="w-10 h-10 rounded-full" />
+              {% endif %}
+              <!-- <img src='/media/{{ company.company_logo }}' alt="" class="w-10 h-10 rounded-full" /> -->
               <div>
                 <p class="text-l text-gray-800">
                   {{ company.company_name }}
@@ -86,9 +88,7 @@
         <hr class="my-4" />
 
         <div
-          class="border-2 border-gray-50 rounded-md shadow-sm bg-contain bg-center bg-transparent bg-opacity-20 bg-no-repeat bg-white bg-opacity-40 w-full"
-          style="background-image: url('{% static "img/paid_receipt.pn" %}')"
-        >
+          class="border-2 border-gray-50 rounded-md shadow-sm bg-contain bg-center bg-transparent bg-opacity-20 bg-no-repeat bg-white bg-opacity-40 w-full" >
           <table class="md:w-full">
             <thead class="bg-orange-50 border-b-2 border-gray-50">
               <tr class="[&>th]:text-orange-800">
