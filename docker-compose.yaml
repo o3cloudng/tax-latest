@@ -6,7 +6,7 @@ services:
     container_name: redis
     restart: unless-stopped
     volumes:
-      - redis_data:/data
+      - redis_data:/app/tax-service/data
     networks:
       - tax_network
     ports:
