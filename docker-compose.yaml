@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - tax_network
+    ports:
+      - "6379:6379"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_volume:/app/tax-service/staticfiles
+      - media_volume:/app/tax-service/media
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_worker
+    restart: unless-stopped
+    volumes:
+      - static_volume:/app/tax-service/staticfiles
+      - media_volume:/app/tax-service/media
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+    command: celery -A core worker --loglevel=info --concurrency=4
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery_beat
+    restart: unless-stopped
+    volumes:
+      - static_volume:/app/tax-service/staticfiles
+      - media_volume:/app/tax-service/media
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - celery_worker
+    command: celery -A core beat --loglevel=info
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flower
+    restart: unless-stopped
+    ports:
+      - "5555:5555"
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - celery_worker
+      - celery_beat
+    command: celery -A core flower --broker=redis://redis:6379/0 --basic_auth=admin:1Million
+
+volumes:
+  redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  tax_network:
+    driver: bridge
