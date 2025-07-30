@@ -17,3 +17,5 @@ COPY . .
 
 # RUN python manage.py migrate
 RUN python manage.py collectstatic --no-input 
+
+# CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]

@@ -31,7 +31,7 @@ services:
       - .env.production
     depends_on:
       - redis
-    command: gunicorn core.wsgi --bind 0.0.0.0:8000
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
 
   celery_worker:
     build:
@@ -40,7 +40,7 @@ services:
     container_name: celery_worker
     restart: unless-stopped
     volumes:
-      - .:/opt/latest
+      - .:/app/latest
     networks:
       - tax_network
     env_file:
