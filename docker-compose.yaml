@@ -32,8 +32,8 @@ services:
       - .env.production
     depends_on:
       - redis
-    # command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
-    command: python manage.py runserver # --bind 0.0.0.0:8000
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    # command: python manage.py runserver # --bind 0.0.0.0:8000
 
   celery_worker:
     build:
