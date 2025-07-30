@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: web
-    command: gunicorn tax-service.core.wsgi:application --bind 0.0.0.0:8000
+    # command: gunicorn tax-service.core.wsgi:application --bind 0.0.0.0:8000
 
     volumes:
       - .:/app/tax-service
