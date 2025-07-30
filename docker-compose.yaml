@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   redis:
@@ -6,21 +6,23 @@ services:
     container_name: redis
     restart: unless-stopped
     volumes:
-      - redis_data:/app/tax-service/data
+      - redis_data:/data
     networks:
       - tax_network
     ports:
       - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
 
   web:
     build:
-      context: .
+      context: /app/tax-service
       dockerfile: Dockerfile
     container_name: web
     restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
+      - .:/app/tax-service
       - static_volume:/app/tax-service/staticfiles
       - media_volume:/app/tax-service/media
     networks:
@@ -29,16 +31,16 @@ services:
       - .env.production
     depends_on:
       - redis
+    command: gunicorn core.wsgi --bind 0.0.0.0:8000
 
   celery_worker:
     build:
-      context: .
+      context: /app/tax-service
       dockerfile: Dockerfile
     container_name: celery_worker
     restart: unless-stopped
     volumes:
-      - static_volume:/app/tax-service/staticfiles
-      - media_volume:/app/tax-service/media
+      - .:/opt/latest
     networks:
       - tax_network
     env_file:
@@ -49,13 +51,12 @@ services:
 
   celery_beat:
     build:
-      context: .
+      context: /app/tax-service
       dockerfile: Dockerfile
     container_name: celery_beat
     restart: unless-stopped
     volumes:
-      - static_volume:/app/tax-service/staticfiles
-      - media_volume:/app/tax-service/media
+      - .:/app/tax-service
     networks:
       - tax_network
     env_file:
@@ -63,16 +64,16 @@ services:
     depends_on:
       - redis
       - celery_worker
-    command: celery -A core beat --loglevel=info
+    command: celery -A core beat --loglevel=info #--scheduler django_celery_beat.schedulers:DatabaseScheduler
 
   flower:
     build:
-      context: .
+      context: /app/tax-service
       dockerfile: Dockerfile
     container_name: flower
     restart: unless-stopped
-    ports:
-      - "5555:5555"
+    volumes:
+      - /app/tax-service:/app/tax-service
     networks:
       - tax_network
     env_file:
@@ -81,6 +82,8 @@ services:
       - redis
       - celery_worker
       - celery_beat
+    ports:
+      - "5555:5555"
     command: celery -A core flower --broker=redis://redis:6379/0 --basic_auth=admin:1Million
 
 volumes:
@@ -91,3 +94,4 @@ volumes:
 networks:
   tax_network:
     driver: bridge
+
