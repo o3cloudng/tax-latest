@@ -15,7 +15,7 @@ services:
 
   web:
     build:
-      context: /app/tax-service
+      context: .
       dockerfile: Dockerfile
     container_name: web
     restart: unless-stopped
@@ -31,7 +31,8 @@ services:
       - .env.production
     depends_on:
       - redis
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn core.wsgi:application --chdir /app/tax-service --bind 0.0.0.0:8000
+
 
   celery_worker:
     build:
@@ -40,8 +41,8 @@ services:
     container_name: celery_worker
     restart: unless-stopped
     volumes:
-      - .:/app/latest
-      - worker_volume:/app/latest
+      - .:/app/tax-service
+      - worker_volume:/app/tax-service
     networks:
       - tax_network
     env_file:
