@@ -42,7 +42,6 @@ services:
     restart: unless-stopped
     volumes:
       - .:/app/tax-service
-      - worker_volume:/app/tax-service
     networks:
       - tax_network
     env_file:
