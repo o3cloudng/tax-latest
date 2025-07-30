@@ -52,42 +52,42 @@ services:
       - redis
     command: celery -A core worker --loglevel=info --concurrency=4
 
-  # celery_beat:
-  #   build:
-  #     context: /app/tax-service
-  #     dockerfile: Dockerfile
-  #   container_name: celery_beat
-  #   restart: unless-stopped
-  #   volumes:
-  #     - .:/app/tax-service
-  #   networks:
-  #     - tax_network
-  #   env_file:
-  #     - .env.production
-  #   depends_on:
-  #     - redis
-  #     - celery_worker
-  #   command: celery -A core beat --loglevel=info #--scheduler django_celery_beat.schedulers:DatabaseScheduler
+  celery_beat:
+    build:
+      context: /app/tax-service
+      dockerfile: Dockerfile
+    container_name: celery_beat
+    restart: unless-stopped
+    volumes:
+      - .:/app/tax-service
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - celery_worker
+    command: celery -A core beat --loglevel=info #--scheduler django_celery_beat.schedulers:DatabaseScheduler
 
-  # flower:
-  #   build:
-  #     context: /app/tax-service
-  #     dockerfile: Dockerfile
-  #   container_name: flower
-  #   restart: unless-stopped
-  #   volumes:
-  #     - /app/tax-service:/app/tax-service
-  #   networks:
-  #     - tax_network
-  #   env_file:
-  #     - .env.production
-  #   depends_on:
-  #     - redis
-  #     - celery_worker
-  #     - celery_beat
-  #   ports:
-  #     - "5555:5555"
-  #   command: celery -A core flower --broker=redis://redis:6379/0 --basic_auth=admin:1Million
+  flower:
+    build:
+      context: /app/tax-service
+      dockerfile: Dockerfile
+    container_name: flower
+    restart: unless-stopped
+    volumes:
+      - /app/tax-service:/app/tax-service
+    networks:
+      - tax_network
+    env_file:
+      - .env.production
+    depends_on:
+      - redis
+      - celery_worker
+      - celery_beat
+    ports:
+      - "5555:5555"
+    command: celery -A core flower --broker=redis://redis:6379/0 --basic_auth=admin:1Million
 
 volumes:
   redis_data:
