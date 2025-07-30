@@ -15,10 +15,11 @@ services:
 
   web:
     build:
-      context: ./
+      context: .
       dockerfile: Dockerfile
     container_name: web
     restart: unless-stopped
+    working_dir: /app/tax-service
     ports:
       - "8000:8000"
     volumes:
