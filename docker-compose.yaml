@@ -41,6 +41,7 @@ services:
     restart: unless-stopped
     volumes:
       - .:/app/latest
+      - worker_volume:/app/latest
     networks:
       - tax_network
     env_file:
@@ -90,6 +91,7 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
+  worker_volume:
 
 networks:
   tax_network:
