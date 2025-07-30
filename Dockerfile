@@ -1,6 +1,6 @@
 FROM python:3.11.4-slim
 
-WORKDIR /opt/tax-latest 
+WORKDIR /app/tax-service
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -16,4 +16,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # RUN python manage.py migrate
-RUN python manage.py collectstatic --no-input
+RUN python manage.py collectstatic --no-input 
