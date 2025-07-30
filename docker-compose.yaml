@@ -29,6 +29,8 @@ services:
       - tax_network
     env_file:
       - .env.production
+    environment:
+      - PYTHONPATH=/app/tax-service
     depends_on:
       - redis
     command: gunicorn core.wsgi:application --chdir /app/tax-service --bind 0.0.0.0:8000
