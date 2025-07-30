@@ -15,7 +15,7 @@ services:
 
   web:
     build:
-      context: /app/tax-service
+      context: ./
       dockerfile: Dockerfile
     container_name: web
     restart: unless-stopped
