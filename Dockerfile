@@ -10,9 +10,9 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY requirements.txt /app/tax-service
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/tax-service/
+COPY . /app/tax-service
 
 # CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
