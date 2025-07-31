@@ -1,12 +1,12 @@
-# version: '3.8'
+version: '3.9'
 
 services:
   redis:
     image: redis:7-alpine
     container_name: redis
     restart: unless-stopped
-    volumes:
-      - redis_data:/data
+    # volumes:
+    #   - redis_data:/data
     networks:
       - tax_network
     ports:
@@ -19,13 +19,13 @@ services:
       dockerfile: Dockerfile
     container_name: web
     restart: unless-stopped
-    working_dir: /app/tax-service
+    working_dir: /app
     ports:
       - "8000:8000"
     volumes:
-      - .:/app/tax-service
-      - static_volume:/app/tax-service/staticfiles
-      - media_volume:/app/tax-service/media
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     networks:
       - tax_network
     env_file:
@@ -37,12 +37,12 @@ services:
 
   celery_worker:
     build:
-      context: /app/tax-service
+      context: /app
       dockerfile: Dockerfile
     container_name: celery_worker
     restart: unless-stopped
     volumes:
-      - .:/app/tax-service
+      - .:/app
     networks:
       - tax_network
     env_file:
@@ -53,12 +53,12 @@ services:
 
   celery_beat:
     build:
-      context: /app/tax-service
+      context: /app
       dockerfile: Dockerfile
     container_name: celery_beat
     restart: unless-stopped
     volumes:
-      - .:/app/tax-service
+      - .:/app
     networks:
       - tax_network
     env_file:
@@ -70,12 +70,12 @@ services:
 
   flower:
     build:
-      context: /app/tax-service
+      context: /app
       dockerfile: Dockerfile
     container_name: flower
     restart: unless-stopped
     volumes:
-      - /app/tax-service:/app/tax-service
+      - /app:/app
     networks:
       - tax_network
     env_file:
@@ -89,9 +89,9 @@ services:
     command: celery -A core flower --broker=redis://redis:6379/0 --basic_auth=admin:1Million
 
 volumes:
-  redis_data:
   static_volume:
   media_volume:
+  # redis_data:
 
 networks:
   tax_network:
