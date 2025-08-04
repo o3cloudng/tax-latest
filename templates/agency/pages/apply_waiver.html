@@ -43,9 +43,11 @@
               <td>&#8358;{{ remittance | floatformat:2 | intcomma }}</td>
               <td>&#8358;{{ amount_paid | floatformat:2 | intcomma }}</td>
               {% if remittance == 0 %}
-              <td>&#8358;{{ penalty | floatformat:2 | intcomma }}</td>
-              {% else %}
               <td><s>&#8358;{{ penalty | floatformat:2 | intcomma }}</s></td>
+              {% elif waiver_applied == 0 %}
+              <td><s>&#8358;{{ penalty | floatformat:2 | intcomma }}</s></td>
+              {% else %}
+              <td>&#8358;{{ penalty | floatformat:2 | intcomma }}</td>
               {% endif %}
               <td>&#8358;{{ waiver_applied | floatformat:2 | intcomma }}</td>
               <td>&#8358;{{ total_liability | floatformat:2 | intcomma }}</td>

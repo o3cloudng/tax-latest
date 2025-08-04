@@ -61,7 +61,7 @@ def agency_dashboard(request):
     if infrastructures.filter(one_month).exists():
         infrastructures_month = infrastructures.filter(one_month)
         infrastructures_month = infrastructures_month.count() / infrastructures.count() * 100
-        # print(f"Infrastructure / Month {infrastructures_month}")
+        
     else:
         infrastructures_month = []
         
@@ -87,7 +87,6 @@ def agency_dashboard(request):
     # REVENUE BY SECTORS
     revenue_dn = DemandNotice.objects.select_related('company').values('company__sector__name')\
         .annotate(revenue = Sum('total_due'))
-    # print(f"Revenue: {revenue_dn}")
     
     revenue_name = []
     revenue_sum = []
@@ -162,9 +161,6 @@ def demand_notice_htmx_pagination(request):
     paginator = Paginator(demand_notices, 10)  # Show 10 posts per page
     page_obj = paginator.get_page(page_number)
 
-    print(f"PAGE NUM: {page_number}")
-    print(f"PAGINATION: {page_obj}")
-
     if request.htmx:
         return render(request, "agency/pages/admin-demand-notices.html", {"demand_notice_pagination": page_obj})
 
@@ -211,14 +207,6 @@ def agency_demand_notice(request):
     page_number = request.GET.get("page", 1)
     paginator = Paginator(demand_notices, 10)  # Show 10 posts per page
     page_obj = paginator.get_page(page_number)
-
-    # print(f"PAGE NUM: {page_number}")
-    # print(f"PAGINATION: {page_obj}")
-
-    # if request.htmx:
-    #     return render(request, "partials/post_list_partial.html", {"page_obj": page_obj})
-
-    # return render(request, "post_list.html", {"page_obj": page_obj})
 
     context = {
         "is_profile_complete" : False,
@@ -737,12 +725,6 @@ def add_notification(request):
                 "notifications": note
             }
             return render(request,"agency/pages/admin-settings.html#notification", context)
-        # else:
-        #     print(form.errors)
-        # context = {
-        #     "company_form": form,
-        # }
-        # return render(request,"agency/pages/admin-settings.html", context)
     
 
 @login_required
@@ -893,7 +875,6 @@ def agency_upload_new(request):
 @login_required
 # @tax_payer_only
 def agency_add_permit_ex_form(request, pk):
-    print("ADDING EXISITING INFRASTRUCTURE FORM")
     if Permit.objects.all().exists(): 
         last = Permit.objects.latest("pk").id
         ref_id = "LA"+generate_ref_id() + str(last + 1).zfill(5)
@@ -918,7 +899,7 @@ def agency_add_permit_ex_form(request, pk):
 
             return render(request, 'agency/pages/forms/permit_details.html', context)
         else:
-            print("ERROR: ", form.errors)
+            pass
 
     context = {
         'form':form,
@@ -933,11 +914,8 @@ def edit_disputed_demand_notice(request, ref_id):
     if Remittance.objects.filter(referenceid=ref_id).exists():
         remit = Remittance.objects.get(referenceid=ref_id)
         form = RemittanceForm(instance=remit)
-        print("REMITTANCE: ", remit.receipt)
     else:
         form = RemittanceForm()
-
-    # print("REFID: ", ref_id)
 
     ref = Q(referenceid=ref_id)
     coy = Q(company=70)
@@ -947,9 +925,7 @@ def edit_disputed_demand_notice(request, ref_id):
     permits = Permit.objects.filter(ref)
     company = permits.first().company.company_name
     referenceid = permits.first().referenceid
-    # undisputed_permits = Permit.objects.filter(ref)
-
-    # print("PERMITS: ", permits)
+    
 
     if Remittance.objects.filter(Q(referenceid=ref_id) & Q(company=request.user)).exists():
         remittance = Remittance.objects.get(Q(referenceid=ref_id) & Q(company=request.user))
@@ -970,7 +946,6 @@ def edit_disputed_demand_notice(request, ref_id):
 def dispute_dn_edit(request, pk):
     permit = Permit.objects.get(pk=pk)
     form = PermitEditForm(instance = permit)
-    print("Permit ID: ", permit.id)
     context = {
         'form': form,
         'permit_id':permit.id
@@ -981,15 +956,12 @@ def dispute_dn_edit(request, pk):
 @login_required
 def update_dispute_dn_edit(request):
     ref_id = str(request.POST['referenceid'])
-    # print("REF: ", ref_id)
     if request.htmx:
         perm = Permit.objects.get(pk=request.POST.get('permit_id'))
         # form = PermitEditForm(request.POST or None, request.FILES or None)
         form = PermitEditForm(request.POST or None, request.FILES or None, instance = perm)
 
         infra_rate = InfrastructureType.objects.get(pk=request.POST['infra_type'])
-        # print("READY POST: ", infra_rate.rate, type(infra_rate.rate))
-        # print("Permit type: ", request.POST['amount'], type(request.POST['amount']))
         if "mast" in infra_rate.infra_name.lower():
             infra_cost = infra_rate.rate * int(request.POST['amount'])
             len = 0
@@ -1003,12 +975,10 @@ def update_dispute_dn_edit(request):
             qty = 0
             len = request.POST['length']
 
-        print("AMOUNT OR NUMBER: ", infra_rate.infra_name.lower())
         year = str(request.POST['year']+"-01-01")
         installed_date = datetime.strptime(year, '%Y-%m-%d')
 
         if form.is_valid():
-            # print("Form is valid")
             permit = form.save(commit=False)
             permit.referenceid = ref_id
             permit.company = perm.company
@@ -1029,7 +999,7 @@ def update_dispute_dn_edit(request):
             return HttpResponseClientRedirect('/agency/companies/disputed/edit/'+permit.referenceid)
             # return render(request, 'tax-payers/partials/inc/added_permit', context)
         else:
-            print("FILE FORMAT INVALID")
+            pass
     form = PermitForm()
 
     context = {
@@ -1066,15 +1036,11 @@ def undispute_dn_receipt(request, ref_id):
     else:
         length = 0
 
-    
     app_count = mast_roof_no + length
     total_app_fee = app_count * app_fee.rate
 
-    # print("APPLICATION COUNT: ", app_count)
-
     tot_sum_infra = Permit.objects.filter(Q(referenceid = ref_id) & Q(is_disputed=True)).aggregate(no_sum = Sum('infra_cost'))
-    # print("Tot Sum: ", tot_sum_infra)
-
+    
     # Site assessment report rate
     sar_rate = mast_roof_no['no_sites'] * site_assessment.rate
 
@@ -1088,13 +1054,10 @@ def undispute_dn_receipt(request, ref_id):
     else:
         waver = 0
     
-    # print("WAVER: ", waver)
     total_liability = total_due - waver
 
     # Agency Details
-    agency = Agency.objects.all().first()
-    print("AGENCY: ", agency)
-    
+    agency = Agency.objects.all().first()    
 
     context = {
         'permits': permits,
@@ -1122,59 +1085,8 @@ def undispute_dn_receipt(request, ref_id):
 def del_undisputed(request, pk):
     permit = Permit.objects.get(pk=pk)
     permit.delete()
-    print("DELETE NEW WORKING....: ")
 
     return HttpResponseClientRedirect('/agency/companies/disputed/edit/'+permit.referenceid)
-
-# @login_required
-# def accept_undisputed_edit(request, pk):
-#     permit = Permit.objects.get(pk=pk)
-#     print("PERMIT: ", permit)
-#     # permit.company= company,
-#     # permit.referenceid= referenceid,
-#     # permit.infra_type= infra_type,
-#     # permit.amount= amount,
-#     # permit.length= length,
-#     # permit.add_from= add_from,
-#     # permit.add_to= add_to,
-#     # permit.year_installed= str(permit.year_installed), 
-#     # permit.age= age,
-#     # permit.upload_application_letter= upload_application_letter,
-#     # permit.upload_asBuilt_drawing= upload_asBuilt_drawing,
-#     # permit.upload_payment_receipt= upload_payment_receipt,
-#     # permit.status= status,
-#     # permit.is_disputed= True,
-#     # permit.is_undisputed= is_undisputed,
-#     # permit.is_revised= is_revised,
-#     # permit.is_paid= is_paid,
-#     # permit.is_existing= False
-#     # pm = Permit.objects.create(
-#     #     company= permit.company,
-#     #     referenceid= permit.referenceid,
-#     #     infra_type= permit.infra_type,
-#     #     amount= permit.amount,
-#     #     length= permit.length,
-#     #     add_from= permit.add_from,
-#     #     add_to= permit.add_to,
-#     #     year_installed= str(permit.year_installed), 
-#     #     age= permit.age,
-#     #     upload_application_letter= permit.upload_application_letter,
-#     #     upload_asBuilt_drawing= permit.upload_asBuilt_drawing,
-#     #     upload_payment_receipt= permit.upload_payment_receipt,
-#     #     status= permit.status,
-#     #     is_disputed= True,
-#     #     is_undisputed= permit.is_undisputed,
-#     #     is_revised= permit.is_revised,
-#     #     is_paid= permit.is_paid,
-#     #     is_existing= False
-#     # )
-#     # context = {
-#     #     pm:pm
-#     # } 
-#     # print("ACCEPTED DN: .....", pm)
-#     return redirect('dispute-demand-notice', permit.referenceid)
-
-
 
 @login_required 
 def agency_add_permit_form(request, ref_id):
@@ -1193,10 +1105,9 @@ def agency_add_permit_form(request, ref_id):
                 'permits': permits
             }
 
-            print("USER ID: ", permits)
             return render(request, 'agency/partials/permit_details.html', context)
         else:
-            print("ERROR: ", form.errors)
+            return form.errors
 
     context = {
         'form':form,
@@ -1209,13 +1120,10 @@ def agency_add_permit_form(request, ref_id):
 @login_required
 def add_dispute_dn(request):
     ref_id = str(request.POST['referenceid'])
-    print("REF: ", ref_id)
     if request.htmx:
         form = PermitEditForm(request.POST or None, request.FILES or None)
 
         infra_rate = InfrastructureType.objects.get(pk=request.POST['infra_type'])
-        # print("READY POST: ", infra_rate.rate, type(infra_rate.rate))
-        # print("Permit type: ", request.POST['amount'], type(request.POST['amount']))
         if "mast" in infra_rate.infra_name.lower():
             infra_cost = infra_rate.rate * int(request.POST['amount'])
             len = 0
@@ -1229,10 +1137,7 @@ def add_dispute_dn(request):
             qty = 0
             len = request.POST['length']
 
-        print("AMOUNT OR NUMBER: ", infra_rate.infra_name.lower())
-
         if form.is_valid():
-            # print("Form is valid")
             permit = form.save(commit=False)
             permit.referenceid = ref_id
             permit.company = request.user
@@ -1252,7 +1157,7 @@ def add_dispute_dn(request):
             return HttpResponseClientRedirect('/agency/companies/dn/edit/'+permit.referenceid)
             # return render(request, 'tax-payers/partials/inc/added_permit', context)
         else:
-            print("FILE FORMAT INVALID")
+            return "FILE FORMAT INVALID"
     form = PermitForm()
 
     context = {
@@ -1284,14 +1189,11 @@ def agency_add_undispute_edit(request):
             qty = 0
             len = request.POST['length']
 
-        print("REFERENCE ID: ", ref_id)
         year = str(request.POST['year']+"-01-01")
         installed_date = datetime.strptime(year, '%Y-%m-%d')
         company = Permit.objects.filter(referenceid=ref_id).first().company
-        print("COMPANY: ", company)
 
         if form.is_valid():
-            # print("Form is valid")
             permit = form.save(commit=False)
             permit.referenceid = ref_id
             permit.company = company
@@ -1311,7 +1213,7 @@ def agency_add_undispute_edit(request):
             return HttpResponseClientRedirect('/agency/companies/disputed/edit/'+permit.referenceid)
 
         else:
-            print("FILE FORMAT INVALID")
+            return "FILE FORMAT INVALID"
     form = PermitForm()
 
     context = {
@@ -1326,123 +1228,8 @@ def agency_add_undispute_edit(request):
 def waiver_requests(request):
     remittance = Remittance.objects.all()
     waiver = Waiver.objects.all()
-    # print(remmittance)
     context = {
         'remittance': remittance,
         'waiver': waiver
     }
     return render(request, 'agency/waiver-requests.html', context)
-
-
-
-
-
-# @login_required
-# # @tax_payer_only
-# def undispute_dn_receipt(request, ref_id):
-#     permits = Permit.objects.filter(Q(referenceid = ref_id) & Q(is_existing=True))
-#     if not permits.exists():
-#         return redirect('apply_existing_infra')
-
-#     if not permits.first().company == request.user:
-#         return redirect('apply_existing_infra')
-#     # Update is_disputed
-#     permits = permits.update(is_disputed = True)
-#     permits = Permit.objects.filter(Q(referenceid = ref_id) & Q(is_disputed = True) & Q(is_existing=True))
-
-#     ref = permits.first()
-#     app_fee = AdminSetting.objects.get(slug="application-fee")
-#     site_assessment = AdminSetting.objects.get(slug="site-assessment")
-#     admin_pm_fees = AdminSetting.objects.get(slug="admin-pm-fees")
-#     penalty = AdminSetting.objects.get(slug="penalty")
-
-#     mast_roof = Permit.objects.filter((Q(referenceid = ref_id) & Q(is_disputed=True) & Q(is_existing=True)) & (Q(infra_type__infra_name__istartswith='Mast') | Q(infra_type__infra_name__istartswith='Roof')))
-    
-#     length = Permit.objects.filter(Q(referenceid = ref_id) & Q(is_disputed=True) & Q(is_existing=True) & (Q(infra_type__infra_name__istartswith='Optic') | Q(infra_type__infra_name__istartswith='Gas') | Q(infra_type__infra_name__istartswith='Power') | Q(infra_type__infra_name__istartswith='Pipeline')))
-#     #application number = number of masts and rooftops 
-
-#     if Remittance.objects.filter(Q(referenceid=ref_id) & Q(company=request.user)).exists():
-#         remittance = Remittance.objects.get(Q(referenceid=ref_id) & Q(company=request.user))
-#         remittance = remittance.remitted_amount
-#     else:
-#         remittance = 0
-
-#     if mast_roof.exists():
-#         mast_roof_no = mast_roof.aggregate(no_sites = Sum('amount'))['no_sites']
-#     else:
-#         mast_roof_no = 0
-#         # mast_roof_no['no_sites'] = 0
-
-#     print("MAST & ROOF NO: ", mast_roof_no)
-#     if length.exists():
-#         len_count = length.count()
-#     else:
-#         len_count = 0
-
-#     app_count = mast_roof_no + len_count
-#     total_app_fee = app_count * app_fee.rate
-
-#     tot_sum_infra = Permit.objects.filter(Q(referenceid = ref_id) & Q(is_disputed=True) & Q(is_existing=True)).aggregate(no_sum = Sum('infra_cost'))
-#     # tot_sum_infra = Permit.objects.filter(Q(referenceid = ref_id) & Q(is_existing=True)).aggregate(no_sum = Sum('infra_cost'))
-    
-#     print("INFRA COST: ", tot_sum_infra)
-#     # Site assessment report rate
-#     sar_rate = mast_roof_no * site_assessment.rate
-#     print("SUM: ", tot_sum_infra['no_sum'], type(tot_sum_infra['no_sum']))
-
-
-#     admin_pm_fees_sum = (admin_pm_fees.rate * tot_sum_infra['no_sum']) / 100
-
-#     total_due = tot_sum_infra['no_sum'] + total_app_fee + admin_pm_fees_sum + sar_rate
-
-#     print("TOTAL DUE: ", total_due, type(total_due))
-#     # ADD WAVER
-#     if Waiver.objects.filter(referenceid=ref).exists():
-#         waver = Waiver.objects.get(referenceid=ref).wave_amount
-#     else:
-#         waver = 0
-#     # PENALTY CALCULATION
-#     refid = Q(referenceid = ref_id)
-#     is_exist = Q(is_existing=True)
-#     is_dispute = Q(is_disputed=True)
-#     # current_user = Q(comapny = request.user)
-#     if Permit.objects.filter(refid & is_exist).exists():
-#         age_sum = Permit.objects.filter(refid & is_exist & is_dispute).aggregate(ages = Sum('age'))['ages']
-#     else:
-#         age_sum = 0
-
-#     print("AGE Calculated: ", age_sum)
-    
-#     penalty_sum = age_sum * penalty.rate
-#     print("PENALTY Calculated: ", penalty_sum)
-
-#     print("REMITTANCE: ", remittance)
-
-    
-#     # Remove penalty from the total calculation after dispute
-#     total_liability = total_due  - remittance - waver
-    
-
-#     context = {
-#         'permits': permits,
-#         'ref': ref,
-#         'site_assessment': site_assessment,
-#         'site_assess_count': mast_roof_no,
-#         'admin_pm_fees': admin_pm_fees,
-#         'app_fee': app_fee,
-#         'app_count': app_count,
-#         'total_app_fee': total_app_fee,
-#         'sar_rate': sar_rate,
-#         'tot_sum_infra': tot_sum_infra,
-#         'admin_pm_fees_sum': admin_pm_fees_sum,
-#         'total_due': total_due,
-#         'waver': waver,
-#         'total_liability': total_liability,
-#         'ref_id': ref_id,
-#         'penalty_sum': penalty_sum,
-#         'penalty': penalty,
-#         'remittance': remittance,
-#         'age_sum': age_sum,
-#         'agency': Agency.objects.all().first()
-#     }
-#     return render(request, 'tax-payers/receipts/undisputed_ex_dn_receipt.html', context)

@@ -9,14 +9,13 @@ def role_required(allowed_roles=[]):
                 return view_func(request, *args, **kwargs)
             else: # Logout
                 logout(request)
-                # raise PermissionDenied
+                raise PermissionDenied
         return wrap
     return decorator
 
 # Admin Only
 def admin_only(view_func):
     def wrap(request, *args, **kwargs):
-        # print(f"IS ADMIN: {request.user.is_tax_admin}")
         if request.user.is_tax_admin:
             return view_func(request, *args, **kwargs)
         else: # Logout

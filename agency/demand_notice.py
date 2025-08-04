@@ -45,14 +45,7 @@ def agency_generate_demand_notice(request, pk):
     
     total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = agency_total_due(company, False, agency)
     
-    # total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = total_due(company, True)
-    # print("TOTAL DUES: ", total_sum, sum_cost_infrastructure, application_cost, admin_fees, sar_cost)
-
-    # penalty_fee, total_annual_fees = agency_penalty_calculation(request, company)
-    # penalty = penalty_fee
-    # annual_fees = total_annual_fees 
     annual_fees = AdminSetting.objects.get(slug="annual-fee").rate
-    # print(f"ANNUAL FEE: {annual_fees}")
 
     try: 
         demand_notice = DemandNotice.objects.create(
@@ -72,9 +65,7 @@ def agency_generate_demand_notice(request, pk):
         )
 
         if demand_notice:
-            # print(f"DEMAND NOTICE WAS CREATED.....")
             obj = DemandNotice.objects.get(id=demand_notice.id)
-            print(f"REFERENCE ID: {obj.referenceid}")
             # Mark infrastructure as processed
             infra = Infrastructure.objects.filter(Q(processed=False))
             infra.update(processed=True)
@@ -97,7 +88,6 @@ def agency_generate_demand_notice(request, pk):
             send_email_function(html_content, text_content, agency.email, "NOTICE: NEW DEMAND NOTICE")
             messages.success(request, 'Demand notice created.')
             # messages.success(request, "Notification sent.")
-            # print(f"Your email has been sent to {request.user.company_name}")
             return redirect('agency_generate_receipt', obj.referenceid)
         
         messages.error(request, 'Failed to generate demand notice')
@@ -105,7 +95,6 @@ def agency_generate_demand_notice(request, pk):
                  
 
     except Exception as e:
-        # print("Unexpected error while creating DemandNotice:", e)
         messages.error(request, 'Failed to generate demand notice')
         return redirect('agency_add_infrastructure', company.id)
 
@@ -144,13 +133,10 @@ def agency_generate_receipt(request, ref_id):
 
     demand_notice = DemandNotice.objects.get(referenceid=ref_id)
     # company = demand_notice.company.company_name
-    print(f"{demand_notice.company.company_name}")
 
     infra = demand_notice.infra
     infra = infra.replace("'", '"')
     infra = json.loads(infra)
-
-    print(infra)
 
     context = {
         # 'infrastructure': infrastructure,
@@ -170,7 +156,6 @@ def agency_generate_receipt(request, ref_id):
         'total_liability': demand_notice.total_due,
         'site_assessment_cost': demand_notice.site_assessment       
     }
-    # print(context)
     # messages.success(request, "Demand notice generated.")
     
     return render(request, 'agency/receipts/demand-notice.html', context)
@@ -218,14 +203,15 @@ def generate_ex_demand_notice(request):
     
     total_sum, subtotal, sum_cost_infrastructure, application_cost, admin_fees, sar_cost, infra = agency_total_due(company, True, agency)
 
-    # penalty_fee, total_annual_fees = agency_penalty_calculation(request, company)
-    # penalty = penalty_fee.filter(Q(is_existing=True) & Q(processed=False) & Q(created_by=request.user)).values('penalty_fee').aggregate(penal = Sum('penalty_fee'))
-    # penalty = (penalty['penal'] // 10000) * 10000
-
-    # annual_fees = total_annual_fees.filter(Q(is_existing=True) & Q(processed=False)).values('total_annual_fees').aggregate(total = Sum('total_annual_fees'))['total']
     penalty_fee, total_annual_fees = agency_penalty_calculation(request, company)
     penalty = penalty_fee
     annual_fees = total_annual_fees
+
+    messages.error(request, 'No infrastructure')
+    if not (total_sum or infra or subtotal or application_cost or admin_fees or sar_cost):
+        messages.error(request, 'No infrastructure')
+        return redirect('agency_apply_for_exist', company.id)
+
     try: 
         demand_notice = DemandNotice.objects.create(
         created_by=request.user,
@@ -275,12 +261,10 @@ def generate_ex_demand_notice(request):
             send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, "NOTICE: NEW DEMAND NOTICE")
             send_email_function(html_content, text_content, request.user.email, "NOTICE: NEW DEMAND NOTICE")
             messages.success(request, 'Demand notice created.')
-            print(f"OBJ REF: {obj.referenceid}")
             return redirect('agency_generate_ex_receipt', obj.referenceid)
                 
 
     except Exception as e:
-        # print("Unexpected error while creating DemandNotice:", e)
         messages.error(request, 'Failed to generate demand notice')
         return redirect('agency_apply_for_exist', company.id)
     
@@ -315,13 +299,8 @@ def generate_ex_demand_notice(request):
 @login_required
 def agency_generate_ex_receipt(request, ref_id):
     admin_settings = AdminSetting.objects.all()
-    # ref_id = request.POST.get('referenceid')
-    # company = User.objects.get(pk=request.POST.get('company'))
-
-    # print(f"REF ID: {ref_id}")
 
     demand_notice = DemandNotice.objects.get(referenceid=ref_id)
-    # print(f"DEMAND NOTICE: {demand_notice}")
 
     infra = demand_notice.infra
     infra = infra.replace("'", '"')
@@ -394,9 +373,7 @@ def undispute_ex_demand_notice_receipt(request, ref_id):
 @login_required
 def agency_apply_waiver(request):
     if request.method == 'POST':
-        print("REF ID----------------------: ", request.POST['referenceid'])
-        print("COMPANY----------------------: ", request.POST['company'])
-        print("WAIVER APPLIED----------------------: ", request.POST['waiver_applied'])
+        pass
    
     return "DONE"
 
@@ -459,7 +436,6 @@ def agency_waiver(request, ref_id):
         annual_fee = dn.annual_fee
         total_liability = dn.total_due #- dn.waiver_applied
         status = "REVISED"
-        # print("TOTAL DUE: ", total_liability)
     else:
         form = WaiverForm(request.POST or None, request.FILES or None)
 
@@ -469,10 +445,6 @@ def agency_waiver(request, ref_id):
         receipt = Remittance.objects.get(referenceid=ref_id).receipt
     else:
         receipt = ''
-
-    print(f"REFENCE ID: {ref_id}")
-    print(f"RECEIPT: {receipt}")
-    print(f"COMPANY: {company}")
 
     context = {
         'ref_id': ref_id,

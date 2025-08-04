@@ -20,7 +20,7 @@
       {% if agency.agency_logo %}
         <img src='/media/{{ agency.agency_logo }}' alt="" class="w-10 h-10 rounded-full" />
       {% else %}
-        <img src='/media/agency/logo/lasimra_-512x512.png' alt="" class="w-10 h-10 rounded-full" />
+        <img src="/media/{% static 'img/logo.jpg' %}" alt="" class="w-10 h-10 rounded-full" />
       {% endif %}
       <div>
         <h1 class="text-orange-400 font-normal text-2xl my-2">

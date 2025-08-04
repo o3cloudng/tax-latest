@@ -17,7 +17,7 @@ from django.db.models import Count, Sum, F
 @shared_task(bind=True)
 def task_func(self):
     for i in range(10):
-        print(i)
+        pass
     return "Done"
 
 
@@ -52,7 +52,6 @@ def send_annual_tax_emails(self):
     companies = User.objects.filter(is_tax_admin=False)
 
     agency = Agency.objects.first()
-    # print("URL: ", settings.URL)
     for company in companies:
         mail_subject = f"ANNUAL INFRASTRUCTURE TAX"
         to_email = company.email
@@ -110,8 +109,6 @@ def send_annual_tax_emails_to_clients():
                 total_cost = result['total_cost']
             
             overall_cost += total_cost
-            # print(f"Infra Type: {result['infra_type__infra_name']} ({result['total_length']})\
-            #         | Count: {result['count']} | Sum: {result['total_cost']} | Total: {total_cost}")
 
         html_content = render_to_string("Emails/admin/annual_due_email.html", {
             "company_name": company.company_name,  # Fixed variable reference
@@ -129,6 +126,4 @@ def send_annual_tax_emails_to_clients():
         )
         message.attach_alternative(html_content, "text/html")
         message.send()
-
-        print(f"OVERALL TOTAL COST: {overall_cost}")
         

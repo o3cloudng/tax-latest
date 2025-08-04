@@ -10,7 +10,7 @@
         />
         <p class="text-sm text-gray800">{{ request.user }}</p>
         <div class="w-6 h-6 rounded-full">
-          {% if request.user.company_logo is not None %}
+          {% if request.user.company_logo is not none %}
             <img src="/media/{{ request.user.company_logo }}" alt="LG" class="w-20 rounded-full" />
           {% else %}
             <img src="/static/img/default.png" alt="" class="w-20 rounded-full" />

@@ -458,6 +458,7 @@ def revised_demand_notice_receipt(request, ref_id):
         'sar_fee':admin_settings.get(slug='site-assessment').rate,
         'infrastructure': infra,
         'penalty': demand_notice.penalty,
+        'remittance': demand_notice.remittance,
         'total_liability': demand_notice.total_due,
         'waiver_applied': demand_notice.waiver_applied,
         'site_assessment_cost': demand_notice.site_assessment       

@@ -225,7 +225,6 @@ def add_ex_infrastructure2(request):
             form.save()
             messages.success(request, f"{form.infra_type} added successfully")
         else:
-            # print(form.errors)
             messages.error(request, f"{form.errors}")
     context = {
         'infrastructure': InfrastructureType.objects.all().first(),
