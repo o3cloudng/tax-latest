@@ -21,7 +21,7 @@ urlpatterns = [
     path('', services.landingPage, name="landingPage"),
     path('admin/', admin.site.urls),
     path('clients/', include("account.urls")),
-    path('tax/', include("tax.urls")),
+    path('company/', include("tax.urls")),
     path('payments/', include("payments.urls")),
     path('agency/', include("agency.urls")),
     # path('adminarea/', include("admin.urls")),

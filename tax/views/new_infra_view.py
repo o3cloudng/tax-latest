@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from account.models import AdminSetting
 from tax.models import InfrastructureType, Waiver, Infrastructure, DemandNotice
 from datetime import date, datetime
-from django_htmx.http import HttpResponseClientRedirect
+# from django_htmx.http import HttpResponseClientRedirect
 from django.db.models import Q, Sum, Count
 from core.decorator import tax_payer_only
 from agency.models import Agency

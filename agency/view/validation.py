@@ -4,7 +4,6 @@ from tax.models import Infrastructure, DemandNotice, InfrastructureType
 from account.models import AdminSetting, Sector
 from django.db.models import Q
 from account.models import User
-from django_htmx.http import HttpResponseClientRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from agency.forms import InfrastructureSettingsForm

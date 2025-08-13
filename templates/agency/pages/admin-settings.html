@@ -18,7 +18,8 @@
     {% endif %}
   </td>
   <td>{{ company.email }}</td>
-  <td class="flex flex-row align-middle"><img width="20px" src="/media/{{company.company_logo}}" /> &nbsp;
+  <td class="flex flex-row align-middle">
+    <img width="20px" src="/{{company.company_logo}}" /> &nbsp;
     {{ company.company_name }}
   </td>
   <td>
@@ -484,6 +485,11 @@
               </div>
 
               <div class="w-full flex justify-start items-center gap-5">
+                <label for="password" class="w-1/3">Phone</label>
+                {{ company_form.phone_number }}
+              </div>
+
+              <div class="w-full flex justify-start items-center gap-5">
                 <label for="password" class="w-1/3">Password</label>
                 {{ company_form.password1 }}
               </div>
@@ -548,8 +554,8 @@
                     {% endif %}
                   </td>
                   <td>{{ company.email }}</td>
-                  <td class="flex flex-row align-middle"><img width="20px"
-                      src="/media/{{company.company_logo}}" /> &nbsp;
+                  <td class="flex flex-row align-middle">
+                    <img width="20px" src="{{company.company_logo}}" /> &nbsp;
                     {{ company.company_name }}
                   </td>
                   <td>

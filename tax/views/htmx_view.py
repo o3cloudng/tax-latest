@@ -7,6 +7,7 @@ from datetime import datetime
 from django.contrib import messages
 from tax.models import Infrastructure, DemandNotice
 from django.db.models import Q
+from django.urls import reverse_lazy
 
 
 @login_required
@@ -124,7 +125,8 @@ def add_infrastructure(request):
     context = {
         'infrastructure': InfrastructureType.objects.all().first(),
     }
-    return HttpResponseClientRedirect('/tax/apply/permit/', context)
+    return HttpResponseClientRedirect(reverse_lazy("apply_for_permit"), context)
+    # return HttpResponseClientRedirect('/company/apply/permit/', context)
 
 
 @login_required
@@ -160,7 +162,8 @@ def add_infrastructure2(request):
     context = {
         'infrastructure': InfrastructureType.objects.all().first(),
     }
-    return HttpResponseClientRedirect('/tax/apply/permit/', context)
+    return HttpResponseClientRedirect(reverse_lazy("apply_for_permit"), context)
+    # return HttpResponseClientRedirect('/company/apply/permit/', context)
 
 @login_required
 def add_ex_infrastructure(request):
@@ -194,7 +197,9 @@ def add_ex_infrastructure(request):
     context = {
         'infrastructure': InfrastructureType.objects.all().first(),
     }
-    return HttpResponseClientRedirect('/tax/apply/permit/exist/', context)
+
+    return HttpResponseClientRedirect(reverse_lazy("apply_existing_infra"), context)
+    # return HttpResponseClientRedirect('/company/apply/permit/exist/', context)
 
 
 @login_required
@@ -232,4 +237,5 @@ def add_ex_infrastructure2(request):
     context = {
         'infrastructure': InfrastructureType.objects.all().first(),
     }
-    return HttpResponseClientRedirect('/tax/apply/permit/exist/', context)
+    return HttpResponseClientRedirect(reverse_lazy("apply_existing_infra"), context)
+    # return HttpResponseClientRedirect('/company/apply/permit/exist/', context)

@@ -5,19 +5,20 @@ from datetime import timedelta
 
 from django.core.management.utils import get_random_secret_key
 # from decouple import config, Csv, AutoConfig
-import dj_database_url
+# import dj_database_url
 from dotenv import load_dotenv
 # load_dotenv()
-load_dotenv(dotenv_path='/opt/tax-latest/.env.production')
+load_dotenv()
 
-DEBUG=os.environ.get('DEBUG', 'False')
+DEBUG=True
+# DEBUG=os.environ.get('DEBUG', 'False')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # config = AutoConfig(search_path='/home/tax-latest/.env')
 
 SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com", "www.google.com:443", "flower.maxvaafrica.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "134.209.187.156", "lasimra.maxvaafrica.com", "flower.maxvaafrica.com"]
 CSRF_TRUSTED_ORIGINS = [
     'https://lasimra.maxvaafrica.com',
     'https://127.0.0.1',
@@ -25,22 +26,22 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # settings.py
-if not DEBUG:
-    # Ensure all traffic uses HTTPS
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
+# if not DEBUG:
+#     # Ensure all traffic uses HTTPS
+#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#     SECURE_SSL_REDIRECT = True
     
-    # Secure cookies
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+#     # Secure cookies
+#     SESSION_COOKIE_SECURE = True
+#     CSRF_COOKIE_SECURE = True
     
-    # HTTP Strict Transport Security (HSTS)
-    SECURE_HSTS_SECONDS = 30 * 24 * 60 * 60  # 30 days (start with a shorter duration)
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     # HTTP Strict Transport Security (HSTS)
+#     SECURE_HSTS_SECONDS = 30 * 24 * 60 * 60  # 30 days (start with a shorter duration)
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     
-    # Additional security headers
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
+#     # Additional security headers
+#     SECURE_CONTENT_TYPE_NOSNIFF = True
+#     X_FRAME_OPTIONS = 'DENY'
 
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
@@ -119,31 +120,32 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# if os.environ.get('DEBUG'):
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-# else:
-# print(f"We are in production mode: {os.environ.get('DB_HOST')}")
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT', '25060'),
-        'OPTIONS': {
-            'connect_timeout': 5,
-            # Explicitly disable socket connection
-            'client_encoding': 'UTF8',
-            'sslmode': 'require',
-        },
+if os.environ.get('EVN') == 'development':
+    print(f"We are in development mode")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    print(f"We are in production mode: {os.environ.get('DB_HOST')}")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql', # django.db.backends.postgresql
+            'NAME': os.environ.get('DB_NAME'),
+            'USER': os.environ.get('DB_USER'),
+            'PASSWORD': os.environ.get('DB_PASS'),
+            'HOST': os.environ.get('DB_HOST'),
+            'PORT': os.environ.get('DB_PORT', '25060'),
+            'OPTIONS': {
+                'connect_timeout': 5,
+                # Explicitly disable socket connection
+                'client_encoding': 'UTF8',
+                'sslmode': 'require',
+            },
+        }
+    }
 # print("Database connected successfully")
 # HTTPS / Security
 
@@ -169,8 +171,8 @@ USE_I18N = True
 USE_TZ = True
 
 if os.environ.get('ENV') == 'production':
-    STATIC_URL = '/opt/tax-latest/static/'
-    STATIC_ROOT = BASE_DIR / "opt/tax-latest/staticfiles"
+    STATIC_URL = '/app/static/'
+    STATIC_ROOT = BASE_DIR / "app/staticfiles"
     STATICFILES_DIRS = [BASE_DIR / "static"]
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, 'assets/media')

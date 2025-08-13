@@ -30,10 +30,18 @@ class SectorForm(forms.ModelForm):
 class AddUserForm(UserCreationForm):
     USER_TYPE_CHOICES =( 
         (0, "Company"), 
-        (1, "Agency Admin 1"), 
-        (1, "Agency Admin 2"), 
-        (1, "Agency Admin 3"), 
+        (1, "Agency Admin"), 
+        # (1, "Agency Admin 2"), 
+        # (1, "Agency Admin 3"), 
     ) 
+    phone_number = forms.CharField(max_length=50, required=True, 
+                                widget=forms.widgets.Input(
+            attrs={
+                "placeholder": "Phone number", 
+                "type":"text",
+                "class": "w-full py-4", 
+            }),
+            label="Phone number",)
     is_tax_admin = forms.ChoiceField(
         choices = USER_TYPE_CHOICES,
         required=True, 

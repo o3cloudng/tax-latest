@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from account.models import AdminSetting
 from tax.models import InfrastructureType, Waiver, Remittance, Infrastructure, DemandNotice
 from datetime import date, datetime
-from django_htmx.http import HttpResponseClientRedirect
+# from django_htmx.http import HttpResponseClientRedirect
 from django.db.models import (F, ExpressionWrapper, Q, Sum, Count, CharField, DecimalField, DateTimeField,
                                 IntegerField, Value, Case, When, Func)
 from django.db.models.functions import Concat, Cast, Now

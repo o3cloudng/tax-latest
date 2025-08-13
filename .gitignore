@@ -7,10 +7,17 @@
 *.pyc
 __pycache__/
 local_settings.py
-# settings.py
+settings.py
+pyttest.ini 
+conftest.py
 db.sqlite3
 db.sqlite3-journal
-
+assets/
+docker-files/
+tests/
+docker-entrypoint.sh
+templates/agency/receipts/demand-notice-receipt-2.html
+docker-compose.yml
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
 # <django-project-name>/staticfiles/

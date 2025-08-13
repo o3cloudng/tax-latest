@@ -5,7 +5,6 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from tax.models import InfrastructureType, Waiver, Remittance, Infrastructure, DemandNotice
 from account.models import AdminSetting
-from django.urls import reverse_lazy
 from django_htmx.http import HttpResponseClientRedirect
 from django.db.models import Q, Count, Sum, Max
 from dateutil.relativedelta import relativedelta
@@ -33,6 +32,7 @@ from easyaudit.models import CRUDEvent, LoginEvent
 import csv, io
 from django.db import transaction
 from django.core.paginator import Paginator
+from django.utils.text import slugify
 
 
 # Create your views here.
@@ -563,30 +563,81 @@ def agency_settings(request):
 def add_company(request):
     if request.htmx:
         form = AddUserForm(request.POST or None)
+        default_sector = Sector.objects.get(name="None")
         if form.is_valid():
             company = form.save(commit=False)
-            if company.is_tax_admin != 0:
-                company.is_tax_admin = 1
+            company.username = slugify(company.company_name)
+            company.created_by = request.user
+            company.sector = default_sector
+            # if company.is_tax_admin != 0:
+            #     company.is_tax_admin = 1
             company.save()
 
-            messages.success(request, "Agency created successfully.")
+             # Send email to new user company
+            agency = Agency.objects.first()
+            profile = User.objects.get(id=company.id)
+            
+            # Send email to new user company
+            mail_subject = f"New Company Registration Alert - {profile.company_name}"
+            to_email = profile.email
+            # print("URL: ", settings.URL)
+            html_content = render_to_string("Emails/tax_payer/new_company_reg.html", {
+                "company_name":profile.company_name,
+                "default_password":request.POST.get("password1"),
+                "agency_email":agency.agency_email,
+                "agency_phone":agency.phone_number,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            send_email_function(html_content, text_content, to_email, mail_subject)
+            print(f"COMPANYS: {profile}")
+
             context = {
-                "company": company
+                "company": profile
             }
-            return render(request,"agency/pages/admin-settings.html#company", context)
+            messages.success(request, "New user created successfully.")
+            # return render(request,"agency/pages/admin-settings.html", context)
+            # Redirect with HttpResponseClientRedirect
+            return HttpResponseClientRedirect(reverse_lazy("agency_settings"), context)
         else:
             messages.error(request, "Agency creation failed.")
-            return render(request,"agency/pages/admin-settings.html#company", context)
+            return HttpResponseClientRedirect(reverse_lazy("agency_settings"))
+    else:
+        messages.error(request, "Oops! Something went wrong.")
+        return HttpResponseClientRedirect(reverse_lazy("agency_settings"))
+
 
 @login_required
 def create_company(request):
     if request.method == 'POST':
         form = AddUserForm(request.POST or None)
+        default_sector = Sector.objects.get(name="None")
         if form.is_valid():
             company = form.save(commit=False)
-            if company.is_tax_admin != 0:
-                company.is_tax_admin = 1
+            company.username = slugify(company.company_name)
+            company.created_by = request.user
+            company.sector = default_sector
+            # if company.is_tax_admin != 0:
+            #     company.is_tax_admin = 1
             company.save()
+
+            agency = Agency.objects.first()
+            profile = User.objects.get(id=company.id)
+            
+            # Send email to new user company
+            mail_subject = f"New Company Registration Alert - {profile.company_name}"
+            to_email = profile.email
+            # print("URL: ", settings.URL)
+            html_content = render_to_string("Emails/tax_payer/new_company_reg.html", {
+                "company_name":profile.company_name,
+                "default_password":request.POST.get("password1"),
+                "agency_email":agency.agency_email,
+                "agency_phone":agency.phone_number,
+                "login":settings.URL,
+                })
+            text_content = strip_tags(html_content)
+            send_email_function(html_content, text_content, to_email, mail_subject)
+            print(f"COMPANYS: {profile}")
 
             messages.success(request, "Company created successfully.")
             context = {
@@ -596,7 +647,8 @@ def create_company(request):
             return redirect(reverse_lazy("agency_companies"))
         else:
             messages.error(request, "Company creation failed.")
-            return redirect(reverse_lazy("agency_companies"))
+            return redirect(reverse_lazy("agency_companies"), context)
+
 
 @login_required
 def add_update_infrastructure(request):
