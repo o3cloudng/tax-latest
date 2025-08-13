@@ -7,7 +7,7 @@
 *.pyc
 __pycache__/
 local_settings.py
-settings.py
+core/settings.py
 pyttest.ini 
 conftest.py
 db.sqlite3
