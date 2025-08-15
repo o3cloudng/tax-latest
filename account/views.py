@@ -96,52 +96,68 @@ def dashboard(request):
 @login_required
 def setup_profile(request):
     user = User.objects.get(pk=request.user.id)
+    print("This USER: ", user)
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            # print("PROFILE: ", form)
-            profile = form.save(commit=False)
-            profile.email = request.user.email
-            profile.is_profile_complete = True
-            profile.save()
+        print("Company name: ", user.company_name)
+        if (user.company_name == "") and (user.rc_number == ""):
+            # pass
+            if form.is_valid():
+                # print("PROFILE: ", form)
+                profile = form.save(commit=False)
+                profile.email = request.user.email
+                profile.is_profile_complete = True
+                profile.save()
 
-            # EMAIL TO NEW COMPANY 
-            agency = Agency.objects.first()
-            # Send email to new user company
-            # mail_subject = "Welcome to Lasimra e-Collection System!"
-            mail_subject = f"New Company Registration Alert - {profile.company_name}"
-            to_email = profile.email
-            # print("URL: ", settings.URL)
-            html_content = render_to_string("Emails/tax_payer/new_company_reg.html", {
-                "company_name":profile.company_name,
-                "agency_email":agency.agency_email,
-                "agency_phone":agency.phone_number,
-                "login":settings.URL,
-                })
-            text_content = strip_tags(html_content)
-            send_email_function(html_content, text_content, to_email, mail_subject)
-            # EMAIL TO ADMIN OF NEW COMAPNY            
-            agency_email = agency.agency_email
-            agency_mail_subject = f"New Company Registration Alert - {profile.company_name}"
-            html_content = render_to_string("Emails/admin/new_company_reg.html", {
-                "company_name":profile.company_name,
-                "reg_date":profile.created_at,
-                "company_email":profile.email,
-                "company_phone":profile.phone_number,
-                "agency_email":agency.agency_email,
-                "agency_phone":agency.phone_number,
-                "login":settings.URL,
-                })
-            text_content = strip_tags(html_content)
-            send_email_function(html_content, text_content, agency_email, agency_mail_subject)
-            send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, agency_mail_subject)
+                # EMAIL TO NEW COMPANY 
+                agency = Agency.objects.first()
+                # Send email to new user company
+                mail_subject = f"Welcome to Lasimra e-Collection System!"
+                to_email = profile.email
+                # print("Company name: ", user.company_name)
+                # if (user.company_name == "") and (user.rc_number == ""):
+
+                print("Email sending triggered")
+
+                html_content = render_to_string("Emails/tax_payer/new_company_reg.html", {
+                    "company_name":profile.company_name,
+                    "agency_email":agency.agency_email,
+                    "agency_phone":agency.phone_number,
+                    "login":settings.URL,
+                    })
+                text_content = strip_tags(html_content)
+                send_email_function(html_content, text_content, to_email, mail_subject)
+                # EMAIL TO ADMIN OF NEW COMAPNY            
+                agency_email = agency.agency_email
+                agency_mail_subject = f"New Company Registration Alert - {profile.company_name}"
+                html_content = render_to_string("Emails/admin/new_company_reg.html", {
+                    "company_name":profile.company_name,
+                    "reg_date":profile.created_at,
+                    "company_email":profile.email,
+                    "company_phone":profile.phone_number,
+                    "agency_email":agency.agency_email,
+                    "agency_phone":agency.phone_number,
+                    "login":settings.URL,
+                    })
+                text_content = strip_tags(html_content)
+                send_email_function(html_content, text_content, agency_email, agency_mail_subject)
+                send_email_function(html_content, text_content, settings.TAX_AUTHOURITY_EMAIL, agency_mail_subject)
 
 
-            messages.success(request, "Profile completed successfully")
-            return redirect("dashboard")
+                messages.success(request, "Profile completed successfully")
+                return redirect("dashboard")
+            else:
+                messages.error(request, "Please, fill the profile correctly.")
+                return redirect(reverse_lazy('setup_profile'))
         else:
-            messages.error(request, "Please, fill the profile correctly.")
-            return redirect(reverse_lazy('setup_profile'))
+            if form.is_valid():
+                # print("PROFILE: ", form)
+                profile = form.save(commit=False)
+                profile.email = request.user.email
+                profile.is_profile_complete = True
+                profile.save()
+                messages.success(request, "Profile updated successfully.")
+                return redirect(reverse_lazy('setup_profile'))
         
     form = UserProfileForm(instance=user)
             

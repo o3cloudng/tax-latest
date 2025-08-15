@@ -165,11 +165,13 @@ def pay4it_callback(request):
             
             demand_notice = DemandNotice.objects.get(referenceid=payment.referenceid)
 
-            total = demand_notice.amount_due + demand_notice.penalty + demand_notice.annual_fee \
+            total = (demand_notice.amount_due + demand_notice.penalty) \
                 - (demand_notice.remittance + demand_notice.waiver_applied + total_paid)
+            # total = (demand_notice.amount_due + demand_notice.penalty + demand_notice.annual_fee) \
+            #     - (demand_notice.remittance + demand_notice.waiver_applied + total_paid)
             # print("SUCCESS")
             # print(data['message'])
-            if total <= 0:
+            if total == 0:
                 DemandNotice.objects.filter(referenceid=payment.referenceid) \
                 .update(amount_paid=total_paid, status='RESOLVED', total_due=total)
 
@@ -221,7 +223,7 @@ def pay4it_callback(request):
                 'admin_rate':admin_settings.get(slug='admin-pm-fees').rate,
                 'sar_fee':admin_settings.get(slug='site-assessment').rate,
             }
-            all_paid = (demand_notice.amount_due + demand_notice.penalty + demand_notice.annual_fee) \
+            all_paid = (demand_notice.amount_due + demand_notice.penalty) \
                         - (demand_notice.remittance + demand_notice.waiver_applied + total_paid)
             if all_paid == 0:
                 return render(request, "payments/paid_receipt.html", context)

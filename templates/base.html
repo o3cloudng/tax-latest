@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="{% static 'css/main_latest.css' %}" />
   <link rel="shortcut icon" type="image/png" href="{% static 'img/lasimra_logo2.png' %}" />
 
-  <title>LASIMRA:: Tax Payers</title>
+  <title>LASIMRA:: {% block title %}{% endblock %}</title>
   <style>
     .aside {
       position: fixed;
@@ -258,6 +258,35 @@
         document.body.removeChild(loader);
       });
     });
+
+    //  Adding comma to number input for remittance
+    const numberInput = document.getElementById('myNumberInput');
+  const form = document.getElementById('myForm');
+
+  // Format number with commas as you type
+  numberInput.addEventListener('input', function (e) {
+    let cursorPosition = this.selectionStart;
+    let originalLength = this.value.length;
+
+    // Remove non-digit characters (except for digits)
+    let rawValue = this.value.replace(/,/g, '').replace(/\D/g, '');
+
+    // Format with commas
+    if (rawValue) {
+      this.value = parseInt(rawValue, 10).toLocaleString();
+    } else {
+      this.value = '';
+    }
+
+    // Adjust cursor to avoid jumping
+    let newLength = this.value.length;
+    this.selectionEnd = cursorPosition + (newLength - originalLength);
+  });
+
+  // Remove commas before form submission
+  form.addEventListener('submit', function () {
+    numberInput.value = numberInput.value.replace(/,/g, '');
+  });
   </script>
 </body>
 

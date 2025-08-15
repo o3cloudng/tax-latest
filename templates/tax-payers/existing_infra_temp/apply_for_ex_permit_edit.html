@@ -1,4 +1,5 @@
 {% extends 'base.html' %} {% load static %}
+{% block title %} Dispute Demand notice {% endblock %}
 {% load humanize %}
 {% block content %}
 <style>
@@ -197,7 +198,7 @@
         </button>
       </div>
       <!-- Modal body -->
-      <form action="{% url 'apply_remittance' %}" method="POST" enctype="multipart/form-data">
+      <form action="{% url 'apply_remittance' %}" method="POST" id="myForm" enctype="multipart/form-data">
         {% csrf_token %}
         <div x-data="{ open: false }" class="p-4 md:p-5 space-y-4">
           <div class="text-base leading-relaxed text-gray-500 dark:text-gray-400">

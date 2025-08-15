@@ -378,6 +378,7 @@ class RemittanceForm(forms.ModelForm):
                 attrs={
                 'class': "form-control",
                 'style': 'max-width: 100%;',
+                'id': 'myNumberInput',
                 'required': True,
                 'placeholder': 'eg 5000000'
                 }),

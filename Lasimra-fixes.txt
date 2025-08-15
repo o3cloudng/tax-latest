@@ -1,0 +1,68 @@
+COMPANY <---> AGENCY
+1. After creating existing demand notice, it does not redirect to the demand notice as it used to.
+2. https://lasimra.maxvaafrica.com/payments/verify/ - This page is not working.
+3. Annual Fee is not adding up to the total sum. (It adds up for me - based on No of Infra and No of years)
+4. On the admin side, penalty should not be struck out. (Not struck out)
+5. https://lasimra.maxvaafrica.com/agency/waiver/LA250700000101 - 
+	Oops! Something went wrong. Please, contact the administrator.
+(Appears okay here)
+6. Usual arrangement of Demand Notice on "Revised Demand Notice" (Rearranged)
+7. No Remittance on the "Revised Demand Notice" Page. (Resolved)
+8. Can the download carry the type of demand notice on the file-name. 
+9. Let the folder or directory for tax-payer be - "Company" instead of "tax" (Done)
+10. Revised changing back to "undisputed paid" after making payment. 
+11. What happens when a company just pays without "dispute" (Resolved straight)
+
+AGENCY
+1. Infrastructure: Created by User/Admin on every table. (Done)
+2. No response when you try to create a company (Done)
+3. No mail to company to get their login details. (Done)
+
+
+
+ISSUES: 13/08/2025
+* Page titles updated - Done
+* NEW USER CREATION:
+	Logo Fix - Settings Page, - Done
+    Admin Are Company logo
+
+* USER EMAIL:
+	User Profile Update keeps sending email on update - Done
+	Change Email Title for Company to "Welcome on Board" - Done
+* Change Page Title from "MASIMRA:: TaxPayer" to "LASIMRA:: Dashboard" - Done
+
+* EXISTING PAID ALL: (When we pay without disputing)
+	Wrongly redirects to "Undisputed Paid" instead of "Resolved"
+
+* EXISTING PAID UNDISPUTED:
+	Change "Amount Due" / "Amount Paid (Green)" - Receipt - Demand Notice
+	Undisputed Paid Demand should include row for "Amount Paid"
+	Total Paid (Excluding Penalty)
+	Bring down "Total Due"  & "Penalty"
+	"Total Paid" should be included
+	Annual fee not displaying
+
+	Generate a note (To contact admin)
+
+	ORDER
+	- Admin charges (Annual due, SAR, )
+	- Penalty
+	- Total Due
+	- Remittance
+	- Waiver paid
+	- Amount Paid
+
+* REMMITTANCE & WAIVER: Input add javascript comma
+
+* REVISED - Receipt:
+	Should also include "Total Paid"
+
+* EXISTING PAID ALL: (When we pay without disputing)
+	Wrongly redirects to "Undisputed Paid" instead of "Resolved"
+	Change Amount Due to Amount Paid
+	Add Total Amount Paid under it (Undisputed paid + Resolved)
+	TOTAL to TOTAL DUE: should be (0.00)
+	Amount Paid: Total (Current Payment)
+	Total Amount Paid (Undisputed paid + Resolved)
+
+	

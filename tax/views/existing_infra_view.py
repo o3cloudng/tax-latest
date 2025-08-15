@@ -71,20 +71,26 @@ def apply_remittance(request):
         # Check if remittance is more than total due
         tot_due = rem.subtotal + rem.annual_fee + rem.application_fee + \
                     rem.admin_fee + rem.site_assessment
+        
+        clean_remitted_amount = int(request.POST.get('remitted_amount').replace(',',''))
 
-        if int(request.POST.get('remitted_amount')) > int(tot_due):
+
+        if clean_remitted_amount > int(tot_due):
             # print(f"Real Cost: {tot_due}")
+            
             messages.error(request, 'Please check your remittance value.')
             return redirect('dispute-ex-demand-notice', request.POST.get('referenceid'))
 
         
         if form.is_valid():            
-            if not int(request.POST.get('remitted_amount')):
+            # print(f"CLEAN REMITTANCE:: {clean_remitted_amount}")
+            # print(f"TOTAL DUE:: {int(tot_due)}")
+            if not clean_remitted_amount:
                 total_due = rem.subtotal + rem.annual_fee + rem.penalty + rem.application_fee + \
-                    rem.admin_fee + rem.site_assessment - int(request.POST.get('remitted_amount'))
+                    rem.admin_fee + rem.site_assessment - clean_remitted_amount
             else:
                 total_due = rem.subtotal + rem.annual_fee + rem.application_fee + \
-                rem.admin_fee + rem.site_assessment - int(request.POST.get('remitted_amount'))
+                rem.admin_fee + rem.site_assessment - clean_remitted_amount
                 # print(f"Total Due: {total_due}")
 
             remit = DemandNotice.objects.filter(Q(company=request.user) & Q(referenceid = request.POST.get('referenceid')))
@@ -128,10 +134,12 @@ def apply_remittance(request):
 
             messages.success(request, 'Your remittance was added successfully.')
             return redirect('dispute-ex-demand-notice', request.POST.get('referenceid'))
-            
+        
+        else:
+            print(form.errors)
       
-        messages.error(request, 'Your remittance failed.')
-        return redirect('dispute-ex-demand-notice', request.POST.get('referenceid'))
+            messages.error(request, 'Your remittance failed.')
+            return redirect('dispute-ex-demand-notice', request.POST.get('referenceid'))
 
 
 def age(the_date):
@@ -349,7 +357,7 @@ def undispute_ex_demand_notice_receipt(request, ref_id):
     demand_notice = DemandNotice.objects.get(referenceid=ref_id)
     # if demand_notice AN emand_notice.amount_due == 0:
     if demand_notice and demand_notice.amount_paid == 0:
-        messages.success(request, "Undisputed demand notice updated")
+        # messages.success(request, "Undisputed demand notice updated")
         DemandNotice.objects.filter(referenceid=ref_id).update(status="UNDISPUTED UNPAID")
 
     infra = demand_notice.infra

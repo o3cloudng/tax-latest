@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% load humanize %} {% load static %} {% block content %}
+{% extends 'base.html' %} {% load humanize %} {% load static %} 
+{% block title %}Dashboard{% endblock %}
+{% block content %}
 <section class="relative w-full flex flex-row items-start justify-start h-screen z-10">
 
   {% include 'tax-payers/aside.html' %}
