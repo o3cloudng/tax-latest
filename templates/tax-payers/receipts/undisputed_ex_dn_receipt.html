@@ -76,6 +76,7 @@
                 class="text-orange-800 font-semibold mt-2 bg-gray-100 rounded-md shadow-sm p-2 hover:bg-orange-400 hover:text-white">
                 <h2 class="block text-sm">Amount Due:</h2>
                 <h2 class="text-2xl font-bold">&#8358;{{ total_liability | floatformat:2 | intcomma }}</h2>
+                <small><strong>Total Paid: &#8358;{{ amount_paid | floatformat:2 | intcomma }}</strong></small>
               </div>
             </div>
           </div>
