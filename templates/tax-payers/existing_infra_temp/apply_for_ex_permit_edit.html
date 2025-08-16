@@ -124,7 +124,7 @@
           </thead>
           <tbody id="table">
             <tr>
-              <td><a href="{% url 'dispute-ex-demand-notice' demand_notice.referenceid %}"> {{ demand_notice.referenceid }} </a> </td></td>
+              <td><a href="{% url 'generate_ex_receipt' demand_notice.referenceid %}"> {{ demand_notice.referenceid }} </a> </td></td>
               <td>&#8358;{{ amount_due | floatformat:2 | intcomma }}</td>
               <td>&#8358;{{ annual_fee | floatformat:2 | intcomma }}</td>
               <td>&#8358;{{ remittance | floatformat:2 | intcomma }}</td>
