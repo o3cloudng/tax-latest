@@ -7,12 +7,14 @@ services:
     command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers=4 --threads=2 --timeout=120
     volumes:
       - .:/app
-      - ./static:/app/static
-      - ./media:/app/media
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     env_file:
       - .env.production
     depends_on:
       - redis
+    networks:
+      - tax_network
     ports:
       - "8000:8000"
     restart: always
@@ -29,6 +31,8 @@ services:
       - .env.production
     depends_on:
       - redis
+    networks:
+      - tax_network
     restart: always
 
   celery_beat:
@@ -43,6 +47,8 @@ services:
       - .env.production
     depends_on:
       - redis
+    networks:
+      - tax_network
     restart: always
 
   # flower:
@@ -53,6 +59,8 @@ services:
   #     - "5555:5555"
   #   depends_on:
   #     - redis
+  #   networks:
+  #     - tax_network
   #   env_file:
   #     - .env.production
   #   restart: always
@@ -65,7 +73,15 @@ services:
       - redis_data:/data
     # ports:
     #   - "6379:6379"
+    networks:
+      - tax_network
     restart: always
 
 volumes:
   redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  tax_network:
+    driver: bridge
