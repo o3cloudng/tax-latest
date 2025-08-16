@@ -45,17 +45,17 @@ services:
       - redis
     restart: always
 
-  flower:
-    image: mher/flower
-    container_name: flower
-    command: flower --broker=redis://redis:6379/0 --port=5555
-    ports:
-      - "5555:5555"
-    depends_on:
-      - redis
-    env_file:
-      - .env.production
-    restart: always
+  # flower:
+  #   image: mher/flower
+  #   container_name: flower
+  #   command: flower --broker=redis://redis:6379/0 --port=5555
+  #   ports:
+  #     - "5555:5555"
+  #   depends_on:
+  #     - redis
+  #   env_file:
+  #     - .env.production
+  #   restart: always
 
   redis:
     image: redis:7
