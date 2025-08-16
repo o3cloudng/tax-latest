@@ -24,7 +24,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 COPY . .
 
-RUN mkdir -p /app/staticfiles /app/media
+RUN mkdir -p /app/static /app/staticfiles /app/media /app/assets/media
 
 # RUN python manage.py collectstatic
 
