@@ -1,98 +1,73 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  redis:
-    image: redis:7-alpine
-    container_name: redis
-    restart: unless-stopped
-    # volumes:
-    #   - redis_data:/data
-    networks:
-      - tax_network
-    ports:
-      - "6379:6379"
-    command: redis-server --save 60 1 --loglevel warning
-
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: web
-    restart: unless-stopped
-    working_dir: /app
-    ports:
-      - "8000:8000"
+    container_name: django_web
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers=4 --threads=2 --timeout=120
     volumes:
       - .:/app
-      - static_volume:/app/staticfiles
-      - media_volume:/app/media
-    networks:
-      - tax_network
+      - ./static:/app/static
+      - ./media:/app/media
     env_file:
       - .env.production
     depends_on:
       - redis
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
-    # command: python manage.py runserver # --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    restart: always
 
   celery_worker:
     build:
-      context: /app
+      context: .
       dockerfile: Dockerfile
     container_name: celery_worker
-    restart: unless-stopped
+    command: celery -A core worker -l info --concurrency=4 --max-tasks-per-child=1000 --max-memory-per-child=200000
     volumes:
       - .:/app
-    networks:
-      - tax_network
     env_file:
       - .env.production
     depends_on:
       - redis
-    command: celery -A core worker --loglevel=info --concurrency=4
+    restart: always
 
   celery_beat:
     build:
-      context: /app
+      context: .
       dockerfile: Dockerfile
     container_name: celery_beat
-    restart: unless-stopped
+    command: celery -A core beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     volumes:
       - .:/app
-    networks:
-      - tax_network
     env_file:
       - .env.production
     depends_on:
       - redis
-      - celery_worker
-    command: celery -A core beat --loglevel=info #--scheduler django_celery_beat.schedulers:DatabaseScheduler
+    restart: always
 
   flower:
-    build:
-      context: /app
-      dockerfile: Dockerfile
+    image: mher/flower
     container_name: flower
-    restart: unless-stopped
-    volumes:
-      - /app:/app
-    networks:
-      - tax_network
-    env_file:
-      - .env.production
-    depends_on:
-      - redis
-      - celery_worker
-      - celery_beat
+    command: flower --broker=redis://redis:6379/0 --port=5555
     ports:
       - "5555:5555"
-    command: celery -A core flower --broker=redis://redis:6379/0 --basic_auth=admin:1Million
+    depends_on:
+      - redis
+    env_file:
+      - .env.production
+    restart: always
+
+  redis:
+    image: redis:7
+    container_name: redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: always
 
 volumes:
-  static_volume:
-  media_volume:
-  # redis_data:
-
-networks:
-  tax_network:
-    driver: bridge
+  redis_data:
