@@ -469,6 +469,7 @@ def revised_demand_notice_receipt(request, ref_id):
         'remittance': demand_notice.remittance,
         'total_liability': demand_notice.total_due,
         'waiver_applied': demand_notice.waiver_applied,
+        'amount_paid': demand_notice.amount_paid,
         'site_assessment_cost': demand_notice.site_assessment       
     }
     return render(request, 'tax-payers/receipts/revised_receipt.html', context)
