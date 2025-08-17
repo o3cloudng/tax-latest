@@ -471,7 +471,7 @@ def agency_waiver(request, ref_id):
         'agency': Agency.objects.all().first(),
         'receipt': receipt,
         'company': company,
-        'form': form
+        'form': WaiverForm(request.POST or None, request.FILES or None, instance=demand_notice)
     }
     return render(request, 'agency/pages/apply_waiver.html', context)
 
