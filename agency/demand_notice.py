@@ -442,7 +442,7 @@ def agency_waiver(request, ref_id):
         else:
             form = WaiverForm(request.POST or None, request.FILES or None)
 
-    company = User.objects.get(id=demand_notice.get(referenceid=ref_id).company)
+    company = User.objects.get(id=demand_notice.get(referenceid=ref_id).company.id)
 
     if Remittance.objects.filter(referenceid=ref_id).exists():
         receipt = Remittance.objects.get(referenceid=ref_id).receipt
