@@ -420,8 +420,8 @@ def agency_waiver(request, ref_id):
 
 
             # SEND EMAIL TO TAX PAYER (REVISED)
-            mail_subject = "REVISED DEMAND NOTICE BY AGENCY!"
-            to_email = company.email
+            # mail_subject = "REVISED DEMAND NOTICE BY AGENCY!"
+            # to_email = company.email
             agency = request.user
             html_content = render_to_string("Emails/admin/revised_notice.html", {
                 "company":company,
@@ -432,14 +432,14 @@ def agency_waiver(request, ref_id):
                 "total_liability":total_liability,
                 "login":settings.URL,
                 })
-            text_content = strip_tags(html_content)
-            send_email_function(html_content, text_content, to_email, mail_subject)
+            # text_content = strip_tags(html_content)
+            # send_email_function(html_content, text_content, to_email, mail_subject)
 
-            # mail_subject = f"REVISED DEMAND NOTICE!: {ref_id}"
-            # email_template = "Emails/admin/revised_notice.html"
-            # agency_email_subject = f"NOTICE: REVISED DEMAND NOTICE - {company.company_name}"
-            # send_demand_notice_email(request, mail_subject, ref_id, dn.created_at, \
-            #                             total_due, email_template, agency_email_subject)
+            mail_subject = f"REVISED DEMAND NOTICE!: {ref_id}"
+            email_template = "Emails/admin/revised_notice.html"
+            agency_email_subject = f"NOTICE: REVISED DEMAND NOTICE - {company.company_name}"
+            send_demand_notice_email(request, mail_subject, ref_id, dn.created_at, \
+                                        total_due, email_template, agency_email_subject)
         else:
             form = WaiverForm(request.POST or None, request.FILES or None)
 
