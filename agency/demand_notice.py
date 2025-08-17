@@ -442,7 +442,7 @@ def agency_waiver(request, ref_id):
         else:
             form = WaiverForm(request.POST or None, request.FILES or None)
 
-    company = User.objects.get(id=demand_notice.get(referenceid=ref_id).company.id)
+    company = User.objects.get(id=DemandNotice.objects.get(referenceid=ref_id).company.id)
     demand_notice = demand_notice.get(Q(referenceid=ref_id))
     
     penalty = demand_notice.penalty
