@@ -443,6 +443,15 @@ def agency_waiver(request, ref_id):
             form = WaiverForm(request.POST or None, request.FILES or None)
 
     company = User.objects.get(id=demand_notice.get(referenceid=ref_id).company.id)
+    demand_notice = demand_notice.get(Q(referenceid=ref_id))
+    
+    penalty = demand_notice.penalty
+    remittance = demand_notice.remittance
+    waiver_applied = demand_notice.waiver_applied
+    amount_paid = demand_notice.amount_paid
+    amount_due = demand_notice.amount_due
+    annual_fee = demand_notice.annual_fee
+    total_liability = demand_notice.total_due 
 
     if Remittance.objects.filter(referenceid=ref_id).exists():
         receipt = Remittance.objects.get(referenceid=ref_id).receipt
