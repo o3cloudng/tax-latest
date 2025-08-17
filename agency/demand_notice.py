@@ -410,7 +410,8 @@ def agency_waiver(request, ref_id):
                 "agency_email":agency,
                 "agency_phone":request.user.phone_number,
                 "referenceid":ref_id,
-                "total_due": total_due,
+                "waiver_applied":waiver_applied,
+                "total_due": demand_notice.total_due,
                 "login":settings.URL,
                 })
             text_content = strip_tags(html_content)

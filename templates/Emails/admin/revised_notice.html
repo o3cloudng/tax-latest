@@ -9,6 +9,7 @@
 <ul>
     <li>Reference Number: {{referenceid}}</li>
     <li>Date: {{ company.created_at }}</li>
+    <li>Waiver Applied: &#8358;{{ waiver_applied | floatformat:2 | intcomma }}</li>
     <li>Revised Amount Due: &#8358;{{ total_due | floatformat:2 | intcomma }}</li>
 </ul>
 </p>
