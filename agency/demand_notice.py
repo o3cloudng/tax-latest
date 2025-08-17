@@ -400,6 +400,7 @@ def agency_waiver(request, ref_id):
             demand_notice.update(waiver_applied=waiver_applied, total_due=total_due, status="REVISED", \
                                  referenceid=ref_id, updated_at=datetime.now())
             messages.success(request, 'Waiver was added successfully.')
+            demand_notice = DemandNotice.objects.get(referenceid=ref_id)
 
             # SEND EMAIL TO TAX PAYER (REVISED)
             mail_subject = "REVISED DEMAND NOTICE BY AGENCY!"
@@ -410,7 +411,7 @@ def agency_waiver(request, ref_id):
                 "agency_email":agency,
                 "agency_phone":request.user.phone_number,
                 "referenceid":ref_id,
-                "waiver_applied":waiver_applied,
+                "waiver_applied":demand_notice.waiver_applied,
                 "total_due": demand_notice.total_due,
                 "login":settings.URL,
                 })
