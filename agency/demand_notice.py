@@ -381,8 +381,9 @@ def agency_apply_waiver(request):
 @login_required # Dispute Demand Notice - Issues
 def agency_waiver(request, ref_id):
     demand_notice = DemandNotice.objects.filter(referenceid=ref_id)
+    company = User.objects.get(pk=request.POST['company'])
     if request.method == 'POST':
-        company = User.objects.get(pk=request.POST['company'])
+        # company = User.objects.get(pk=request.POST['company'])
         ref_id = request.POST['referenceid']
         waiver_applied = request.POST['waiver_applied']
 
@@ -442,7 +443,7 @@ def agency_waiver(request, ref_id):
         else:
             form = WaiverForm(request.POST or None, request.FILES or None)
 
-    company = User.objects.get(id=demand_notice.company.id)
+    # company = User.objects.get(id=demand_notice.company.id)
 
     if Remittance.objects.filter(referenceid=ref_id).exists():
         receipt = Remittance.objects.get(referenceid=ref_id).receipt
