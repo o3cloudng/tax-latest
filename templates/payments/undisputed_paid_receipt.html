@@ -194,6 +194,20 @@
             <h3>&#8358;{{ total_liability | floatformat:2 | intcomma }}</h3>
           </div>
         </div>
+        {% if not request.user.is_tax_admin %}
+        {% if amount_paid %}
+        <div class="mt-5 bg-orange-100 border border-red-700 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <span class="block sm:inline">Thank you for your payment of the <strong>Undisputed Demand Notice</strong>. 
+            A designated LASIMRA Account Manager will contact you shortly to address any outstanding dues, 
+            including accrued penalties and other applicable fees.</span>
+        </div>
+        {% else %}
+        <div class="mt-5 bg-orange-100 border border-red-700 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <span class="block sm:inline">Thank you for generating your <strong>Undisputed Demand Notice</strong>. 
+            Please note that the associated penalty has been temporarily waived. You are kindly advised to proceed with payment.</span>
+        </div>
+        {% endif %}
+        {% endif %}
         <div class="flex flex-col p-3 gap-4 w-full">
           <div class="flex flex-row justify-center items-center gap-10 px-auto my-4">
             <div
