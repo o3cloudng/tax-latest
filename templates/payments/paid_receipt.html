@@ -162,8 +162,12 @@
             <p>Waiver Applied</p>
             <h4 class="">&#8358;{{ waiver_applied | floatformat:2 | intcomma }}</h4>
           </div>
+          <div class="font-normal text-sm w-full text-green-800 flex flex-row justify-between items-center p-3">
+            <p>Total Paid</p>
+            <h4 class="">&#8358;{{ amount_paid | floatformat:2 | intcomma }}</h4>
+          </div>
           <div class="bg-green-100 font-bold w-full text-green-800 flex flex-row justify-between items-center p-3">
-            <h3>Total</h3>
+            <h3>Total Due</h3>
             <h3>&#8358;{{ total_liability | floatformat:2 | intcomma }}</h3>
             <!-- <h3>&#8358;{{ total_liability | floatformat:2 | intcomma }}</h3> -->
           </div>
