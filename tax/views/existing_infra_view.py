@@ -408,13 +408,15 @@ def resolved_demand_notice_receipt(request, ref_id):
 
 
     context = {
+        'ref_id': ref_id,
         'company': request.user,
         'demand_notice': demand_notice,
         'subtotal': demand_notice.subtotal,
         'penalty': demand_notice.penalty,
         'amount_paid': demand_notice.amount_paid,
         'amount_due': demand_notice.amount_due,
-        'annual_fee': demand_notice.annual_fee,
+        'annual_fee': admin_settings.get(slug='annual-fee').rate,
+        'annual_fees': demand_notice.annual_fee,
         'remittance': demand_notice.remittance,
         'waiver_applied': demand_notice.waiver_applied,
         'total_liability': demand_notice.total_due, #- dn.waiver_applied,
