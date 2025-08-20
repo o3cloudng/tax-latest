@@ -72,7 +72,7 @@
               <div
                 class="text-green-800 font-semibold mt-2 bg-gray-100 rounded-md shadow-sm p-2 hover:bg-green-800 hover:text-white">
                 <h2 class="block text-sm">Amount Paid:</h2>
-                <h2 class="text-2xl font-bold">&#8358;{{ amount_due | floatformat:2 | intcomma }}</h2>
+                <h2 class="text-2xl font-bold">&#8358;{{ amount_paid | floatformat:2 | intcomma }}</h2>
               </div>
             </div>
           </div>
@@ -164,7 +164,7 @@
           </div>
           <div class="bg-green-100 font-bold w-full text-green-800 flex flex-row justify-between items-center p-3">
             <h3>Total</h3>
-            <h3>&#8358;{{ amount_due | floatformat:2 | intcomma }}</h3>
+            <h3>&#8358;{{ total_liability | floatformat:2 | intcomma }}</h3>
             <!-- <h3>&#8358;{{ total_liability | floatformat:2 | intcomma }}</h3> -->
           </div>
         </div>

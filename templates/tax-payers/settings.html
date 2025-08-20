@@ -25,7 +25,7 @@
 
           <img src='/media/{{ request.user.company_logo }}' alt="" class="w-20 h-20 rounded-full" />
           <div>
-            <h2 class="text-black text-xl">{{ request.user.company_name }}</h2>
+            <h2 class="text-orange-600 text-xl">{{ request.user.company_name }}</h2>
             <p class="text-sm">{{ user.sector }}</p>
           </div>
         </div>
@@ -55,46 +55,46 @@
           <div class="w-full">
 
             {% csrf_token %}
-            <label for="company_name" class="text-sm text-orange-400 block w-full my-3">
+            <label for="company_name" class="text-sm text-gray600 block w-full my-3">
               Company name
               {{ form.company_name }}
               <p class="errors ml-2" id="company-name-error" style="color: red;"></p>
             </label>
-            <label for="rc_number" class="text-sm text-orange-400 block w-full my-3">
+            <label for="rc_number" class="text-sm text-gray600 block w-full my-3">
               RC Number
               {{ form.rc_number }}
               <p class="errors ml-2" id="rc-number-error" style="color: red;"></p>
             </label>
-            <label for="Country" class="text-sm text-orange-400 block w-full my-3">
+            <label for="Country" class="text-sm text-gray600 block w-full my-3">
               Country
               {{ form.country }}
             </label>
-            <label for="Sector" class="text-sm text-orange-400 block w-full my-3">
+            <label for="Sector" class="text-sm text-gray600 block w-full my-3">
               Sector
               {{ form.sector }}
             </label>
           </div>
           <div class="w-full">
-            <label for="ContactEmail" class="text-sm text-orange-400 block w-full my-3">
+            <label for="ContactEmail" class="text-sm text-gray600 block w-full my-3">
               Contact Email
               {{ form.email }}
             </label>
-            <label for="phone" class="text-sm text-orange-400 block w-full my-3">
+            <label for="phone" class="text-sm text-gray600 block w-full my-3">
               Telephone
               {{ form.phone_number }}
               <p class="errors ml-2" id="phone-error" style="color: red;"></p>
             </label>
-            <label for="StreetAddress" class="text-sm text-orange-400 block w-full my-3">
+            <label for="StreetAddress" class="text-sm text-gray600 block w-full my-3">
               Street Address
               {{ form.address }}
             </label>
-            <label for="CompanyLogo" class="text-sm text-orange-400 block w-full my-3">
+            <label for="CompanyLogo" class="text-sm text-gray600 block w-full my-3">
               Company Logo <br />
               {{ form.company_logo }}
             </label>
           </div>
         </div>
-        <label for="BioData" class="text-sm text-orange-400 block w-full my-3">
+        <label for="BioData" class="text-sm text-gray600 block w-full my-3">
           Corporate Bio Data
           {{ form.bio_data }}
         </label>

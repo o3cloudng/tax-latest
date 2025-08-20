@@ -103,14 +103,14 @@
         </button>
       </div>
       <!-- Modal body -->
-      <form  method="post" action="{% url 'agency_waiver' ref_id %}">
+      <form id="myForm" method="post" action="{% url 'agency_waiver' ref_id %}" >
         {% csrf_token %}
         <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
           <div class="w-full text-base leading-relaxed text-gray-500 dark:text-gray-400">
             Enter amount <span style="color:red">*</span>
             <input type="hidden" name="referenceid" value="{{ ref_id }}" />
             <input type="hidden" name="company" value="{{ company.id }}" />
-            <input text="number" name="waiver_applied" value="{{ waiver_applied }}" class="w-full form-control" />
+            <input text="number" id="myNumberInput" name="waiver_applied" value="{{ waiver_applied }}" style="border: 1px solid #cfcfcf; border-radius: 5px; width: 100%;" class="form-control" />
           </div>
         </div>
         <!-- Modal footer -->

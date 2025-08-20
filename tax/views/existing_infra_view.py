@@ -387,6 +387,7 @@ def undispute_ex_demand_notice_receipt(request, ref_id):
         'amount_paid': demand_notice.amount_paid,
         'annual_fees': demand_notice.annual_fee,
         'total_liability': demand_notice.total_due,
+        'waiver_applied': demand_notice.waiver_applied,
         'site_assessment_cost': demand_notice.site_assessment       
     }
     return render(request, 'tax-payers/receipts/undisputed_ex_dn_receipt.html', context)

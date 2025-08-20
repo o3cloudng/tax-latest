@@ -386,6 +386,8 @@ def agency_waiver(request, ref_id):
         ref_id = request.POST['referenceid']
         waiver_applied = request.POST['waiver_applied']
 
+        # print(f"WAIVER: {request.POST['waiver_applied']}")
+
         form = WaiverForm(request.POST or None, request.FILES or None)
         
         dn = demand_notice.get(Q(referenceid = ref_id))
@@ -417,8 +419,8 @@ def agency_waiver(request, ref_id):
             total_liability = dn.total_due #- dn.waiver_applied
             status = "REVISED"
 
-            print(f"Waiver Applied: {waiver_applied}")
-            print(f"TOTAL DUE: {total_due}")
+            # print(f"Waiver Applied: {waiver_applied}")
+            # print(f"TOTAL DUE: {total_due}")
 
 
             # SEND EMAIL TO TAX PAYER (REVISED)
@@ -431,7 +433,7 @@ def agency_waiver(request, ref_id):
                 "agency_phone":request.user.phone_number,
                 "referenceid":ref_id,
                 "waiver_applied":waiver_applied,
-                "total_liability":total_due,
+                "total_liability":total_liability,
                 "login":settings.URL,
                 })
             text_content = strip_tags(html_content)
