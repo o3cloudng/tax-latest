@@ -195,6 +195,7 @@ def pay4it_callback(request):
             infra = json.loads(infra)
             # print(type(infra), infra)
             admin_settings = AdminSetting.objects.all()
+            demand_notice = DemandNotice.objects.get(referenceid=payment.referenceid)
 
             context = {
                 'ref_id': payment.referenceid,
