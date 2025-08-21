@@ -19,7 +19,7 @@ from core.utils import send_email_function, taxpayer_notification_email
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from agency.tasks import task_func, send_email_func
-
+from payments.models import Payment
 
 @login_required
 @tax_payer_only
@@ -405,10 +405,12 @@ def resolved_demand_notice_receipt(request, ref_id):
     infra = demand_notice.infra
     infra = infra.replace("'", '"')
     infra = json.loads(infra)
+    current_payment = Payment.objects.filter(referenceid=ref_id).first()
 
 
     context = {
         'ref_id': ref_id,
+        'current_payment': current_payment.amount,
         'company': request.user,
         'demand_notice': demand_notice,
         'subtotal': demand_notice.subtotal,
