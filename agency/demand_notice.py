@@ -222,7 +222,7 @@ def generate_ex_demand_notice(request):
         is_exisiting = True,
         infra = infra,
         subtotal = subtotal,
-        amount_due = subtotal + application_cost + admin_fees + sar_cost,
+        amount_due = subtotal + application_cost + admin_fees + sar_cost + total_annual_fees,
         annual_fee = annual_fees,
         penalty = penalty,
         application_fee = application_cost,

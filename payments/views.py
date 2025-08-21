@@ -129,6 +129,7 @@ def pay4it_webhook(request):
         return HttpResponse(status=405) # Return HTTP 405 for non-POST requests
 
 
+@transaction.atomic
 @csrf_exempt
 def pay4it_callback(request):
     if request.method == 'GET':
