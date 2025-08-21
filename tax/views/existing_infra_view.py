@@ -466,7 +466,7 @@ def revised_demand_notice_receipt(request, ref_id):
         'admin_pm_fees_sum': demand_notice.admin_fee,
         'annual_fees': demand_notice.annual_fee,
         'annual_fee': admin_settings.get(slug='annual-fee').rate,
-        'amount_due': demand_notice.amount_due + demand_notice.annual_fee,
+        'amount_due': demand_notice.amount_due,
         'admin_rate':admin_settings.get(slug='admin-pm-fees').rate,
         'sar_fee':admin_settings.get(slug='site-assessment').rate,
         'infrastructure': infra,
