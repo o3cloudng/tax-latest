@@ -158,6 +158,12 @@ def pay4it_callback(request):
         try:
             if verification['Transaction']['NotificationDetails']['ResponseCode'] == 'SUCCESSFULL':
                 Payment.objects.filter(ref=payment.ref).update(verified=True)
+            else:
+                dashboard = ""
+                context = {
+                    'dashboard': dashboard
+                }
+                return render(request, "payments/payment_failed.html", context)
             
             if Payment.objects.filter(referenceid=referenceid, verified=True).exists():
                 total_paid = Payment.objects.filter(referenceid=referenceid, verified=True).aggregate(total=Sum('amount'))['total']   
