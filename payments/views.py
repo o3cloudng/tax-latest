@@ -243,92 +243,92 @@ def pay4it_callback(request):
     return HttpResponse(status=405)
 
 
-# @transaction.atomic
-# def paystack_verify(request, ref):
+@transaction.atomic
+def paystack_verify(request, ref):
 
-#     if not Payment.objects.filter(ref=ref).exists():
-#         messages.error(request, "Payment not initialized.")
-#         return redirect('dashboard')
-#     payment = Payment.objects.get(ref=ref)
-#     referenceid = payment.referenceid
-#     # print("REFERENCEID: ", payment.referenceid)
-#     # print("REF: ", payment.ref)
+    if not Payment.objects.filter(ref=ref).exists():
+        messages.error(request, "Payment not initialized.")
+        return redirect('dashboard')
+    payment = Payment.objects.get(ref=ref)
+    referenceid = payment.referenceid
+    # print("REFERENCEID: ", payment.referenceid)
+    # print("REF: ", payment.ref)
     
-#     url=f"https://api.paystack.co/transaction/verify/{payment.ref}"
+    url=f"https://api.paystack.co/transaction/verify/{payment.ref}"
 
-#     bearer_token = settings.PAYSTACK_SECRET_KEY
+    bearer_token = settings.PAYSTACK_SECRET_KEY
 
-#     headers = {"Authorization": f"Bearer {bearer_token}"}
-#     # print(bearer_token, type(bearer_token))
+    headers = {"Authorization": f"Bearer {bearer_token}"}
+    # print(bearer_token, type(bearer_token))
 
-#     response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers)
 
-#     data = response.json()
-#     # print("SUCCESS: ",response.json())
+    data = response.json()
+    # print("SUCCESS: ",response.json())
     
-#     if payment.ref == ref:
-#         # print("REF: ", data['data']['amount'], type(data['data']['amount']), payment.amount, total)
-#         if (data['status'] == True) & (data['data']['amount']==payment.amount):
-#             Payment.objects.filter(ref=payment.ref).update(verified=True)
+    if payment.ref == ref:
+        # print("REF: ", data['data']['amount'], type(data['data']['amount']), payment.amount, total)
+        if (data['status'] == True) & (data['data']['amount']==payment.amount):
+            Payment.objects.filter(ref=payment.ref).update(verified=True)
             
-#             if Payment.objects.filter(referenceid=referenceid, verified=True).exists():
-#                 total_paid = Payment.objects.filter(referenceid=referenceid, verified=True).aggregate(total=Sum('amount'))['total'] / 100    
-#             else:
-#                 total_paid = 0
-#             demand_notice = DemandNotice.objects.get(referenceid=payment.referenceid)
+            if Payment.objects.filter(referenceid=referenceid, verified=True).exists():
+                total_paid = Payment.objects.filter(referenceid=referenceid, verified=True).aggregate(total=Sum('amount'))['total'] / 100    
+            else:
+                total_paid = 0
+            demand_notice = DemandNotice.objects.get(referenceid=payment.referenceid)
 
-#             total = (demand_notice.amount_due + demand_notice.penalty) \
-#                 - (demand_notice.remittance + demand_notice.waiver_applied + total_paid)
-#             # print("SUCCESS")
-#             # print(data['message'])
-#             if total <= 0:
-#                 DemandNotice.objects.filter(referenceid=payment.referenceid) \
-#                 .update(amount_paid=total_paid, status='RESOLVED', total_due=total)
-#                 # print("RESOLVED: ")
-#             else:
-#                 DemandNotice.objects.filter(referenceid=payment.referenceid) \
-#                     .update(amount_paid=total_paid, status='UNDISPUTED PAID', total_due=total)
-#                 # print("UNDISPUETD PAID: ")
-#             # Payment.objects.filter(ref=payment.ref).update(verified=True)
+            total = (demand_notice.amount_due + demand_notice.penalty) \
+                - (demand_notice.remittance + demand_notice.waiver_applied + total_paid)
+            # print("SUCCESS")
+            # print(data['message'])
+            if total <= 0:
+                DemandNotice.objects.filter(referenceid=payment.referenceid) \
+                .update(amount_paid=total_paid, status='RESOLVED', total_due=total)
+                # print("RESOLVED: ")
+            else:
+                DemandNotice.objects.filter(referenceid=payment.referenceid) \
+                    .update(amount_paid=total_paid, status='UNDISPUTED PAID', total_due=total)
+                # print("UNDISPUETD PAID: ")
+            # Payment.objects.filter(ref=payment.ref).update(verified=True)
 
-#     infra = demand_notice.infra
-#     infra = infra.replace("'", '"')
-#     infra = json.loads(infra)
-#     # print(type(infra), infra)
-#     admin_settings = AdminSetting.objects.all()
+    infra = demand_notice.infra
+    infra = infra.replace("'", '"')
+    infra = json.loads(infra)
+    # print(type(infra), infra)
+    admin_settings = AdminSetting.objects.all()
 
-#     context = {
-#         'ref_id': payment.referenceid,
-#         'company': request.user,
-#         'demand_notice': demand_notice,
-#         'subtotal': demand_notice.subtotal,
-#         'penalty': demand_notice.penalty,
-#         'amount_paid': demand_notice.amount_paid,
-#         'amount_due': demand_notice.amount_due,
-#         'annual_fee': demand_notice.annual_fee,
-#         'remittance': demand_notice.remittance,
-#         'waiver_applied': demand_notice.waiver_applied,
-#         'total_liability': demand_notice.total_due, #- dn.waiver_applied,
-#         'agency': Agency.objects.all().first(),
-#         'remittance': demand_notice.remittance,
-#         'site_assessment_cost': demand_notice.site_assessment, 
-#         'infrastructure': infra,     
+    context = {
+        'ref_id': payment.referenceid,
+        'company': request.user,
+        'demand_notice': demand_notice,
+        'subtotal': demand_notice.subtotal,
+        'penalty': demand_notice.penalty,
+        'amount_paid': demand_notice.amount_paid,
+        'amount_due': demand_notice.amount_due,
+        'annual_fee': demand_notice.annual_fee,
+        'remittance': demand_notice.remittance,
+        'waiver_applied': demand_notice.waiver_applied,
+        'total_liability': demand_notice.total_due, #- dn.waiver_applied,
+        'agency': Agency.objects.all().first(),
+        'remittance': demand_notice.remittance,
+        'site_assessment_cost': demand_notice.site_assessment, 
+        'infrastructure': infra,     
         
         
-#         'app_fee': admin_settings.get(slug='application-fee'),
-#         'total_app_fee': demand_notice.application_fee,
-#         'admin_pm_fees': demand_notice.admin_fee,
-#         'admin_pm_fees_sum': demand_notice.admin_fee,
-#         'site_assessment': demand_notice.site_assessment,
-#         'total_due': demand_notice.total_due,
-#         'admin_rate':admin_settings.get(slug='admin-pm-fees').rate,
-#         'sar_fee':admin_settings.get(slug='site-assessment').rate,
-#     }
-#     all_paid = (demand_notice.amount_due + demand_notice.penalty + demand_notice.annual_fee) \
-#                 - (demand_notice.remittance + demand_notice.waiver_applied + total_paid)
-#     if all_paid == 0:
-#         return render(request, "payments/paid_receipt.html", context)
+        'app_fee': admin_settings.get(slug='application-fee'),
+        'total_app_fee': demand_notice.application_fee,
+        'admin_pm_fees': demand_notice.admin_fee,
+        'admin_pm_fees_sum': demand_notice.admin_fee,
+        'site_assessment': demand_notice.site_assessment,
+        'total_due': demand_notice.total_due,
+        'admin_rate':admin_settings.get(slug='admin-pm-fees').rate,
+        'sar_fee':admin_settings.get(slug='site-assessment').rate,
+    }
+    all_paid = (demand_notice.amount_due + demand_notice.penalty + demand_notice.annual_fee) \
+                - (demand_notice.remittance + demand_notice.waiver_applied + total_paid)
+    if all_paid == 0:
+        return render(request, "payments/paid_receipt.html", context)
     
-#     return render(request, "payments/undisputed_paid_receipt.html", context)
+    return render(request, "payments/undisputed_paid_receipt.html", context)
 
 
