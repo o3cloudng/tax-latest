@@ -23,13 +23,11 @@
       </span>
       Bulk Upload
     </button>
-    <a href="/media/bulk_upload_sample.csv" class="text-sm text-gray-800 underline">Download
-        Format</a>
-    </article>
+    <a href="/media/bulk_upload_sample.csv" class="text-sm text-gray-800 underline">Download Format</a>
   </article>
 
-  {% include 'tax-payers/partials/toasts.html' %}
-  {% include 'agency/inc/agency_logo.html' %}
+      {% include 'tax-payers/partials/toasts.html' %}
+      {% include 'agency/inc/agency_logo.html' %}
 </section>
 <section class="w-full flex flex-col md:flex-row justify-between items-center mt-10">
   <a href="{%  url 'agency_companies_details' company.id %}">
