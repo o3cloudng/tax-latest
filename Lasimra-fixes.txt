@@ -65,4 +65,8 @@ ISSUES: 13/08/2025
 	Amount Paid: Total (Current Payment)
 	Total Amount Paid (Undisputed paid + Resolved)
 
-	
+20 / 08 / 2025
+# Payment
+- Redirecting after complete payment (Missing data) - New
+- Undisputed paid Full payment
+- Resolved Receipt - Current amount paid should be up and Total Amount Paid (Sum of all paid)
