@@ -51,7 +51,7 @@ def agency_generate_demand_notice(request, pk):
         demand_notice = DemandNotice.objects.create(
             created_by=request.user,
             company=company,
-            is_exisiting = True,
+            is_exisiting = False,
             infra = infra,
             subtotal = subtotal,
             amount_due = subtotal + application_cost + admin_fees + sar_cost,
