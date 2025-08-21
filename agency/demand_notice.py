@@ -88,14 +88,16 @@ def agency_generate_demand_notice(request, pk):
             send_email_function(html_content, text_content, agency.email, "NOTICE: NEW DEMAND NOTICE")
             messages.success(request, 'Demand notice created.')
             # messages.success(request, "Notification sent.")
+            print(f"Error: Not sure yet.")
             return redirect('agency_generate_receipt', obj.referenceid)
-        
-        messages.error(request, 'Failed to generate demand notice')
-        return redirect('agency_add_infrastructure', company.id)
+        else:        
+            messages.error(request, 'Failed to generate demand notice')
+            return redirect('agency_add_infrastructure', company.id)
                  
 
     except Exception as e:
         messages.error(request, 'Failed to generate demand notice')
+        print(f"Error: Server error {e}")
         return redirect('agency_add_infrastructure', company.id)
 
 
@@ -190,6 +192,7 @@ def apply_for_existing_permit(request, pk):
         'infra_types': InfrastructureType.objects.all(),
         'infrastructure': InfrastructureType.objects.all().first(),
         'infra_types': InfrastructureType.objects.all().order_by('pk'),
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
 
     return render(request, 'agency/pages/forms/apply_for_exist.html', context)

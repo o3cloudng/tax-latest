@@ -9,6 +9,7 @@ from tax.models import Infrastructure, DemandNotice
 from django.db.models import Q
 # from tax.views.existing_infra_view import generate_ref_id
 from account.models import User
+from agency.models import Agency
 
 
 
@@ -38,7 +39,8 @@ def agency_apply_for_permit(request, pk):
         # 'referenceid':  generate_ref_id(),
         'company': company,
         'userid': company.id,
-        'infra_types': InfrastructureType.objects.all().order_by('pk')
+        'infra_types': InfrastructureType.objects.all().order_by('pk'),
+        "agency": Agency.objects.get(agency_email=request.user.email),
 
     }
 
@@ -55,14 +57,16 @@ def agency_add_infrastructure_form(request):
         context = {
             'infrastructure':infrastructure,
             'userid': userid.id,
-            'current_year': current_year
+            'current_year': current_year,
+            "agency": Agency.objects.get(agency_email=request.user.email),
         }
         return render(request, 'agency/pages/forms/infrastructureform.html', context)
     else:
         context = {
             'current_year': current_year,
             'userid': userid.id,
-            'infrastructure':infrastructure
+            'infrastructure':infrastructure,
+            "agency": Agency.objects.get(agency_email=request.user.email),
         }
         return render(request, 'agency/pages/forms/infrastructureform2.html', context)
 

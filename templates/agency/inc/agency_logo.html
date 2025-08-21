@@ -1,0 +1,20 @@
+
+      <article
+        class="w-fit space-x-5 flex flex-row items-center justify-between bg-lightGray600 rounded-full bg-slate-100 p-3"
+      >
+        <img
+          width="20"
+          height="20"
+          src="https://img.icons8.com/ios/100/appointment-reminders--v1.png"
+          alt="appointment-reminders--v1"
+        />
+        <p class="text-sm text-gray800">{{ request.user }}</p>
+        <div class="w-6 h-6 rounded-full">
+          {% if request.user.company_logo is not none %}
+            <img src="/media/{{ agency.agency_logo }}" alt="LG" class="w-20 rounded-full" />
+          {% else %}
+            <img src="/static/img/default.png" alt="" class="w-20 rounded-full" />
+          {% endif %}
+          
+        </div>
+      </article>

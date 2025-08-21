@@ -150,6 +150,7 @@ def agency_dashboard(request):
         "unresolved_sum": unresolved_sum,
         "audit_trail": audit_trail,
         "log_events": log_events,
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/admin-dashboard.html', context)
 
@@ -221,6 +222,7 @@ def agency_demand_notice(request):
         "disputed": disputed,
         "demand_notice": demand_notice,
         "demand_notice_pagination": page_obj,
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/admin-demand-notices.html', context)
 
@@ -280,6 +282,7 @@ def agency_disputes(request):
         "resolved_last_month_perc": resolved_last_month_perc,
         "unresolved_last_month_perc": unresolved_last_month_perc,
         "unresolved": unresolved,
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/admin-disputes.html', context)
 
@@ -347,7 +350,8 @@ def agency_infrastructure(request):
         "pipeline": pipeline,
         "fibre": fibre,
         "fibre_last_month_perc": fibre_last_month_perc,
-        "gas_powerline": gas_powerline
+        "gas_powerline": gas_powerline,
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/admin-infrastructure.html', context)
 
@@ -419,7 +423,8 @@ def agency_company_infrastructure(request, pk):
         "pipeline": pipeline,
         "fibre": fibre,
         "fibre_last_month_perc": fibre_last_month_perc,
-        "gas_powerline": gas_powerline
+        "gas_powerline": gas_powerline,
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/admin-company-infrastructure.html', context)
 
@@ -451,7 +456,8 @@ def agency_companies(request):
             companies = User.objects.filter(is_tax_admin=False)
 
         context = {
-            "companies": companies
+            "companies": companies,
+            "agency": Agency.objects.get(agency_email=request.user.email),
         }
         return render(request, 'agency/pages/companies.html#company', context)
 
@@ -463,7 +469,8 @@ def agency_companies(request):
         "nullified": nullified.count(),
         "nullified_perc": nullified_perc,
         "company_form": AddUserForm(),
-        "comp_count": comp_count
+        "comp_count": comp_count,
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/companies.html', context)
 
@@ -511,6 +518,7 @@ def agency_companies_details(request, pk):
             # "total_revised": total_revised,
             # "total_resolved": total_resolved,
             "demand_notice": demand_notice,
+            "agency": Agency.objects.get(agency_email=request.user.email),
         }
     return render(request, 'agency/pages/company_detail.html', context)
 
@@ -556,6 +564,7 @@ def agency_settings(request):
         'notifications': Notification.objects.all(),
         'notification_form': NotificationForm(),
         'revenue_form': RevenueForm(),
+        "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/admin-settings.html', context)
 
@@ -593,7 +602,8 @@ def add_company(request):
             print(f"COMPANYS: {profile}")
 
             context = {
-                "company": profile
+                "company": profile,
+                "agency": Agency.objects.get(agency_email=request.user.email),
             }
             messages.success(request, "New user created successfully.")
             # return render(request,"agency/pages/admin-settings.html", context)
@@ -728,7 +738,8 @@ def edit_company(request, pk):
                 return HttpResponseClientRedirect(reverse_lazy("agency_settings"))
         context = {
             "company_form": company_form,
-            "company": company
+            "company": company,
+            "agency": Agency.objects.get(agency_email=request.user.email),
         }
         return render(request,"agency/partials/edit_company.html", context)
 
