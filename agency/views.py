@@ -189,19 +189,19 @@ def agency_demand_notice(request):
     total_revised = revised.aggregate(total = Sum('total_due'))['total']
     total_resolved = resolved.aggregate(total = Sum('amount_paid'))['total']
 
-    if not total_demand_notices:
+    if total_demand_notices is None:
         total_demand_notices = 0.00
 
-    if not total_undisputed_paid:
+    if total_undisputed_paid is None:
         total_undisputed_paid = 0.00
 
-    if not total_undisputed_unpaid:
+    if total_undisputed_unpaid is None:
         total_undisputed_unpaid = 0.00
 
-    if not total_revised:
+    if total_revised is None:
         total_revised = 0.00
 
-    if not total_resolved:
+    if total_resolved is None:
         total_resolved = 0.00
 
     # Pagination
