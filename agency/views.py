@@ -177,7 +177,7 @@ def agency_demand_notice(request):
     all = DemandNotice.objects.all().order_by('-created_at')
     demand_notices = all.all()
     undisputed_unpaid = all.filter(Q(status='UNDISPUTED UNPAID'))
-    undisputed_paid = all.filter(Q(status='UNDISPUTED'))
+    undisputed_paid = all.filter(Q(status='UNDISPUTED PAID'))
     revised = all.filter(Q(status='REVISED'))
     resolved = all.filter(Q(status='RESOLVED'))
     demand_notice = all.filter(Q(status='DEMAND NOTICE'))
