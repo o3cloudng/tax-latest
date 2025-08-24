@@ -184,10 +184,10 @@ def agency_demand_notice(request):
     disputed = all.filter(Q(status__icontains='UNDISPUTED'))
 
     total_demand_notices = demand_notices.aggregate(total = Sum('total_due'))['total']
-    total_undisputed_paid = undisputed_paid.aggregate(total = Sum('total_due'))['total']
+    total_undisputed_paid = undisputed_paid.aggregate(total = Sum('amount_paid'))['total']
     total_undisputed_unpaid = undisputed_unpaid.aggregate(total = Sum('total_due'))['total']
     total_revised = revised.aggregate(total = Sum('total_due'))['total']
-    total_resolved = resolved.aggregate(total = Sum('total_due'))['total']
+    total_resolved = resolved.aggregate(total = Sum('amount_paid'))['total']
 
     if not total_demand_notices:
         total_demand_notices = 0.00
