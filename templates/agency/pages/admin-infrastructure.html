@@ -1,5 +1,6 @@
 {% extends 'agency/base2.html' %} {% load static %}
 {% block title %}Infrastructure{% endblock %}
+{% load humanize %}
 {% block content %}
 <!-- Top Bar with title page, buttons and notification tabs -->
 <section class="w-full flex flex-row justify-between items-center mb-10">
@@ -60,8 +61,6 @@
       {% endif %}
     </div>
   </div>
-
-
   </div>
 </section>
 
@@ -84,13 +83,66 @@
         :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='pipeline'}">Pipeline</a> -->
       <a href="#" class="w-full text-center pb-2" @click.prevent="tab = 'gas'"
         :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='gas'}">Gas/Powerlines</a>
+      <a href="#" @click.prevent="tab = 'summary'" class="w-full text-center pb-2"
+        :class="{'border-b-2 border-b-orange-400 text-orange-400': tab==='summary'}">Summary</a>
 
     </div>
 
     <!-- Tab Content -->
     <div>
+      
       <div x-show="tab === 'all'">
-        <!-- All Tabs -->
+        <section class="flex flex-col w-full">
+
+          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
+            {% include 'agency/partials/search-infrastructure.html' %}
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-orange-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+              </svg>
+              <p class=" font-normal text-gray-800 text-sm">Sort</p>
+
+            </div>
+          </article>
+          <article class="overflow-auto rounded-lg shadow md:mt-10">
+            <!-- Data Table -->
+
+            <table class="w-full overflow-auto">
+              <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th>SN</th>
+                  <th>Type</th>
+                  <th>Address</th>
+                  <th>Application</th>
+                  <th>Build Design</th>
+                  <th>Year installed</th>
+                  <th>Date Created</th>
+                  <!-- <th class="!text-right">Actions</th> -->
+                </tr>
+              </thead>
+              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+              <tbody class="divide-y divide-gray-100 bg-white" id="search-result">
+                {% for m in masts %}
+                {% include 'agency/partials/partial-infrastructure.html' %}
+                {% empty %}
+                <tr>
+                  <td colspan="7"> No Mast / Tower found</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td class="w-40">Rows per page</td>
+                </tr>
+              </tfoot>
+            </table>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'fibre'">
         <section class="flex flex-col w-full">
 
           <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
@@ -124,138 +176,7 @@
                 </tr>
               </thead>
               <!-- hover:[&>*:nth-child(odd)]:bg-white -->
-              <tbody class="divide-y divide-gray-100 bg-white" id="search-result">
-                {% if masts.exists %}
-                {% for m in masts %}
-                {% include 'agency/partials/partial-infrastructure.html' %}
-                {% endfor %}
-                {% else %}
-                <tr>
-                  <td colspan="7"> No fibre Infrastructure
-                  </td>
-                </tr>
-                {% endif %}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td class="w-40">Rows per page</td>
-                </tr>
-              </tfoot>
-            </table>
-          </article>
-        </section>
-      </div>
-      <div x-show="tab === 'mast'">
-        <section class="flex flex-col w-full">
-
-          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
-            <!-- Search and Sort Table -->
-            <div
-              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5 text-darkBlue">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <form>
-                <input type="text" placeholder="Search"
-                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
-              </form>
-            </div>
-            <div
-              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 text-orange-600">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-              </svg>
-              <p class=" font-normal text-gray-800 text-sm">Sort</p>
-
-            </div>
-          </article>
-          <article class="overflow-auto rounded-lg shadow md:mt-10">
-            <!-- Data Table -->
-
-            <table class="w-full overflow-auto">
-              <thead class="bg-gray-50 border-b-2 border-gray-200">
-                <tr>
-                  <th>SN</th>
-                  <th>Type</th>
-                  <th>Address</th>
-                  <th>Application</th>
-                  <th>Build Design</th>
-                  <th>Year installed</th>
-                  <th>Date Created</th>
-                  <!-- <th class="!text-right">Actions</th> -->
-                </tr>
-              </thead>
-              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
-              <tbody class="divide-y divide-gray-100 bg-white ">
-                {% if masts.exists %}
-                {% for m in masts %}
-                {% include 'agency/partials/partial-infrastructure.html' %}
-                {% endfor %}
-                {% else %}
-                <tr>
-                  <td colspan="7"> No Mast / Tower found</td>
-                </tr>
-                {% endif %}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td class="w-40">Rows per page</td>
-                </tr>
-              </tfoot>
-            </table>
-          </article>
-        </section>
-      </div>
-      <div x-show="tab === 'fibre'">
-        <section class="flex flex-col w-full">
-
-          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
-            <!-- Search and Sort Table -->
-            <div
-              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5 text-darkBlue">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <form>
-                <input type="text" placeholder="Search"
-                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
-              </form>
-            </div>
-            <div
-              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 text-orange-600">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-              </svg>
-              <p class=" font-normal text-gray-800 text-sm">Sort</p>
-
-            </div>
-          </article>
-          <article class="overflow-auto rounded-lg shadow md:mt-10">
-            <!-- Data Table -->
-
-            <table class="w-full overflow-auto">
-              <thead class="bg-gray-50 border-b-2 border-gray-200">
-                <tr>
-                  <th>SN</th>
-                  <th>Type</th>
-                  <th>Address</th>
-                  <th>Application</th>
-                  <th>Build Design</th>
-                  <th>Year installed</th>
-                  <th>Date Created</th>
-                  <!-- <th class="!text-right">Actions</th> -->
-                </tr>
-              </thead>
-              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
-              <tbody class="divide-y divide-gray-100 bg-white ">
+              <tbody class="divide-y divide-gray-100 bg-white">
                 {% if fibre.exists %}
                 {% for m in fibre %}
                 {% include 'agency/partials/partial-infrastructure.html' %}
@@ -281,18 +202,7 @@
 
           <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
             <!-- Search and Sort Table -->
-            <div
-              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5 text-darkBlue">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <form>
-                <input type="text" placeholder="Search"
-                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
-              </form>
-            </div>
+            {% include 'agency/partials/search-infrastructure.html' %}
             <div
               class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -346,18 +256,7 @@
 
           <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
             <!-- Search and Sort Table -->
-            <div
-              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5 text-darkBlue">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <form>
-                <input type="text" placeholder="Search"
-                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
-              </form>
-            </div>
+            {% include 'agency/partials/search-infrastructure.html' %}
             <div
               class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -386,7 +285,7 @@
                 </tr>
               </thead>
               <!-- hover:[&>*:nth-child(odd)]:bg-white -->
-              <tbody class="divide-y divide-gray-100 bg-white ">
+              <tbody class="divide-y divide-gray-100 bg-white">
                 {% if pipeline.exists %}
                 {% for m in pipeline %}
                 {% include 'agency/partials/partial-infrastructure.html' %}
@@ -411,18 +310,7 @@
 
           <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
             <!-- Search and Sort Table -->
-            <div
-              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-80 px-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5 text-darkBlue">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <form>
-                <input type="text" placeholder="Search"
-                  class="w-full text-gray800 placeholder-gray400 text-semibold border-0 p-2 ring-0 outline-none bg-transparent focus-within:border-0 rounded-full cursor-pointer" />
-              </form>
-            </div>
+            {% include 'agency/partials/search-infrastructure.html' %}
             <div
               class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -451,7 +339,7 @@
                 </tr>
               </thead>
               <!-- hover:[&>*:nth-child(odd)]:bg-white -->
-              <tbody class="divide-y divide-gray-100 bg-white ">
+              <tbody class="divide-y divide-gray-100 bg-white">
                 {% if gas_powerline.exists %}
                 {% for m in gas_powerline %}
                 {% include 'agency/partials/partial-infrastructure.html' %}
@@ -459,6 +347,64 @@
                 {% else %}
                 <tr>
                   <td colspan="7"> No Mast / Tower found</td>
+                </tr>
+                {% endif %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td class="w-40">Rows per page</td>
+                </tr>
+              </tfoot>
+            </table>
+          </article>
+        </section>
+      </div>
+      <div x-show="tab === 'summary'">
+        <!-- All Tabs -->
+        <section class="flex flex-col w-full">
+
+          <article class="flex md:self-end md:-mt-[60px] spacing-x-2 gap-4">
+            <!-- Search and Sort Table -->
+            {% include 'agency/partials/search-infrastructure.html' %}
+            <div
+              class="flex flex-row justify-start items-center  spacing-x-1 border-[1px] border-slate-200 rounded-full w-20 px-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6 text-orange-600">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+              </svg>
+              <p class=" font-normal text-gray-800 text-sm">Sort</p>
+
+            </div>
+          </article>
+          <article class="overflow-auto rounded-lg shadow md:mt-10">
+            <!-- Data Table -->
+
+            <table class="w-full overflow-auto">
+              <thead class="bg-gray-50 border-b-2 border-gray-200">
+                <tr>
+                  <th>SN</th>
+                  <th>Type</th>
+                  <th>Rate</th>
+                  <th>Count</th>
+                  <!-- <th class="!text-right">Actions</th> -->
+                </tr>
+              </thead>
+              <!-- hover:[&>*:nth-child(odd)]:bg-white -->
+              <tbody class="divide-y divide-gray-100 bg-white">
+                {% if infra_group_count.exists %}
+                {% for m in infra_group_count %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ m.infra_type__infra_name }}</td>
+                    <td>{{ m.infra_type__rate | floatformat:2 | intcomma }}</td>
+                    <td>{{ m.num_infrastructures }}</td> 
+                  </tr>               
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="7"> No fibre Infrastructure
+                  </td>
                 </tr>
                 {% endif %}
               </tbody>

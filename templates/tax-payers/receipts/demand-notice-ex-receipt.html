@@ -165,14 +165,20 @@
             <h4>&#8358;{{ total_b4_penalty | floatformat:2 | intcomma }}</h4>
           </div>
           <div
-            class="font-normal text-sm w-full text-red-800 flex flex-row justify-between items-center p-3"
+            class="font-normal w-full text-sm text-orange-800 flex flex-row justify-between items-center p-3"
           >
             <p>Penalty</p>
             <p>&nbsp;</p>
             <p></p>
             <p>&nbsp;</p>
             <p class="!text-right"></p>
-            <h4 class="">&#8358;{{ penalty | floatformat:2 | intcomma }}</h4>
+            {% if remittance is not none %}
+              {% if not waiver_applied %}
+                <strike><h4 class="">&#8358;{{ penalty | floatformat:2 | intcomma }}</h4></strike>
+              {% endif %}
+            {% else %}
+              <h4 class="">&#8358;{{ penalty | floatformat:2 | intcomma }}</h4>
+            {% endif %}
           </div>
           <!-- <div
             class="font-normal text-sm w-full text-green-800 flex flex-row justify-between items-center p-3"

@@ -329,7 +329,7 @@ def agency_generate_ex_receipt(request, ref_id):
         'total_liability': demand_notice.total_due,
         'site_assessment_cost': demand_notice.site_assessment       
     }
-    messages.success(request, "Demand notice receipt generated")
+    # messages.success(request, "Demand notice receipt generated")
     return render(request, 'agency/receipts/demand-notice-ex-receipt.html', context)
 
 

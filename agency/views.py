@@ -205,9 +205,10 @@ def agency_demand_notice(request):
         total_resolved = 0.00
 
     # Pagination
-    page_number = request.GET.get("page", 1)
-    paginator = Paginator(demand_notices, 10)  # Show 10 posts per page
-    page_obj = paginator.get_page(page_number)
+    # page_number = request.GET.get("page", 1)
+    # paginator = Paginator(demand_notices, 10)  
+    # page_obj = paginator.get_page(page_number)
+    demand_notices = all.order_by('-updated_at')[:10]
 
     context = {
         "is_profile_complete" : False,
@@ -221,7 +222,7 @@ def agency_demand_notice(request):
         "revised": revised,
         "disputed": disputed,
         "demand_notice": demand_notice,
-        "demand_notice_pagination": page_obj,
+        # "demand_notice_pagination": page_obj,
         "agency": Agency.objects.get(agency_email=request.user.email),
     }
     return render(request, 'agency/pages/admin-demand-notices.html', context)
@@ -335,13 +336,13 @@ def agency_infrastructure(request):
     else:
         pipeline_last_month = 0
 
-    
-
-    # mast_count = masts.aggregate(no_m = Sum('amount'))
-    
+    infra_group_count =  Infrastructure.objects.values('infra_type__infra_name', 'infra_type__rate' ).annotate(num_infrastructures=Count('id')).order_by('infra_type')
+    # print(f"{infra_group_count}")
+    # mast_count = masts.aggregate(no_m = Sum('amount'))    
     context = {
         "infrastructures": infrastructures,
         "rooftop": rooftop,
+        "infra_group_count": infra_group_count,
         "masts": masts,
         "others": others,
         "mast_last_month_perc": mast_last_month_perc,

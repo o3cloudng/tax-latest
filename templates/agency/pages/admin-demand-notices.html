@@ -114,14 +114,26 @@
                   <th>Penalty</th>
                   <th>Waiver</th>
                   <th>Total due</th>
-                  <th>Date Created</th>
+                  <th>Date</th>
+                  <th>Creator</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <!-- hover:[&>*:nth-child(odd)]:bg-white -->
               <tbody class="divide-y divide-gray-100 bg-white" id="search-result">
-                {% include 'agency/partials/demand-notices.html' %}
+                {% for dn in demand_notices %}
+                  {% include 'agency/partials/demand-notices.html' %}
+                {% empty %}
+                <tr>
+                    <th colspan="10">No Demand notice found.</th>
+                </tr>
+                {% endfor %}
               </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="10" style="padding: 15px 10px;">&nbsp;</th>
+                </tr>
+              </tfoot>
               
             </table>
           </article>
@@ -169,7 +181,8 @@
                   <th>Penalty</th>
                   <th>Waiver</th>
                   <th>Total due</th>
-                  <th>Date Created</th>
+                  <th>Date</th>
+                  <th>Creator</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -236,7 +249,8 @@
                   <th>Penalty</th>
                   <th>Waiver</th>
                   <th>Total due</th>
-                  <th>Date Created</th>
+                  <th>Date</th>
+                  <th>Creator</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -303,7 +317,8 @@
                   <th>Penalty</th>
                   <th>Waiver</th>
                   <th>Total due</th>
-                  <th>Date Created</th>
+                  <th>Date</th>
+                  <th>Creator</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -370,7 +385,8 @@
                   <th>Penalty</th>
                   <th>Waiver</th>
                   <th>Total due</th>
-                  <th>Date Created</th>
+                  <th>Date</th>
+                  <th>Creator</th>
                   <th>Status</th>
                 </tr>
               </thead>

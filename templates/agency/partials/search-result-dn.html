@@ -44,6 +44,13 @@
     <td>&#8358;{{ dn.waiver_applied | floatformat:2 | intcomma }}</td>
     <td>&#8358;{{ dn.total_due | floatformat:2 | intcomma }}</td>
     <td>{{ dn.created_at | date:"M, d Y" }} </td>
+    <td>
+        {% if dn.created_by == request.user.email %}
+        <small>ADMIN</small> 
+        {% else %}
+        <small>USER</small> 
+        {% endif %}
+    </td>
     <td class="!text-center">
         {% if dn.status == 'DEMAND NOTICE' %}
         <span class="status-others">{{ dn.status }}</span>
