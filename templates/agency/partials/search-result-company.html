@@ -4,7 +4,7 @@
     <td>{{ forloop.counter }}</td>
     <td>
         <a class="flex flex-row" href="{% url 'agency_companies_details' m.id %}">
-            <img width="30px" src="/media/{{m.company_logo}}" />&nbsp;
+            <img class="rounded-full" width="30px" src="/media/{{m.company_logo}}" />&nbsp;
             <span class="font-bold">
                 {{ m.company_name }} <br>
                 <small class="text-gray-400">{{ m.email }}</small>
