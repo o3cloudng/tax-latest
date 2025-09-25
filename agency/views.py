@@ -619,13 +619,21 @@ def create_company(request):
     if request.method == 'POST':
         form = AddUserForm(request.POST or None)
         default_sector = Sector.objects.get(name="None")
+        # print(f"SECTOR: {default_sector}")
+
+        if User.objects.filter(phone_number=request.POST.get('phone_number')).exists():
+            messages.error(request, "Phone number already exists.")
+
+            print(f"PHONE: {User.objects.get(phone_number=request.POST.get('phone_number'))}")
+            return redirect(reverse_lazy("agency_companies"))
+        
         if form.is_valid():
             company = form.save(commit=False)
             company.username = slugify(company.company_name)
             company.created_by = request.user
             company.sector = default_sector
-            # if company.is_tax_admin != 0:
-            #     company.is_tax_admin = 1
+            if company.is_tax_admin != 0:
+                company.is_tax_admin = 1
             company.save()
 
             agency = Agency.objects.first()
@@ -644,7 +652,7 @@ def create_company(request):
                 })
             text_content = strip_tags(html_content)
             send_email_function(html_content, text_content, to_email, mail_subject)
-            print(f"COMPANYS: {profile}")
+            # print(f"COMPANYS: {profile}")
 
             messages.success(request, "Company created successfully.")
             context = {
@@ -654,7 +662,7 @@ def create_company(request):
             return redirect(reverse_lazy("agency_companies"))
         else:
             messages.error(request, "Company creation failed.")
-            return redirect(reverse_lazy("agency_companies"), context)
+            return redirect(reverse_lazy("agency_companies"))
 
 
 @login_required
