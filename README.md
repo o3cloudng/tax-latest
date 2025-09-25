@@ -1,5 +1,7 @@
 # Maximum Collection Project
 
+Project
+```https://lasimra.maxvaafrica.com```
 Setup development Environment
 
 ```
@@ -21,3 +23,4 @@ python manage.py collectstatic
 python manage.py runserver
 
 ```
+
