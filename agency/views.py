@@ -498,7 +498,9 @@ def agency_companies_details(request, pk):
         resolved = all.filter(Q(status='RESOLVED'))
         demand_notice = all.filter(Q(status='DEMAND NOTICE'))
         disputed = all.filter(Q(status__icontains='UNDISPUTED'))
-        unresolved = all.filter(~Q(status="PAID") & ~Q(status="REVISED"))
+        unresolved = all.filter(~Q(status="RESOLVED"))
+        # print(f"UNRESOLVED: {len(unresolved)}")
+        # print(f"DEMAND NOTICES: {len(demand_notices)}")
 
         context = {
             "is_profile_complete" : False,
@@ -512,12 +514,6 @@ def agency_companies_details(request, pk):
             'others': others,
             'resolved': resolved,
             'unresolved': unresolved,
-            
-            # "total_demand_notices": total_demand_notices,
-            # "total_undisputed_paid": total_undisputed_paid,
-            # "total_undisputed_unpaid": total_undisputed_unpaid,
-            # "total_revised": total_revised,
-            # "total_resolved": total_resolved,
             "demand_notice": demand_notice,
             "agency": Agency.objects.get(agency_email=request.user.email),
         }
