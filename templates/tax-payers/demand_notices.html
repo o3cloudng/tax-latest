@@ -25,24 +25,24 @@
       <div class="card">
 
         <p>Total Demand Notices</p>
-        <h4>&#8358;{{ total_demand_notices | floatformat:2 | intcomma }}</h4>
+        <h4>&#8358;{% if total_demand_notices %}{{ total_demand_notices | floatformat:2 | intcomma }}{% else %}0.00{% endif %}</h4>
 
       </div>
       <div class="card">
 
         <p>Total Undisputed (Unpaid)</p>
-        <h4>&#8358;{{ total_undisputed_unpaid | floatformat:2 | intcomma }}</h4>
+        <h4>&#8358;{% if total_undisputed_unpaid %}{{ total_undisputed_unpaid | floatformat:2 | intcomma }}{% else %}0.00{% endif %}</h4>
 
       </div>
       <div class="card">
 
         <p>Total Undisputed (Paid)</p>
-        <h4>&#8358;{{ total_undisputed_paid | floatformat:2 | intcomma }}</h4>
+        <h4>&#8358;{% if total_undisputed_paid %}{{ total_undisputed_paid | floatformat:2 | intcomma }}{% else %}0.00{% endif %}</h4>
       </div>
       <div class="card">
 
         <p>Total Resolved</p>
-        <h4>&#8358;{{ total_resolved | floatformat:2 | intcomma }}</h4>
+        <h4>&#8358;{% if total_resolved %}{{ total_resolved | floatformat:2 | intcomma }}{% else %}0.00{% endif %}</h4>
 
       </div>
       </div>
@@ -193,16 +193,14 @@
                   </thead>
                   <!-- hover:[&>*:nth-child(odd)]:bg-white -->
                   <tbody class="divide-y divide-gray-100 bg-white ">
-                    {% if resolved.exists %}
                     {% for dn in resolved %}
                     {% include 'tax-payers/partials/search/search-result.html' %}
-                    {% endfor %}
-                    {% else %}
+                    {% empty %}
                     <tr>
                       <td colspan="10"> No resolved demand notice
                       </td>
                     </tr>
-                    {% endif %}
+                    {% endfor %}
                   </tbody>
                   <tfoot>
                     <tr>
@@ -263,16 +261,14 @@
                   </thead>
                   <!-- hover:[&>*:nth-child(odd)]:bg-white -->
                   <tbody class="divide-y divide-gray-100 bg-white ">
-                    {% if disputed.exists %}
                     {% for dn in disputed %}
                     {% include 'tax-payers/partials/search/search-result.html' %}
-                    {% endfor %}
-                    {% else %}
+                    {% empty %}
                     <tr>
                       <td colspan="10"> No disputed demand notice
                       </td>
                     </tr>
-                    {% endif %}
+                    {% endfor %}
                   </tbody>
                   <tfoot>
                     <tr>
@@ -333,16 +329,14 @@
                   </thead>
                   <!-- hover:[&>*:nth-child(odd)]:bg-white -->
                   <tbody class="divide-y divide-gray-100 bg-white ">
-                    {% if revised.exists %}
                     {% for dn in revised %}
                     {% include 'tax-payers/partials/search/search-result.html' %}
-                    {% endfor %}
-                    {% else %}
+                    {% empty %}
                     <tr>
                       <td colspan="110"> No revised demand notice
                       </td>
                     </tr>
-                    {% endif %}
+                    {% endfor %}
                   </tbody>
                   <tfoot>
                     <tr>
@@ -403,15 +397,13 @@
                   </thead>
                   <!-- hover:[&>*:nth-child(odd)]:bg-white -->
                   <tbody class="divide-y divide-gray-100 bg-white ">
-                    {% if demand_notice.exists %}
                     {% for dn in demand_notice %}
                     {% include 'tax-payers/partials/search/search-result.html' %}
-                    {% endfor %}
-                    {% else %}
+                    {% empty %}
                     <tr>
                       <td colspan="10"> No demand notice</td>
                     </tr>
-                    {% endif %}
+                    {% endfor %}
                   </tbody>
                   <tfoot>
                     <tr>

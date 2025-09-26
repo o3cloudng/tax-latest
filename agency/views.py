@@ -616,16 +616,21 @@ def add_company(request):
 
 @login_required
 def create_company(request):
+    form = AddUserForm(request.POST or None)
     if request.method == 'POST':
-        form = AddUserForm(request.POST or None)
-        default_sector = Sector.objects.get(name="None")
-        # print(f"SECTOR: {default_sector}")
+        # if Sector.objects.filter(name=request.POST.get('sector')).exists():
+        print(f"POST: Getting here")   
 
-        if User.objects.filter(phone_number=request.POST.get('phone_number')).exists():
-            messages.error(request, "Phone number already exists.")
+        default_sector = Sector.objects.get(name=request.POST.get('sector'))
 
-            print(f"PHONE: {User.objects.get(phone_number=request.POST.get('phone_number'))}")
-            return redirect(reverse_lazy("agency_companies"))
+        print(f"POST SECTOR: {request.POST.get('sector')}")
+        print(f"SECTOR: {default_sector}")
+
+        # if User.objects.filter(phone_number=request.POST.get('phone_number')).exists():
+        #     messages.error(request, "Phone number already exists.")
+
+        #     print(f"PHONE: {User.objects.get(phone_number=request.POST.get('phone_number'))}")
+        #     return redirect(reverse_lazy("agency_companies"))
         
         if form.is_valid():
             company = form.save(commit=False)

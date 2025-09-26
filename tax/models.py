@@ -4,8 +4,6 @@ from datetime import datetime
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, date
-# import timezone
-# from simple_history.models import HistoricalRecords
 
 
 class InfrastructureType(models.Model):
@@ -17,7 +15,6 @@ class InfrastructureType(models.Model):
     def __str__(self):
         return self.infra_name
 
-    
 
 class Infrastructure(models.Model):
     infra_type = models.ForeignKey(InfrastructureType, related_name="infra_type", on_delete=models.CASCADE)
@@ -40,28 +37,6 @@ class Infrastructure(models.Model):
     def __str__(self):
         return f"{self.company} - ({self.infra_type})"
 
-
-
-# class Reference(models.Model):
-#     """Generate unique reference numbers for other models.
-
-#     The only purpose of this model is to generate unique reference numbers.
-#     """
-#     # Django models need at least 1 field
-#     created_date = models.DateTimeField(auto_now_add=True)
-
-#     @classmethod
-#     def generate(cls, prefix: str) -> str:
-#         """Generate a unique reference number prefixed with the provided prefix.
-
-#         For example, you could generate an invoice number as follows:
-
-#         Reference.generate(prefix="INV") # INV-000001 etc.
-#         """
-
-#         instance = cls.objects.create()
-#         suffix = f"{instance.pk}".zfill(6)
-#         return f"{prefix}{suffix}"
 
 class DemandNotice(models.Model):
     PAY_CHOICES = (
@@ -111,16 +86,9 @@ def save(self, *args, **kwargs):
             self.site_assessment - self.remittance - self.waiver_applied + self.annual_fee
         return self.total_due
     
-    # def cal_referenceid(self):
-    #     self.referenceid = generate_ref_id()
-    #     return self.referenceid
-
-    # def update(self, *args, **kwargs):
-    #     self.total_due = self.subtotal + self.penalty + self.application_fee + self.admin_fee + self.site_assessment - self.remittance - self.waiver
-    #     super(DemandNotice, self).save(*args, **kwargs)
-    
     def __str__(self):
         return f"{self.id}"
+    
     
 def generate_ref_id():
     today = date.today()

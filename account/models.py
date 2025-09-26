@@ -57,7 +57,7 @@ class User(AbstractUser, TrackingModel, PermissionsMixin):
     created_by = models.CharField(max_length=255, null=True, )
     contact_name = models.CharField(max_length=255, null=True, )
     rc_number = models.CharField(max_length=20)
-    phone_number = models.CharField(max_length=11, unique=True)
+    phone_number = models.CharField(max_length=11)
     country = models.CharField(max_length=300, default="Nigeria")
     state = models.CharField(max_length=300, default="Lagos State")
     address = models.CharField(max_length=300, null=True)

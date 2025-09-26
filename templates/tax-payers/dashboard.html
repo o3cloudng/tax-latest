@@ -26,25 +26,25 @@
     {% endif %}
     
   <!-- Form Tab -->
-    <section class="w-full grid grid-rows  md:grid-cols-4 gap-4 justify-between items-center mt-10">
-      <div class="card">
+    <section class="w-[80%] grid grid-rows md:grid-cols-4 gap-4 sm:grid-cols-2 sm:gap-2 justify-between items-center mt-10">
+      <div class="card w-[80%]">
         <p>Total Demand Notices</p>
-        <h4> {{ demand_notices.count }}</h4>
+        <h4>{% if demand_notices %}{{ demand_notices|length }}{% else %}0{% endif %}</h4>
 
       </div>
-      <div class="card">
+      <div class="card w-[80%]">
         <p>Total Undisputed (Unpaid)</p>
-        <h4>{{ undisputed_unpaid.count }}</h4>
+        <h4>{% if undisputed_unpaid  %} {{ undisputed_unpaid|length }}{% else %}0{% endif %}</h4>
 
       </div>
-      <div class="card">
+      <div class="card w-[80%]">
         <p>Total Undisputed (Paid)</p>
-        <h4>{{ undisputed_paid.count }}</h4>
+        <h4>{% if undisputed_paid %}{{ undisputed_paid|length }}{% else %}0{% endif %}</h4>
       </div>
-      <div class="card">
+      <div class="card w-[80%]">
 
         <p>Total Resolved</p>
-        <h4>{{ resolved.count }}</h4>
+        <h4>{% if resolved %}{{ resolved|length }}{% else %}0{% endif %}</h4>
 
       </div>
       </div>
@@ -202,16 +202,14 @@
                   </thead>
                   <!-- hover:[&>*:nth-child(odd)]:bg-white -->
                   <tbody class="divide-y divide-gray-100 bg-white ">
-                    {% if resolved.exists %}
                     {% for dn in resolved %}
                     {% include 'tax-payers/partials/search/search-result.html' %}
-                    {% endfor %}
-                    {% else %}
+                    {% empty %}
                     <tr>
                       <td colspan="10"> No resolved demand notice
                       </td>
                     </tr>
-                    {% endif %}
+                    {% endfor %}
                   </tbody>
                   <tfoot>
                     <tr>
@@ -272,16 +270,14 @@
                   </thead>
                   <!-- hover:[&>*:nth-child(odd)]:bg-white -->
                   <tbody class="divide-y divide-gray-100 bg-white ">
-                    {% if disputed.exists %}
                     {% for dn in disputed %}
                     {% include 'tax-payers/partials/search/search-result.html' %}
-                    {% endfor %}
-                    {% else %}
+                    {% empty %}
                     <tr>
                       <td colspan="10"> No disputed demand notice
                       </td>
                     </tr>
-                    {% endif %}
+                    {% endfor %}
                   </tbody>
                   <tfoot>
                     <tr>

@@ -34,7 +34,7 @@ class AddUserForm(UserCreationForm):
         # (1, "Agency Admin 2"), 
         # (1, "Agency Admin 3"), 
     ) 
-    phone_number = forms.CharField(max_length=50, required=True, 
+    phone_number = forms.CharField(max_length=50, required=False, 
                                 widget=forms.widgets.Input(
             attrs={
                 "placeholder": "Phone number", 

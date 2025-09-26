@@ -158,25 +158,23 @@
             {% csrf_token %}
           <article class="w-4/4 my-5 text-md text-gray-500 flex flex-col justify-between items-start gap-5">
             <div class="w-full flex justify-start items-center">
-              <!-- <label for="users" class="w-1/3">User Type</label> -->
               {{ company_form.is_tax_admin }}
             </div>
         
             <div class="w-full flex justify-start items-center gap-5">
-              <!-- <label for="email" class="w-1/3">Email</label> -->
               {{ company_form.email }}
             </div>
+            <!-- Sector (None) -->
+            
             <div class="w-full flex justify-start items-center gap-5">
-              <!-- <label for="cname" class="w-1/3">Company Name:</label> -->
               {{ company_form.company_name }}
+              <input name="sector" type="hidden" value="None" />
             </div>
-            <div class="w-full flex justify-start items-center gap-5">
-              <!-- <label for="cname" class="w-1/3">Company Name:</label> -->
+            <!-- <div class="w-full flex justify-start items-center gap-5">
               {{ company_form.phone_number }}
-            </div>
+            </div> -->
         
             <div class="w-full flex justify-start items-center gap-5">
-              <!-- <label for="password" class="w-1/3">Password</label> -->
               {{ company_form.password1 }}
             </div>
             <div class="w-full flex justify-start items-center">

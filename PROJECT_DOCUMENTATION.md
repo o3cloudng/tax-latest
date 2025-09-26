@@ -95,3 +95,5 @@ docker-compose up --build
 ```
 
 This documentation provides a clear overview and actionable steps to replicate and optimize the Maximum Collection Project effectively.
+
+

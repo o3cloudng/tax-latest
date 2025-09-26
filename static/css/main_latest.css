@@ -68,6 +68,7 @@ body {
     /* 1 */
     line-height: inherit;
     /* 2 */
+    background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
 /*

@@ -26,8 +26,10 @@ urlpatterns = [
     path('agency/', include("agency.urls")),
     # path('adminarea/', include("admin.urls")),
     # path('sentry-debug/', trigger_error),
+    # path('silk/', include('silk.urls', namespace='silk'))
 ]
 
+# urlpatterns += patterns('', url(r'^silk', include('silk.urls', namespace='silk')))
 
 if settings.DEBUG:  
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  
