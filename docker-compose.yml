@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A core.celery worker -l info --concurrency=4 --max-tasks-per-child=1000 --max-memory-per-child=200000
+    command: celery -A core worker -l info --concurrency=4 --max-tasks-per-child=1000 --max-memory-per-child=200000
     volumes:
       - .:/app
     env_file:
